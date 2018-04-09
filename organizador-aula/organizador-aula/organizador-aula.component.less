@@ -1,0 +1,27 @@
+@light-black: rgba(45, 44, 44, 0.9);
+@light-red: rgba(212, 27, 27, 0.9);
+#tabs{
+    border:1px solid;
+    display: inline-block;
+    border-color: white;
+
+}
+
+#tabs li{
+    display:inline-block;   
+    cursor: pointer;
+    background-color: @light-black;
+    color: white;
+    padding-top: 0.5em;
+    padding-bottom:0.5em;
+    padding-right: 1em;   
+    padding-left:1em;
+}
+
+#tabs input{
+    width: 3em;
+}
+
+li.activo{
+    background-color: @light-red!important;
+}

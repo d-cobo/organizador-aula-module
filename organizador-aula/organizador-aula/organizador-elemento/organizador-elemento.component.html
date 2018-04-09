@@ -1,0 +1,43 @@
+<div id="main-div" #mainDiv>
+  <div class="ui-g">
+    <div id="columna-izquierda" class="ui-g-2">        
+        <div id="drag-div">
+          <p>Elementos</p>
+          <div id="elementos">
+            <div class="add" (click)="displayNuevoElemento=true">
+              <i class="addIcon fa fa-plus"></i><span> Nuevo elemento</span>
+            </div>
+            <app-nuevo-elemento (elemento)="nuevoElemento($event)" *ngIf="displayNuevoElemento"></app-nuevo-elemento>
+            <div *ngFor="let elem of organizador.datos.listaElementos; let i= index" [ngStyle]="style" class="dragElement" [style.background-color]="elem.color" (onDragStart)="toolsDragStart(elem)" pDraggable="elementos" [attr.tipo]=elem.id>
+              <span>{{elem.nombre}}</span> <br/>
+              <span>{{elem.ancho}}x{{elem.alto}}</span>
+            </div>
+          </div>
+        </div>            
+    </div>
+    <p-growl [(value)]="msgs"></p-growl>
+    <div id="columna-derecha" class="ui-g-10">
+        <div id="drop-div">
+          <div class="tabla" #tabla>
+            <div class="fila" *ngFor="let fila of organizador.listaFilas">
+                  <p-confirmDialog></p-confirmDialog>
+                  <div [ngStyle]="col.getSizePx()"   (mousedown)="celdaMousedown(col, $event)" pDroppable="elementos" (onDrop)="drop(col,$event)" class="columna"   *ngFor="let col of fila.celdas" [attr.fila]="i" [attr.columna]="j">
+                  
+                    <div   pDraggable="elementos" (mouseover)="onMouseOver(col, $event)" (onDragStart)="celdaDragStart(col)" *ngIf="col.initElemento()"  id="elem_{{i}}_{{j}}" [ngClass]="col.elemento.getClasses()" [ngStyle]="col.elemento.getEstilo()">
+                        
+                        <i (click)="organizador.resizeHorizontal(col.elemento, -1)" class="fa fa-arrow-left resize resizeLeftIcon"></i>
+                        <i (click)="organizador.resizeVertical(col.elemento, -1)" class="fa fa-arrow-up resize resizeUpIcon"></i>
+                        <i (click)="removeElement(col)" class="fa fa-times removeIcon"></i>                        
+                        <div class='separator'></div>
+                        <i (click)="organizador.resizeHorizontal(col.elemento, 1)" class="fa fa-arrow-right resize resizeRightIcon"></i>                        
+                        <i (click)="organizador.resizeVertical(col.elemento, 1)" class="fa fa-arrow-down resize resizeDownIcon"></i>
+                        
+                      
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>          
+    </div>
+  </div>
+</div>

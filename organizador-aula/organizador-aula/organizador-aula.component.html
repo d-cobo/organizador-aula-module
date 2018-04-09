@@ -1,0 +1,12 @@
+<div id="tabs" >
+    <li  [ngClass]="{'activo': activo==ACT_ELEMENTOS}" (click)="activo=ACT_ELEMENTOS"><span>Elementos</span></li>
+    <li [ngClass]="{'activo': activo==ACT_ENTIDADES}" (click)="activo=ACT_ENTIDADES"><span>Entidades</span></li>
+    <li id="btnGuardar" (click)="guardar()"><span>Guardar</span></li>
+    <label>Filas:</label> <input #txtFilas type="number" value="{{creador.numFilas}}"/>
+    <label>Columnas:</label> <input #txtColumnas type="number" value="{{creador.numColumnas}}"/>
+    <button (click)="cambiar()">Cambiar</button>
+</div>
+<app-organizador-elemento (mensaje)='onMensaje($event)' *ngIf="activo==ACT_ELEMENTOS" [datos]="datos"></app-organizador-elemento>
+<app-organizador-entidades (clickEntidad)="onClickEntidad($event)" [templateBarra]="templateBarra" [templateTabla]="templateTabla" *ngIf="activo==ACT_ENTIDADES" [datos]="datos">
+    <ng-template [ngTemplateOutlet]="templateVariable"></ng-template>
+</app-organizador-entidades>

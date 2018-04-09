@@ -1,0 +1,255 @@
+@colorMesa: rgb(207, 127, 7);
+@colorOtro: rgb(100, 91, 91);
+@backgroundTabla: rgba(146, 86, 34, 0.2);
+@iconSize: 2vw;
+
+.elemento{
+
+    text-align:center;
+    position:relative;
+
+}
+
+.inactivo{
+    
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+}
+
+.activo{
+    margin-left: 5%;
+    margin-top: 0.5em;
+    width:90%;
+    height: 90%;   
+    border: 1px solid;
+    border-color: gray;
+    opacity:1; 
+    pointer-events: none;
+    overflow:hidden;
+}
+
+
+.flecha{
+    position: relative;
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;; 
+    pointer-events: none;
+}
+
+
+.flecha{
+    position: relative;
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
+    position: absolute;
+}
+
+
+.abajo{
+    top: 94%;
+    left: 40%;
+}
+.arriba{
+    left:39%;
+    top: -12%;
+}
+
+.izquierda{
+    left: -13%;
+    top: 41%;
+}
+
+.derecha{
+    left: 93%;
+    top: 41%;
+}
+
+
+
+
+#drag-div{
+    border: 1px solid;    
+    height:100%;
+    overflow-y:auto;
+}
+
+#drag-div p{
+    text-align: center;
+    background-color: rgba(45, 44, 44, 0.9);
+    color: white;
+    margin-top: 0px;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+}
+#main-div{
+margin:0;
+height:800px;
+}
+
+#main-div .ui-g{
+    height:100%;
+}
+#columna-izquierda, #columna-derecha{
+    padding: 0;   
+    
+}
+
+
+
+
+
+/*
+#drag-div table td{
+    padding-top:80%;
+}
+*/
+#drag-div .dragElement{
+    //padding-top:80%;
+    text-align: center;
+    //color:white;
+    width:22%;
+    float: left;
+    margin:5%;
+    //width: 90%;
+    position:relative;
+    cursor: pointer;
+}
+/*
+#drag-div .dragElement:before{
+    content: "\f1ae";  
+    font-family: FontAwesome;
+    left:30%;
+    font-size: 5vw;
+    position:absolute;
+    top:0;
+}*/
+
+.dragElement{
+    i{
+        font-size: @iconSize;
+    }
+}
+
+.entidad{
+    opacity: 1;
+    pointer-events:auto;
+    i{
+        display: block;
+        font-size: @iconSize;
+    }
+}
+
+
+
+
+#drop-div{
+    border-radius: 5px;
+    height:100%;    
+    
+}
+
+.tabla{
+  //  display:table;
+    width: 100%;
+    height:100%;
+    //table-layout: fixed;
+}
+
+.columna{
+    display: inline-block;
+    //display: table-cell;
+    border-style: solid;
+    border-width: 0.5px 0.5px 0px 0px;
+    background-color:@backgroundTabla;
+    //padding: 1%;
+    //max-width:0px;   
+}
+
+.columna:first-child{
+    border-left: 0.5px solid;
+}
+
+.fila:last-child .columna{
+    border-bottom:0.5px solid;
+}
+
+.fila{
+    display: flex;
+}
+
+
+
+span{
+    height:0px;
+}
+
+.activo i{
+    font-size: @iconSize;
+}
+.removeIcon{
+    float:right;
+    margin-left:2px;
+    cursor: pointer;
+}
+
+
+
+.activo{
+    .resizeUpIcon, .resizeLeftIcon{
+        float:left;
+        cursor: pointer;        
+    }
+    .resizeDownIcon, .resizeRightIcon{
+        float: right;
+        cursor: pointer;    
+    }
+}
+
+
+/*
+.inactivo .removeIcon, .inactivo .expandRightIcon{
+    visibility: hidden;
+}*/
+.separator{
+    height: ~"-moz-calc(100% - 1.5vw)";
+    height: ~"-webkit-calc(100% - 1.5vw)";
+    height: ~"-o-calc(100% - 1.5vw)";
+    height: ~"calc(100% - 1.5vw)";
+    width:0;
+}
+
+.inactivo{
+    i{
+        visibility: hidden;
+    }
+}
+.activo{
+    i{
+        pointer-events: auto;
+    }
+}
+
+.noUp .resizeUpIcon, .noDown .resizeDownIcon, .noLeft .resizeLeftIcon, .noRight .resizeRightIcon{
+    visibility: hidden;
+    width:0;
+    margin:0;
+}
+
+.filler{
+    width:100%;
+    height:100%;
+}
+
+.entidad{
+    margin-top: 1vw;
+    cursor: pointer;
+}

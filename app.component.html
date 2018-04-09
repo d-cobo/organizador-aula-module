@@ -1,0 +1,15 @@
+<div *ngIf="!cargado">
+    <textarea #txt></textarea>
+    <button (click)="cargar()">Cargar</button>
+</div>
+<!--<app-organizador-aula *ngIf="cargado" [creador]="creador"></app-organizador-aula>-->
+<app-organizador-aula *ngIf="cargado" (mensaje)="onMensaje($event)" (clickEntidad)="mostrarAlumno($event)" [templateTabla]="tempTabla" [templateBarra]="tempBarra" [listaElementos]="listaElementos" [listaEntidades]="listaEntidades" [filas]="filas" [columnas]="columnas">
+    <ng-template #tempBarra let-objeto>
+        <span>{{objeto.nombre}}</span>        
+        <i class="fa fa-user"></i>            
+    </ng-template>
+    <ng-template #tempTabla let-objeto>
+        <i class="fa fa-user"></i>
+        <span>{{objeto.otro}}</span>         
+    </ng-template>
+</app-organizador-aula>
