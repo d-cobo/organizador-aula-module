@@ -149,6 +149,7 @@ export class OrganizadorElementoComponent implements OnInit {
   ampliarCol(){
     this.organizador.datos.listaFilas.forEach(f=>f.celdas[2].ancho*=2)
   }
+  
 
 
 }

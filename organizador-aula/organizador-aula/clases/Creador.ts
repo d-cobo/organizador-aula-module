@@ -72,6 +72,7 @@ export class CreadorDefault extends Creador{
         let newHeight:number = this.listaFilas.length/this.numFilas;     
         if(newHeight>1){
             this.listaFilas = this.listaFilas.slice(0,this.numFilas);
+            console.log(this.listaFilas);
             this.listaFilas.forEach(fila=>{
                 fila.celdas.filter(cel=> cel.initElemento()).forEach(cel=>{
                     if(cel.elemento.x2>=this.numFilas-1){

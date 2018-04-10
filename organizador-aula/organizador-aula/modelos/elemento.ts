@@ -38,7 +38,7 @@ export class Elemento{
             this.celdas[0].forEach((c,i)=>{
                 if(i!=0) suma+=c.ancho
             });
-            return (1*suma)+"px";
+            return (suma)+(this.celdas[0].length*0.5)+"px";
             //return 90+100*(this.y2-this.y)+"%";
         }
         else
@@ -51,7 +51,7 @@ export class Elemento{
             this.celdas.forEach((c,i)=>{
                 suma+=c[0].alto;
             });
-            return (suma-10)+"px";
+            return (suma + this.celdas.length*0.5 -10)+"px";
             //return 90+100*(this.y2-this.y)+"%";
         }
         else
