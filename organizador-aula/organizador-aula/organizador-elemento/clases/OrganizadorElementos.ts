@@ -13,7 +13,7 @@ export class OrganizadorElementos extends Organizador{
       if(!this.datos.listaFilas){
         this.datos.inicializarFilas();
         this.initElementos();
-        this.comprobarResizeElementos();
+
       }
     }
 
@@ -45,39 +45,45 @@ export class OrganizadorElementos extends Organizador{
         });
       }
 
-      comprobarResizeElementos(): void{       
-        this.listaFilas.forEach(fila=>{
-          fila.celdas.filter(c=>c.initElemento()).forEach(cel=>{
-            this.comprobarResize(cel.elemento);
-          })
-        })    
-      }
 
-      comprobarResize(elem: Elemento): void{
-    
-        elem.resizeRight=true;
-        if(!this.listaFilas[elem.x].celdas[elem.y+1]){  //   elem.y$1==$2his.datos.columnas-1){
-          elem.resizeRight=false;
-        }else{
-          for(let fila=elem.x;fila<=elem.x2;fila++){
-            if(this.celdaOcupada(fila, elem.y2+1)){
-              
-              elem.resizeRight=false;
-            }
+
+      comprobarResize(celda: Celda, elemento: [Elemento, HTMLElement], event: any){                
+        let nuevaCel: Celda = this.getClickedCelda(celda, event.layerX, event.layerY); 
+        let elem = elemento[0];        
+        let target = elemento[1];          
+        if(celda==nuevaCel){
+          console.log("misma celda");
+          console.log(elem);
+          target.style.width = elem.getAnchoPx();
+          target.style.height = elem.getAltoPx();    
+          return;
+        }
+        let dirY: number = (nuevaCel.y - celda.y) - (elem.y2 - elem.y);       
+        let dirX: number = (nuevaCel.x - celda.x) - (elem.x2 - elem.x);
+        
+        for(let fila=celda.x;fila<=nuevaCel.x;fila++){
+          for(let col=celda.y; col<=nuevaCel.y; col++){          
+            if(this.celdaOcupada(fila,col, elem)){
+              console.log("ocupadaaa");
+              dirX = 0;
+              dirY= 0;
+              fila=nuevaCel.x+1;
+              col=nuevaCel.y+1;
+            };
           }
         }
-    
-        elem.resizeDown=true;
-        if(!this.listaFilas[elem.x+1]){
-          elem.resizeDown=false;
+        
+        if(dirX<0){
+          this.resizeVertical(elem, dirX);  
+          this.resizeHorizontal(elem, dirY);
         }else{
-          for(let col=elem.y;col<=elem.y2;col++){
-            if(this.celdaOcupada(elem.x2+1,col)){
-              elem.resizeDown=false;
-            }
-          }
+         this.resizeHorizontal(elem, dirY);
+         this.resizeVertical(elem, dirX);
         }
-    }
+        target.style.width = elem.getAnchoPx();
+        target.style.height = elem.getAltoPx();    
+        this.setCeldasOcupadas(elem);
+      }
 
     setCeldasOcupadas (elemento: Elemento): void{
         elemento.celdas=[];
@@ -123,7 +129,7 @@ export class OrganizadorElementos extends Organizador{
       //this.elementos = this.elementos.filter(el=>el.x != pos[0] || el.y != pos[1])
     })    
     //Y comprobamos de nuevo los resizes
-    this.comprobarResizeElementos();    
+  
   }
 
 
@@ -136,8 +142,8 @@ export class OrganizadorElementos extends Organizador{
         
       }
     }
-    this.setCeldasOcupadas(elem);
-    this.comprobarResizeElementos();
+    //this.setCeldasOcupadas(elem);
+    
     //this.comprobarResize(this.coords[index], div);
   }
 
@@ -149,8 +155,8 @@ export class OrganizadorElementos extends Organizador{
         this.listaFilas[elem.x2-dir].celdas[col].elemento = null;
       }
     }
-    this.setCeldasOcupadas(elem);
-    this.comprobarResizeElementos();
+    //this.setCeldasOcupadas(elem);
+    
     //this.comprobarResize(this.coords[index], div);
   }
 
@@ -193,7 +199,7 @@ export class OrganizadorElementos extends Organizador{
     if(coor){
       this.cambiarReferencias(draggedCelda.elemento, coor);
     }
-    this.comprobarResizeElementos();    
+  
     //console.log(this.listaFilas);    
     return MsgTipo.OK;
   }

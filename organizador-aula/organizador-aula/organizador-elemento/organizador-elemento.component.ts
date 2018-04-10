@@ -17,7 +17,7 @@ import { NuevoElementoComponent } from './nuevo-elemento/nuevo-elemento.componen
   styleUrls: ['./organizador-elemento.component.less']
 })
 export class OrganizadorElementoComponent implements OnInit {
-
+  
   @Input('datos') datos: Datos;
   @ViewChild('mainDiv') mainDiv: ElementRef;
   @ViewChild('tabla') tabla: ElementRef;
@@ -28,6 +28,7 @@ export class OrganizadorElementoComponent implements OnInit {
   organizador: OrganizadorElementos;
   overElem: any;
   msgs: Message[] = [];
+  resizingElement: [Elemento, HTMLElement];
   
   displayNuevoElemento: boolean = false;
 
@@ -128,12 +129,20 @@ export class OrganizadorElementoComponent implements OnInit {
     this.datos.listaElementos.push(elemento);
   }   
 
-  celdaMousedown(celda: Celda, evento: MouseEvent){
+  celdaMousedown(celda: Celda, event: any){
+    let cel: Celda = this.organizador.getClickedCelda(celda, event.layerX, event.layerY);  
+    if(cel.x == celda.elemento.x2 && cel.y == celda.elemento.y2){
+      this.resizingElement = [celda.elemento, event.target];
+    }else{
+      this.resizingElement = null;
+    }
     
-    //console.log(celda, evento);
-    
-    this.clickedCelda=celda;
 
+  }
+
+  comprobarResize(celda: Celda, event: any){          
+    if(this.resizingElement) this.organizador.comprobarResize(celda, this.resizingElement, event);
+    
   }
 
   //TODO: BORRAR
