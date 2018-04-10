@@ -25,7 +25,7 @@ export abstract class Organizador{
     }
 
     calcularCasillas(tabla: ElementRef, mainDiv: ElementRef): [number, number]{        
-        let ancho:number = Math.floor(tabla.nativeElement.clientWidth*0.9 / this.datos.columnas);
+        let ancho:number = Math.floor(tabla.nativeElement.clientWidth*0.9 / (this.datos.columnas+1));
         let alto:number = Math.floor(mainDiv.nativeElement.clientHeight / this.datos.filas);
        return [ancho, alto];
     }

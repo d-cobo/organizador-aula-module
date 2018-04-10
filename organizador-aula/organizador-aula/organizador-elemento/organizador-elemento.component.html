@@ -23,7 +23,7 @@
                   <p-confirmDialog></p-confirmDialog>
                   <div [ngStyle]="col.getSizePx()"   (mousedown)="celdaMousedown(col, $event)" pDroppable="elementos" (onDrop)="drop(col,$event)" class="columna"   *ngFor="let col of fila.celdas" [attr.fila]="i" [attr.columna]="j">
                   
-                    <div   pDraggable="elementos" (mouseover)="onMouseOver(col, $event)" (onDragStart)="celdaDragStart(col)" *ngIf="col.initElemento()"  id="elem_{{i}}_{{j}}" [ngClass]="col.elemento.getClasses()" [ngStyle]="col.elemento.getEstilo()">
+                    <div pDraggable="elementos"  (onDragStart)="celdaDragStart(col, $event)" *ngIf="col.initElemento()"  id="elem_{{i}}_{{j}}" [ngClass]="col.elemento.getClasses()" [ngStyle]="col.elemento.getEstilo()">
                         
                         <i (click)="organizador.resizeHorizontal(col.elemento, -1)" class="fa fa-arrow-left resize resizeLeftIcon"></i>
                         <i (click)="organizador.resizeVertical(col.elemento, -1)" class="fa fa-arrow-up resize resizeUpIcon"></i>
@@ -41,3 +41,4 @@
     </div>
   </div>
 </div>
+<button (click)='ampliarCol()'>asd</button>

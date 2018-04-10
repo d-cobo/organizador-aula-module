@@ -46,7 +46,7 @@ export class OrganizadorElementoComponent implements OnInit {
   }
 
   @HostListener('window:resize', ['$event'])
-  onResize(){    
+  onResize(){        
     this.organizador.cambiarSize(this.tabla, this.mainDiv);        
   }
 
@@ -76,6 +76,9 @@ export class OrganizadorElementoComponent implements OnInit {
   
   //Funcion para el drop
   drop(cel: Celda, event: any){    
+    //cel = this.organizador.getClickedCelda(cel, event.layerX, event.layerY);
+    if(cel.elemento)      
+      cel = this.organizador.getClickedCelda(cel, event.layerX, event.layerY);
     let status: number = this.organizador.drop(cel, this.draggedCelda, this.clickedCelda);
     if(status===MsgTipo.ERROR){
       this.mensaje.emit({tipo: MsgTipo.ERROR, codigo: MsgCodigo.CeldaOcupada});
@@ -95,7 +98,8 @@ export class OrganizadorElementoComponent implements OnInit {
 
 
   //Actualiza el elemento que se esta arrastrando
-  celdaDragStart(celda: Celda): void{         
+  celdaDragStart(celda: Celda, event: MouseEvent): void{         
+    this.clickedCelda = this.organizador.getClickedCelda(celda, event.layerX, event.layerY);
     this.draggedCelda=celda;
   }
 
@@ -126,20 +130,16 @@ export class OrganizadorElementoComponent implements OnInit {
 
   celdaMousedown(celda: Celda, evento: MouseEvent){
     
-    console.log(celda, evento);
+    //console.log(celda, evento);
     
     this.clickedCelda=celda;
-    this.overElem.style.pointerEvents="auto";
+
   }
 
-
-
-  onMouseOver(col: Celda, event: MouseEvent){  
-    if(this.overElem) this.overElem.style.pointerEvents = "auto";
-    this.overElem =  event.target;
-    
-    if(!this.clickedCelda || this.clickedCelda.elemento != col.elemento)
-      this.overElem.style.pointerEvents = "none";
+  //TODO: BORRAR
+  ampliarCol(){
+    this.organizador.datos.listaFilas.forEach(f=>f.celdas[2].ancho*=2)
   }
+
 
 }

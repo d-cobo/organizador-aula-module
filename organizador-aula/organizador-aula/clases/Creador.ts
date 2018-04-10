@@ -133,8 +133,8 @@ export class CreadorDefault extends Creador{
         this.sizeCelda[0]=ancho;
         this.sizeCelda[1]=alto;
         if(this.listaFilas){
-            this.listaFilas.forEach(fila=>fila.celdas.forEach(cel=>{
-                cel.ancho=ancho;
+            this.listaFilas.forEach(fila=>fila.celdas.forEach(cel=>{                
+                cel.ancho=ancho;                
                 cel.alto=alto;
             }));
         }
@@ -154,7 +154,12 @@ export class CreadorDefault extends Creador{
         for(let numFila=0; numFila<this.numFilas;numFila++){
             this.listaFilas.push(new Fila(numFila));
             for(let numCol=0; numCol<this.numColumnas;numCol++){
-                this.listaFilas[numFila].celdas.push(new Celda(numFila, numCol, this.sizeCelda[0], this.sizeCelda[1]));
+                if(numCol==3){
+                        this.listaFilas[numFila].celdas.push(new Celda(numFila, numCol, this.sizeCelda[0]*2, this.sizeCelda[1]));
+                } else
+                /*else if(numCol!=4)
+                    this.listaFilas[numFila].celdas.push(new Celda(numFila, numCol, this.sizeCelda[0], this.sizeCelda[1]));*/
+                    this.listaFilas[numFila].celdas.push(new Celda(numFila, numCol, this.sizeCelda[0], this.sizeCelda[1]));
             }
         }        
     }

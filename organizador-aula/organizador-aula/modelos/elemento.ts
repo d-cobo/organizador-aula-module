@@ -1,5 +1,6 @@
 import { Coordenada } from "./lista-elementos";
 import { Entidad } from "./entidad";
+import { Celda } from "./celda";
 
 export class Elemento{
     x: number;
@@ -11,6 +12,7 @@ export class Elemento{
     nombre: string;
     color:string; 
     activo: boolean = false;
+    celdas: Celda[][] = [];
     entidades: Entidad[] = [];
     resizeRight:boolean=true;    
     resizeDown: boolean=true;
@@ -30,15 +32,29 @@ export class Elemento{
     }
 
     getAnchoPx():string{
-        if(this.activo)
-            return 90+100*(this.y2-this.y)+"%";
+        if(this.activo){
+            let suma=0;
+            suma+=this.celdas[0][0].ancho*0.9;
+            this.celdas[0].forEach((c,i)=>{
+                if(i!=0) suma+=c.ancho
+            });
+            return (1*suma)+"px";
+            //return 90+100*(this.y2-this.y)+"%";
+        }
         else
             return '0';
     }
 
     getAltoPx():string{
-        if(this.activo)
-            return 90+100*(this.x2-this.x)+"%";
+        if(this.activo){
+            let suma=0;
+            suma+=this.celdas[0][0].alto*0.9;
+            this.celdas.forEach((c,i)=>{
+                if(i!=0) suma+=c[0].alto;
+            });
+            return (1*suma)+"px";
+            //return 90+100*(this.y2-this.y)+"%";
+        }
         else
             return '0';
     }
@@ -85,5 +101,7 @@ export class Elemento{
     getIndexEntidad(entidad: Entidad):number{
         return this.entidades.findIndex(ent=>ent.objeto.equals(entidad.objeto));        
     }
+
+
     
 }

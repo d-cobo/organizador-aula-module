@@ -80,11 +80,15 @@ export class OrganizadorElementos extends Organizador{
     }
 
     setCeldasOcupadas (elemento: Elemento): void{
+        elemento.celdas=[];
         for(let fila=elemento.x;fila<=elemento.x2;fila++){
+          let cel: number = elemento.celdas.push([]) - 1;
           for(let col=elemento.y;col<=elemento.y2;col++){        
             this.listaFilas[fila].celdas[col].elemento= elemento;
+            elemento.celdas[cel].push(this.listaFilas[fila].celdas[col]);
           }
         }
+        
     }
       
   celdaOcupada(x:number, y:number, elem: Elemento=null): boolean{
@@ -126,14 +130,13 @@ export class OrganizadorElementos extends Organizador{
   resizeHorizontal(elem: Elemento, dir: number):void{
     elem.y2+=dir;
     //Ampliando hacia la derecha
-    if(dir>0){
-    this.setCeldasOcupadas(elem);
-    //Reduciendo hacia la izquierda
-    }else if(dir<0){
+    if(dir<0){
       for(let fila=elem.x;fila<=elem.x2;fila++){
         this.listaFilas[fila].celdas[elem.y2-dir].elemento = null;
+        
       }
     }
+    this.setCeldasOcupadas(elem);
     this.comprobarResizeElementos();
     //this.comprobarResize(this.coords[index], div);
   }
@@ -141,14 +144,12 @@ export class OrganizadorElementos extends Organizador{
   resizeVertical(elem: Elemento, dir: number):void{
     elem.x2+=dir;
     //Ampliando hacia abajo
-    if(dir>0){
-    this.setCeldasOcupadas(elem);
-    //Reduciendo hacia arriba
-    }else if(dir<0){
+    if(dir<0){
       for(let col=elem.y;col<=elem.y2;col++){
         this.listaFilas[elem.x2-dir].celdas[col].elemento = null;
       }
     }
+    this.setCeldasOcupadas(elem);
     this.comprobarResizeElementos();
     //this.comprobarResize(this.coords[index], div);
   }
@@ -193,8 +194,29 @@ export class OrganizadorElementos extends Organizador{
       this.cambiarReferencias(draggedCelda.elemento, coor);
     }
     this.comprobarResizeElementos();    
-    console.log(this.listaFilas);    
+    //console.log(this.listaFilas);    
     return MsgTipo.OK;
+  }
+
+  getClickedCelda(celdaInicial: Celda, posX: number, posY: number): Celda{
+    let fila: Fila = this.getClickedFila(celdaInicial, posY);
+    let ind = celdaInicial.y;
+    while(posX>0){
+      posX-=fila.celdas[ind].ancho;
+      ind++;
+    }    
+    //console.log(fila.celdas[ind-1]);
+    return fila.celdas[ind-1];
+
+  }
+
+  getClickedFila(celda: Celda, posY: number): Fila{
+    let ind = celda.x;    
+    while(posY>0){
+      posY-=this.datos.listaFilas[ind].celdas[celda.y].alto;
+      ind++;
+    }
+    return this.datos.listaFilas[ind-1];
   }
   
 }
