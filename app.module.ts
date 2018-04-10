@@ -43,6 +43,9 @@ export class AlumnoEnt extends Alumno implements ListaEntidad {
 }
 
 export class CreadorPropio extends Creador {
+  setTotalSize(anchoTotal: number, altoTotal: number): void {
+    throw new Error("Method not implemented.");
+  }
   onFilasChange(): void {
     console.log("asdasd");
     this.inicializarFilas();
@@ -65,10 +68,10 @@ export class CreadorPropio extends Creador {
     for(let f=0; f<this.numFilas; f++){
       this.listaFilas.push(new Fila(f));
       if(f==7){
-        this.listaFilas[f].celdas.push(new Celda(f,0,this.sizeCelda[0]*7 + 7*0.5, this.sizeCelda[1]));
+        //this.listaFilas[f].celdas.push(new Celda(f,0,this.sizeCelda[0]*7 + 7*0.5, this.sizeCelda[1]));
       }else{
         for(let c=0; c<this.numColumnas; c++){
-          this.listaFilas[f].celdas.push(new Celda(f,c,this.sizeCelda[0], this.sizeCelda[1]));
+          //this.listaFilas[f].celdas.push(new Celda(f,c,this.sizeCelda[0], this.sizeCelda[1]));
         }
       }
     }

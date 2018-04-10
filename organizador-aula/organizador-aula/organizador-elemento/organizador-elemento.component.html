@@ -19,19 +19,20 @@
     <div id="columna-derecha" class="ui-g-10">
         <div id="drop-div">
           <div class="tabla" #tabla>
-            <div class="fila" *ngFor="let fila of organizador.listaFilas">
-                  <p-confirmDialog></p-confirmDialog>
+            <div class="fila" *ngFor="let fila of organizador.listaFilas">                  
                   <div [ngStyle]="col.getSizePx()"   (mousedown)="celdaMousedown(col, $event)" pDroppable="elementos" (onDrop)="drop(col,$event)" class="columna"   *ngFor="let col of fila.celdas" [attr.fila]="i" [attr.columna]="j">
                   
                     <div pDraggable="elementos"  (onDragStart)="celdaDragStart(col, $event)" *ngIf="col.initElemento()"  id="elem_{{i}}_{{j}}" [ngClass]="col.elemento.getClasses()" [ngStyle]="col.elemento.getEstilo()">
-                        
+                        <!--
                         <i (click)="organizador.resizeHorizontal(col.elemento, -1)" class="fa fa-arrow-left resize resizeLeftIcon"></i>
                         <i (click)="organizador.resizeVertical(col.elemento, -1)" class="fa fa-arrow-up resize resizeUpIcon"></i>
-                        <i (click)="removeElement(col)" class="fa fa-times removeIcon"></i>                        
+                        -->
+                        <i (click)="removeElement(col)" class="fa fa-times removeIcon"></i> 
+                        <!--                        
                         <div class='separator'></div>
                         <i (click)="organizador.resizeHorizontal(col.elemento, 1)" class="fa fa-arrow-right resize resizeRightIcon"></i>                        
                         <i (click)="organizador.resizeVertical(col.elemento, 1)" class="fa fa-arrow-down resize resizeDownIcon"></i>
-                        
+                        -->
                       
                     </div>
                 </div>

@@ -8,11 +8,16 @@ export class Celda{
     alto: number;
     elemento: Elemento=null;
     
-    constructor(x:number, y:number, ancho:number, alto:number){
+    /*constructor(x:number, y:number, ancho:number, alto:number){
         this.x = x;
         this.y=y;
         this.ancho = ancho;
         this.alto = alto;
+        //this.elemento = new Elemento(x,y);        
+    }*/
+    constructor(x:number, y:number){
+        this.x = x;
+        this.y=y;        
         //this.elemento = new Elemento(x,y);        
     }
 

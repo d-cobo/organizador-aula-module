@@ -16,22 +16,23 @@ export abstract class Organizador{
         return this.datos.listaFilas;
     }
 
-    set sizeCelda(sizeCelda: [number, number]){        
-        this.datos.creador.setSize(sizeCelda[0], sizeCelda[1]);                
+    set size(sizeCelda: [number, number, number, number]){        
+        this.datos.creador.setSize(sizeCelda[0], sizeCelda[1]);  
+        this.datos.creador.setTotalSize(sizeCelda[2], sizeCelda[3]);  
     }
 
     get sizeCelda(): [number, number]{
         return this.datos.creador.size;
     }
 
-    calcularCasillas(tabla: ElementRef, mainDiv: ElementRef): [number, number]{        
-        let ancho:number = Math.floor(tabla.nativeElement.clientWidth*0.9 / (this.datos.columnas+1));
+    calcularCasillas(tabla: ElementRef, mainDiv: ElementRef): [number, number, number, number]{        
+        let ancho:number = Math.floor(tabla.nativeElement.clientWidth*0.9 / (this.datos.columnas));
         let alto:number = Math.floor(mainDiv.nativeElement.clientHeight / this.datos.filas);
-       return [ancho, alto];
+       return [ancho, alto, tabla.nativeElement.clientWidth*0.9, mainDiv.nativeElement.clientHeight];
     }
 
     cambiarSize(tabla: ElementRef, mainDiv: ElementRef): void{
-        this.sizeCelda = this.calcularCasillas(tabla, mainDiv);
+        this.size = this.calcularCasillas(tabla, mainDiv);
     }
 
     

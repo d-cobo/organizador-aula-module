@@ -47,12 +47,11 @@ export class Elemento{
 
     getAltoPx():string{
         if(this.activo){
-            let suma=0;
-            suma+=this.celdas[0][0].alto*0.9;
+            let suma=0;            
             this.celdas.forEach((c,i)=>{
-                if(i!=0) suma+=c[0].alto;
+                suma+=c[0].alto;
             });
-            return (1*suma)+"px";
+            return (suma-10)+"px";
             //return 90+100*(this.y2-this.y)+"%";
         }
         else

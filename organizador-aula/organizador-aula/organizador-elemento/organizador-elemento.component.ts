@@ -104,7 +104,7 @@ export class OrganizadorElementoComponent implements OnInit {
   }
 
   toolsDragStart(listElem: ListaElemento){
-    let celda: Celda=new Celda(-1,-1,-1,-1)
+    let celda: Celda=new Celda(-1,-1)
     let elem=new Elemento();
     elem.color=listElem.color;
     elem.id=listElem.id;

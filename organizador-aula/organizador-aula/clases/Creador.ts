@@ -12,6 +12,7 @@ export abstract class Creador{
     listaFilas: Fila[];
     //protected filas: Fila[];
     protected sizeCelda: [number, number] = [0,0];
+    protected sizePantalla: [number, number] = [0,0];
     
     constructor(numFilas:number, numColumnas:number, listaElementos: ListaElemento[] = null, listaEntidades: ListaEntidad[] = null){
         this.prNumFilas=numFilas;
@@ -61,7 +62,8 @@ export abstract class Creador{
     abstract onFilasChange(): void;
     abstract onColumnasChange(): void;
     abstract inicializarFilas(): void;
-    abstract setSize(ancho:number, alto:number): void;
+    abstract setSize(anchoCelda:number, altoCelda:number): void;    
+    abstract setTotalSize(anchoTotal:number, altoTotal:number): void;    
     
 }
 
@@ -86,7 +88,7 @@ export class CreadorDefault extends Creador{
             for(let numFila=oldlen; numFila<this.numFilas; numFila++){
                 this.listaFilas.push(new Fila(numFila));
                 for(let numCol=0; numCol<this.numColumnas;numCol++){
-                    this.listaFilas[numFila].celdas.push(new Celda(numFila, numCol, this.sizeCelda[0], this.sizeCelda[1]));
+                    this.listaFilas[numFila].celdas.push(new Celda(numFila, numCol));
                 }
             }            
         }
@@ -117,7 +119,7 @@ export class CreadorDefault extends Creador{
                     fila.celdas[oldlen-1].elemento.resizeRight=true;
                 }
                 for(let col=oldlen; col<this.numColumnas;col++){
-                    fila.celdas.push(new Celda(fila.x, col, this.sizeCelda[0], this.sizeCelda[1]));
+                    fila.celdas.push(new Celda(fila.x, col));
                 }
             })
         }
@@ -129,15 +131,25 @@ export class CreadorDefault extends Creador{
     constructor(numFilas:number, numColumnas:number, listaElementos: ListaElemento[] = null, listaEntidades: ListaEntidad[] = null){
         super(numFilas, numColumnas, listaElementos, listaEntidades);
     }
-    setSize(ancho:number, alto:number){        
-        this.sizeCelda[0]=ancho;
-        this.sizeCelda[1]=alto;
-        if(this.listaFilas){
-            this.listaFilas.forEach(fila=>fila.celdas.forEach(cel=>{                
-                cel.ancho=ancho;                
-                cel.alto=alto;
+    setSize(anchoCelda?:number, altoCelda?:number): void{        
+        if (anchoCelda) this.sizeCelda[0]=anchoCelda;
+        if (altoCelda) this.sizeCelda[1]=altoCelda;        
+        if(this.listaFilas){            
+            this.listaFilas.forEach(fila=>fila.celdas.forEach(cel=>{                                
+                cel.ancho=this.sizeCelda[0];               
+                
+                cel.alto=this.sizeCelda[1];
+                /*PRUEBA PARA CAMBIAR TAMAÑOS 
+                    if(cel.y==3) cel.ancho*=2;
+                    if(cel.x==2) cel.alto*=1.8; 
+                */
             }));
         }
+    }
+
+    setTotalSize(anchoTotal: number, altoTotal: number): void{
+        this.sizePantalla[0]=anchoTotal;
+        this.sizePantalla[1]=altoTotal;
     }
     /*inicializarFilas():Fila[]{                
         let filas: Fila[] = [];
@@ -149,19 +161,31 @@ export class CreadorDefault extends Creador{
         }
         return filas;
     }*/
-    inicializarFilas():void{                
+    inicializarFilas():void{                        
         this.listaFilas=[];
         for(let numFila=0; numFila<this.numFilas;numFila++){
             this.listaFilas.push(new Fila(numFila));
-            for(let numCol=0; numCol<this.numColumnas;numCol++){
-                if(numCol==3){
-                        this.listaFilas[numFila].celdas.push(new Celda(numFila, numCol, this.sizeCelda[0]*2, this.sizeCelda[1]));
-                } else
-                /*else if(numCol!=4)
-                    this.listaFilas[numFila].celdas.push(new Celda(numFila, numCol, this.sizeCelda[0], this.sizeCelda[1]));*/
-                    this.listaFilas[numFila].celdas.push(new Celda(numFila, numCol, this.sizeCelda[0], this.sizeCelda[1]));
+            for(let numCol=0; numCol<this.numColumnas;numCol++){                
+                this.listaFilas[numFila].celdas.push(new Celda(numFila, numCol));
             }
-        }        
+        }
+        this.setSize();
+        this.actualizarTamano();        
+    }
+
+    actualizarTamano(): void{
+        let sumAlto: number = 0;
+        let sumAncho: number = 0;
+        this.listaFilas[0].celdas.forEach(c=>{
+            sumAncho+=c.ancho;
+        });
+        this.listaFilas.forEach(f=>{
+            sumAlto+=f.celdas[0].alto;
+        });
+        this.listaFilas.forEach(f=>f.celdas.forEach(c=>{
+            c.ancho = c.ancho * (this.sizePantalla[0] / sumAncho);
+            c.alto = c.alto * (this.sizePantalla[1] / sumAlto);
+        }))
     }
 
 }
