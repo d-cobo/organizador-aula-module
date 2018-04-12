@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ElementRef, Renderer2, Input, ViewChild, ViewChildren, QueryList, HostListener, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, Renderer2, Input, ViewChild, ViewChildren, QueryList, HostListener, EventEmitter, Output, ApplicationRef } from '@angular/core';
 import { ResizeEvent, ResizableDirective } from 'angular-resizable-element';
 import { Coordenada, ListaElemento, Position } from '../modelos/lista-elementos';
 import { Fila } from '../modelos/fila';
@@ -11,11 +11,13 @@ import { OrganizadorEntidades } from '../organizador-entidades/clases/Organizado
 import { MsgTipo, MsgCodigo, Mensaje } from '../clases/Mensajes';
 import { NuevoElementoComponent } from './nuevo-elemento/nuevo-elemento.component';
 
+
 @Component({
   selector: 'app-organizador-elemento',
   templateUrl: './organizador-elemento.component.html',
   styleUrls: ['./organizador-elemento.component.less']
 })
+
 export class OrganizadorElementoComponent implements OnInit {
   
   @Input('datos') datos: Datos;
@@ -23,14 +25,24 @@ export class OrganizadorElementoComponent implements OnInit {
   @ViewChild('tabla') tabla: ElementRef;
   @Output('mensaje') mensaje: EventEmitter<Mensaje> = new EventEmitter<Mensaje>();
 
+  
   draggedCelda: Celda;  
+  dragEvent: DragEvent;
   clickedCelda: Celda;  
   organizador: OrganizadorElementos;
   overElem: any;
   msgs: Message[] = [];
-  resizingElement: [Elemento, HTMLElement];
-  
+  resizingElement: {elem, htmlElem};
+  startingPoint: {left, top, ancho, alto};
   displayNuevoElemento: boolean = false;
+  resizeDir: number;
+  directions: {ARRIBA, ABAJO, IZQUIERDA, DERECHA} = {
+    ARRIBA: 0,
+    ABAJO: 1,
+    IZQUIERDA: 2,
+    DERECHA: 3
+  }
+  
 
   get style(){
     let size: [number, number] = this.organizador.sizeCelda;
@@ -76,7 +88,11 @@ export class OrganizadorElementoComponent implements OnInit {
   }
   
   //Funcion para el drop
-  drop(cel: Celda, event: any){    
+  drop(cel: Celda, event: MouseEvent){     
+    if(this.resizingElement && this.resizingElement.elem){  
+      //this.resize(event);         
+      return;
+    }
     //cel = this.organizador.getClickedCelda(cel, event.layerX, event.layerY);
     if(cel.elemento)      
       cel = this.organizador.getClickedCelda(cel, event.layerX, event.layerY);
@@ -89,6 +105,7 @@ export class OrganizadorElementoComponent implements OnInit {
     this.clickedCelda=null;
   }
 
+
   //Calcula el tamaño de las casillas 
   /*calcularCasillas(): [number, number]{        
 
@@ -96,6 +113,7 @@ export class OrganizadorElementoComponent implements OnInit {
     let alto:number = Math.floor(this.mainDiv.nativeElement.clientHeight / this.organizador.datos.filas);
    return [ancho, alto];
   }*/
+
 
 
   //Actualiza el elemento que se esta arrastrando
@@ -129,27 +147,56 @@ export class OrganizadorElementoComponent implements OnInit {
     this.datos.listaElementos.push(elemento);
   }   
 
-  celdaMousedown(celda: Celda, event: any){
-    let cel: Celda = this.organizador.getClickedCelda(celda, event.layerX, event.layerY);  
-    if(cel.x == celda.elemento.x2 && cel.y == celda.elemento.y2){
-      this.resizingElement = [celda.elemento, event.target];
-    }else{
-      this.resizingElement = null;
+  onResizeStart(celda: Celda, event: DragEvent){
+    this.startingPoint = {left: event.clientX, top: event.clientY, ancho: celda.elemento.getAncho(), alto: celda.elemento.getAlto()};    
+    console.log(event);
+    this.resizingElement = {elem: celda.elemento, htmlElem:  (<HTMLElement>event.target).parentNode};    
+
+  }
+
+  
+  onDrag(celda: Celda, dir:number)
+  {
+    if(!this.dragEvent) return;
+    let event=this.dragEvent;
+    if(this.draggedCelda) this.draggedCelda=null;
+
+    this.resizeDir=dir;   
+    let targElem: HTMLElement = this.resizingElement.htmlElem;
+    //ARIBA
+    if(dir==this.directions.ARRIBA){
+      
+      if (this.startingPoint.alto - (event.clientY - this.startingPoint.top) <= 0) return;
+        targElem.style.top = (event.clientY - this.startingPoint.top)+"px";
+        targElem.style.height = this.startingPoint.alto - (event.clientY - this.startingPoint.top)+"px";
+        
+      //ABAJO
+      }else if(dir == this.directions.ABAJO){
+        targElem.style.height = this.startingPoint.alto + (event.clientY - this.startingPoint.top)+"px";
+        
+    }else if(dir == this.directions.IZQUIERDA){
+      if (this.startingPoint.ancho - (event.clientX - this.startingPoint.left) <= 0) return;
+        targElem.style.left = (event.clientX - this.startingPoint.left)+"px";
+        targElem.style.width = this.startingPoint.ancho - (event.clientX - this.startingPoint.left)+"px";
+        
+    }else if(dir == this.directions.DERECHA){      
+      
+      targElem.style.width = this.startingPoint.ancho + (event.clientX - this.startingPoint.left)+"px";      
+      
     }
     
-
   }
 
-  comprobarResize(celda: Celda, event: any){          
-    if(this.resizingElement) this.organizador.comprobarResize(celda, this.resizingElement, event);
+  onDragEnd(){
     
+    this.organizador.resize(this.resizingElement.elem, this.resizingElement.htmlElem, this.resizeDir, this.startingPoint, this.dragEvent);
+    this.resizingElement.elem=null;
   }
 
-  //TODO: BORRAR
-  ampliarCol(){
-    this.organizador.datos.listaFilas.forEach(f=>f.celdas[2].ancho*=2)
+  tablaDragEnter(event: DragEvent){
+    this.dragEvent=event;   
   }
-  
 
 
 }
+

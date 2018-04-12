@@ -14,8 +14,6 @@ export class Elemento{
     activo: boolean = false;
     celdas: Celda[][] = [];
     entidades: Entidad[] = [];
-    resizeRight:boolean=true;    
-    resizeDown: boolean=true;
 
     
 
@@ -24,38 +22,38 @@ export class Elemento{
     }
 
     getAncho():number{
-        return this.y2-this.y;
-    }
-
-    getAlto():number{
-        return this.x2-this.x;
-    }
-
-    getAnchoPx():string{
         if(this.activo){
             let suma=0;
             suma+=this.celdas[0][0].ancho*0.9;
             this.celdas[0].forEach((c,i)=>{
                 if(i!=0) suma+=c.ancho
             });
-            return (suma)+(this.celdas[0].length*0.5)+"px";
+            return (suma)+(this.celdas[0].length*0.5);
             //return 90+100*(this.y2-this.y)+"%";
         }
         else
-            return '0';
+            return 0;
     }
 
-    getAltoPx():string{
+    getAlto():number{
         if(this.activo){
             let suma=0;            
             this.celdas.forEach((c,i)=>{
                 suma+=c[0].alto;
             });
-            return (suma + this.celdas.length*0.5 -10)+"px";
+            return (suma + this.celdas.length*0.5 -10);
             //return 90+100*(this.y2-this.y)+"%";
         }
         else
-            return '0';
+            return 0;
+    }
+
+    getAnchoPx():string{
+        return this.getAncho()+"px";
+    }
+
+    getAltoPx():string{
+        return this.getAlto()+"px";
     }
 
     getEstilo():object{
@@ -89,11 +87,7 @@ export class Elemento{
         return{
             elemento: true,
             activo: this.activo,
-            inactivo: !this.activo,
-            noRight: !this.resizeRight,
-            noDown: !this.resizeDown,
-            noUp: this.x2===this.x,
-            noLeft:   this.y2===this.y
+            inactivo: !this.activo,            
         }
     }
 

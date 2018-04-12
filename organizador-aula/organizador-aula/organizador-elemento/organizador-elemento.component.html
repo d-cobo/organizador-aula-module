@@ -18,14 +18,25 @@
     <p-growl [(value)]="msgs"></p-growl>
     <div id="columna-derecha" class="ui-g-10">
         <div id="drop-div">
-          <div class="tabla" #tabla>
+          <div class="tabla" (dragover)="tablaDragEnter($event)" pDroppable="elementos" #tabla>
             <div class="fila" *ngFor="let fila of organizador.listaFilas">                  
-                  <div [ngStyle]="col.getSizePx()"   pDroppable="elementos" (onDrop)="drop(col,$event)" class="columna"   *ngFor="let col of fila.celdas" [attr.fila]="i" [attr.columna]="j">
+                  <div [ngStyle]="col.getSizePx()" pDroppable="elementos" (onDrop)="drop(col,$event)" class="columna"   *ngFor="let col of fila.celdas" [attr.fila]="i" [attr.columna]="j">                    
                   
-                    <div pDraggable="elementos"  (mousedown)="celdaMousedown(col, $event)" (mouseup)="comprobarResize(col, $event)"  (onDragStart)="celdaDragStart(col, $event)" *ngIf="col.initElemento()"  id="elem_{{i}}_{{j}}" [ngClass]="col.elemento.getClasses()" [ngStyle]="col.elemento.getEstilo()">
+                    <div pDraggable="elementos"  (onDragStart)="celdaDragStart(col, $event)" *ngIf="col.initElemento()"  id="elem_{{i}}_{{j}}" [ngClass]="col.elemento.getClasses()" [ngStyle]="col.elemento.getEstilo()">
+                      <div class="arrow upArrow">&#11021;</div>
+                      <div class="arrow leftArrow"> &#11020;</div>
+                      <div class="arrow rightArrow"> &#11020;</div>
+                      <div class="arrow downArrow">&#11021;</div>
+                      
+                      <div class="resize resize-up"  [dragEffect]="none" (onDragStart)="onResizeStart(col, $event)" (onDrag)="onDrag(col, directions.ARRIBA, $event)" (onDragEnd)="onDragEnd($event)" pDraggable="resize"></div>    
+                      <div class="resize resize-left"  (onDragStart)="onResizeStart(col, $event)" (onDrag)="onDrag(col, directions.IZQUIERDA, $event)" (onDragEnd)="onDragEnd($event)" pDraggable="resize"></div>    
+                      <div class="resize resize-right"  (onDragStart)="onResizeStart(col, $event)" (onDrag)="onDrag(col, directions.DERECHA, $event)" (onDragEnd)="onDragEnd($event)" pDraggable="resize"></div>    
+                      <div class="resize resize-down"  (onDragStart)="onResizeStart(col, $event)" (onDrag)="onDrag(col, directions.ABAJO, $event)" (onDragEnd)="onDragEnd($event)" pDraggable="resize"></div>    
+                      
+                      
                         <!--
-                        <i (click)="organizador.resizeHorizontal(col.elemento, -1)" class="fa fa-arrow-left resize resizeLeftIcon"></i>
-                        <i (click)="organizador.resizeVertical(col.elemento, -1)" class="fa fa-arrow-up resize resizeUpIcon"></i>
+                          <i (click)="organizador.resizeHorizontal(col.elemento, -1)" class="fa fa-arrow-left resize resizeLeftIcon"></i>
+                          <i (click)="organizador.resizeVertical(col.elemento, -1)" class="fa fa-arrow-up resize resizeUpIcon"></i>
                         -->
                         <i (click)="removeElement(col)" class="fa fa-times removeIcon"></i> 
                                              

@@ -171,7 +171,7 @@ export class OrganizadorElementos extends Organizador{
     let coor: any = null;    
     if(!draggedCelda.elemento.activo){
       posx=cel.x;
-      posy= cel.y;
+      posy= cel.y;      
       //draggedCelda.elemento.setPos(cel.x, cel.y, draggedCelda.elemento.getAncho, cel.y);      
     }else{            
       //this.setCeldasOcupadas(this.draggedCelda.elemento.getPos(), true);
@@ -180,13 +180,9 @@ export class OrganizadorElementos extends Organizador{
       posy= draggedCelda.elemento.y + (cel.y - clickedCelda.y);
 
     }
-    let posx2:number = posx+draggedCelda.elemento.getAlto();
-    let posy2: number =  posy+draggedCelda.elemento.getAncho();
-    for(let fila=posx;fila<=posx2;fila++){
-      for(let col=posy; col<=posy2; col++){          
-        if(this.celdaOcupada(fila,col,draggedCelda.elemento)) return MsgTipo.ERROR;
-      }
-    }
+    let posx2:number = posx+draggedCelda.elemento.x2 - draggedCelda.elemento.x;
+    let posy2: number =  posy+draggedCelda.elemento.y2 - draggedCelda.elemento.y;    
+    if(this.celdasOcupadas(posx, posx2, posy, posy2, draggedCelda.elemento)) return MsgTipo.ERROR;      
     draggedCelda.elemento.setPos(
       posx,
       posy,
@@ -204,25 +200,223 @@ export class OrganizadorElementos extends Organizador{
     return MsgTipo.OK;
   }
 
+  celdasOcupadas(x: number,x2: number,y: number,y2: number, elem: Elemento): boolean{
+    for(let fila=x;fila<=x2;fila++){
+      for(let col=y; col<=y2; col++){          
+        if(this.celdaOcupada(fila,col,elem)) return true;
+      }
+    }
+    return false;
+  }
+
   getClickedCelda(celdaInicial: Celda, posX: number, posY: number): Celda{
+      
     let fila: Fila = this.getClickedFila(celdaInicial, posY);
+    if(!fila.celdas[0].ancho) return fila.celdas[0];
     let ind = celdaInicial.y;
-    while(posX>0){
-      posX-=fila.celdas[ind].ancho;
-      ind++;
-    }    
-    //console.log(fila.celdas[ind-1]);
-    return fila.celdas[ind-1];
+    
+    if(posX>0){
+      while(posX>0){
+        posX-=fila.celdas[ind].ancho;
+        ind++;
+      }    
+      ind--;
+    }else if(posX<0){
+      while(posX<0){
+        posX+=fila.celdas[ind].ancho;
+        ind--;
+      }          
+    }
+    
+    if(ind < 0){
+      return new Celda(0, -1);            
+    }else if(ind >= fila.celdas.length){      
+      return new Celda(0,fila.celdas.length);      
+    }
+    else
+      return fila.celdas[ind];
+    
 
   }
 
   getClickedFila(celda: Celda, posY: number): Fila{
     let ind = celda.x;    
-    while(posY>0){
-      posY-=this.datos.listaFilas[ind].celdas[celda.y].alto;
-      ind++;
+ 
+    if(posY>0){
+      while(posY>0){                
+        posY-=this.datos.listaFilas[ind].celdas[celda.y].alto;                
+        ind++;
+      }
+      ind--;
+    }else if(posY<0){
+      while(posY<0){
+        posY+=this.datos.listaFilas[ind].celdas[celda.y].alto;
+        ind--;
+      }
+      
     }
-    return this.datos.listaFilas[ind-1];
+    
+    if(ind < 0){
+      let auxFila = new Fila(0);
+      auxFila.celdas.push(new Celda(-1,0));
+      return auxFila;
+    }else if(ind >= this.datos.listaFilas.length){
+      let auxFila = new Fila(0);
+      auxFila.celdas.push(new Celda(this.datos.listaFilas.length,0));
+      return auxFila;
+    }
+    else
+      return this.datos.listaFilas[ind];
+  }
+
+  
+  resize(elem: Elemento, htmlElem: HTMLElement, resizeDir: number,
+    startingPoint: {alto, ancho, top, left}, event: MouseEvent)
+  {
+    let celdaActual: Celda;    
+     //ARRIBA
+    if(resizeDir==0){
+      try{
+        celdaActual = this.getClickedCelda(elem.celdas[0][0],  0, event.clientY - startingPoint.top);
+      }catch{
+        celdaActual=elem.celdas[0][0];
+      }
+      let difX: number;
+      let posx = celdaActual.x;
+      if(posx > elem.x2){        
+        posx = elem.x2;
+      }      
+      difX = posx - elem.x;
+    
+      if(difX>0){        
+        for(let fila=0; fila<difX; fila++){
+          elem.celdas[fila].forEach(c=>c.elemento=null);
+        }
+      }else if(difX<0){
+        if(this.celdasOcupadas(posx, elem.x2, elem.y, elem.y2, elem)){          
+          posx=elem.x;
+          difX=0;
+        }
+      }
+      elem.x = posx;                       
+      if(difX==0){
+        this.setDefaultStyle(elem, htmlElem);       
+      }
+      
+      
+    }
+    //ABAJO
+    else if(resizeDir==1){
+      let celdaInicial: Celda = elem.celdas[elem.celdas.length-1][0];        
+      let posx2:number; 
+    //  try{
+        celdaActual = this.getClickedCelda(celdaInicial,  0, event.clientY - startingPoint.top);
+        posx2 = celdaActual.x+1;      
+        console.log("try", posx2);
+    //  }catch{
+      //   posx2 = elem.x2;
+      //   console.log("ca", posx2);
+      // }      
+      
+      if(posx2 < elem.x){        
+        posx2 = elem.x;
+      }   
+      let difX: number = elem.x2 - posx2;
+      if(difX>0){
+        let ind: number = elem.celdas.length-1;
+        for(let fila=ind; fila>=ind-difX; fila--){
+          console.log(fila, elem.celdas);
+          elem.celdas[fila].forEach(c=>c.elemento=null);
+        }
+      }else if(difX<0){
+        if(this.celdasOcupadas(elem.x, posx2, elem.y, elem.y2, elem)){          
+          posx2=elem.x2;
+          difX=0;
+        }
+      }
+      elem.x2 = posx2; 
+      if(difX==0){
+        this.setDefaultStyle(elem, htmlElem);      
+      }
+    } 
+    //IZQUIERDA
+    else if(resizeDir==2){
+      try{
+        celdaActual = this.getClickedCelda(elem.celdas[0][0],  event.clientX - startingPoint.left, 0);
+      }catch{
+        celdaActual=elem.celdas[0][0];
+      }
+      console.log(celdaActual);
+      let difY: number;
+      let posy = celdaActual.y;
+      if(posy > elem.y2){        
+        posy = elem.y2;
+      }      
+      difY = posy - elem.y;
+
+    // let difY: number = cel.y - elem.y;
+      if(difY>0){        
+        elem.celdas.forEach(f=>{
+          for(let celda=0; celda<difY; celda++){
+            f[celda].elemento=null;
+          }
+        });
+      }else if(difY<0){
+        if(this.celdasOcupadas(elem.x, elem.x2, posy, elem.y2, elem)){          
+          posy=elem.y;
+          difY=0;
+        }
+      }
+
+      elem.y = posy;
+      if(difY==0){
+        this.setDefaultStyle(elem, htmlElem);
+      }
+    }  
+    //DERECHA
+    else if(resizeDir==3){
+      let celdaInicial: Celda = elem.celdas[0][elem.celdas[0].length-1];        
+      let posy2:number; 
+      try{
+        celdaActual = this.getClickedCelda(celdaInicial,  event.clientX - startingPoint.left, 0);
+        posy2 = celdaActual.y+1;      
+      }catch{
+        posy2 = elem.y2;
+      }      
+      
+      if(posy2 < elem.y){        
+        posy2 = elem.y;
+      }   
+      let difY: number = elem.y2 - posy2;
+      if(difY>0){
+        let ind: number = elem.celdas[0].length-1;
+        elem.celdas.forEach(f=>{
+          for(let celda=ind; celda>=ind-difY; celda--){            
+            f[celda].elemento=null;
+          }
+        })        
+      }else if(difY<0){
+        if(this.celdasOcupadas(elem.x, elem.x2, elem.y, posy2, elem)){          
+          posy2=elem.y2;
+          difY=0;
+        }
+      }
+      elem.y2 = posy2; 
+      if(difY==0){
+        this.setDefaultStyle(elem, htmlElem);      
+      }
+    }       
+
+    //FINAL
+    this.setCeldasOcupadas(elem);     
+    elem = null;
+  }
+
+  setDefaultStyle(elem: Elemento, target: HTMLElement){
+    target.style.top="0";
+    target.style.left="0";
+    target.style.width= elem.getAnchoPx();
+    target.style.height = elem.getAltoPx();  
   }
   
 }
