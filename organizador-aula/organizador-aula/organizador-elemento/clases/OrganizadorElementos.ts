@@ -1,10 +1,10 @@
-import { Organizador } from "../../clases/Organizador";
+import { Organizador } from "../../utils/Organizador";
 import { Fila } from "../../modelos/fila";
 import { Elemento } from "../../modelos/elemento";
 import { ElementRef } from "@angular/core";
 import { Celda } from "../../modelos/celda";
 import { Coordenada } from "../../modelos/lista-elementos";
-import { MsgTipo } from "../../clases/Mensajes";
+import { MsgTipo } from "../../utils/Mensajes";
 
 export class OrganizadorElementos extends Organizador{
 

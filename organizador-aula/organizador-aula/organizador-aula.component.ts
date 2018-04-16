@@ -1,12 +1,14 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, TemplateRef, Output, EventEmitter } from '@angular/core';
 import { OrganizadorElementoComponent } from './organizador-elemento/organizador-elemento.component';
-import { Datos } from './clases/Datos';
-import { Creador, CreadorDefault } from './clases/Creador';
+import { Datos } from './utils/Datos';
+import { Creador, CreadorDefault } from './utils/Creador';
 import { Celda } from './modelos/celda';
 import { ListaElemento } from './modelos/lista-elementos';
 import { ListaEntidad } from './modelos/lista-entidad';
 import { Entidad } from './modelos/entidad';
-import {Mensaje} from './clases/Mensajes';
+import {Mensaje} from './utils/Mensajes';
+import { ExportTablero, ExportElemento } from './utils/TableroExportInterfaces';
+import { Elemento } from './modelos/elemento';
 @Component({
   selector: 'app-organizador-aula',
   templateUrl: './organizador-aula.component.html',
@@ -22,6 +24,7 @@ export class OrganizadorAulaComponent implements OnInit {
 
   @Output('clickEntidad') clickEntidad: EventEmitter<Object> = new EventEmitter<Object>();
   @Output('mensaje') mensaje: EventEmitter<Mensaje> = new EventEmitter<Mensaje>();
+  @Output('onExport') onExport: EventEmitter<ExportTablero> = new EventEmitter<ExportTablero>();
 
   @ViewChild('txtFilas') txtFilas: ElementRef;
   @ViewChild('txtColumnas') txtColumnas: ElementRef;
@@ -42,60 +45,23 @@ export class OrganizadorAulaComponent implements OnInit {
   }
 
   guardar(){
-    let saved={
-      listaEntidades: this.generarListaEntidades(),
-      listaElementos: this.generarListaElementos(),
-      filas: this.datos.filas,
-      columnas: this.datos.columnas
-    } 
-    /* 
-    this.creador.listaEntidades = this.generarListaEntidades();
-    this.creador.listaElementos = this.generarListaElementos();
-    let saved = JSON.stringify(this.creador);*/
-    console.log(saved);
-    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(saved));
-
-    //Hacer lo que se quiera con dataStr! En este caso lo descargo como archivo para pruebas
-    var downloadAnchorNode = document.createElement('a');
-    downloadAnchorNode.setAttribute("href",     dataStr);
-    downloadAnchorNode.setAttribute("download", "exportName" + ".json");
-    downloadAnchorNode.click();
-    downloadAnchorNode.remove();
-  }
-
-  generarListaElementos():ListaElemento[]{
-    let listaElementos: ListaElemento[] = [];
-    this.datos.listaElementos.forEach(elem=>{
-      listaElementos.push({
-        id: elem.id,
-        nombre: elem.nombre,
-        color: elem.color,
-        posiciones: []
+    let exportTablero: ExportTablero = {numFilas:this.datos.creador.numFilas, numColumnas: this.datos.creador.numColumnas,
+       elementos: [], entidades: []};    
+    this.datos.listaFilas.forEach(f=>
+      f.celdas.filter(celda=>celda.initElemento()).forEach(celda=>{
+        let elem: Elemento = celda.elemento;
+        let exportElemento: ExportElemento = {x: elem.x, y: elem.y, x2: elem.x2, y2: elem.y2,
+          nombre: elem.nombre, id: elem.id, color: elem.color, maxEntidades: elem.maxEntidades}
+        elem.entidades.forEach(entidad=>{
+          exportTablero.entidades.push({elemento: exportElemento, objeto: entidad.objeto});
+        })
+        exportTablero.elementos.push(exportElemento);
       })
-    })
-    this.datos.listaFilas.forEach(fila=>{
-      fila.celdas.filter(cel=>cel.initElemento()).forEach(celda=>{
-        let elem = listaElementos.find(el => el.id===celda.elemento.id);
-        if(elem){
-          elem.posiciones.push({xy: [celda.elemento.x, celda.elemento.y], xy2: [celda.elemento.x2, celda.elemento.y2]});
-        }
-      })
-    });
-    return listaElementos;
-  }
-  generarListaEntidades(){
-    let listaEntidades: ListaEntidad[];
-    listaEntidades=this.datos.listaEntidades;
-    /*
-    listaEntidades.posiciones=[];
-    this.datos.listaFilas.forEach(fila=>{
-      fila.celdas.filter(cel=>cel.initElemento()).forEach(celda=>{
-        celda.elemento.entidades.forEach(entidad=>{          
-          listaEntidades.posiciones.push({id: entidad.id, pos: [celda.x, celda.y]});
-        });
-      })
-    })*/
-    return listaEntidades;
+    );
+    this.datos.entidades.filter(ent => ent.elemento == null).forEach(entidad=>{
+      exportTablero.entidades.push({elemento: null, objeto: entidad.objeto});
+    });    
+    this.onExport.emit(exportTablero);
   }
 
   cambiar(){

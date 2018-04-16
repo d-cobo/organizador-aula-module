@@ -11,7 +11,7 @@ export class Elemento{
     maxEntidades: number;
     nombre: string;
     color:string; 
-    activo: boolean = false;
+    activo: boolean = false; //Si es un elemento posicionado
     celdas: Celda[][] = [];
     entidades: Entidad[] = [];
 

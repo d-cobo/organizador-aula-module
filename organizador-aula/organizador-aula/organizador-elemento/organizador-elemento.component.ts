@@ -5,10 +5,10 @@ import { Fila } from '../modelos/fila';
 import { Celda } from '../modelos/celda';
 import { Elemento } from '../modelos/elemento';
 import { OrganizadorElementos } from './clases/OrganizadorElementos';
-import { Datos } from '../clases/Datos';
+import { Datos } from '../utils/Datos';
 import { ConfirmationService, Message } from 'primeng/api';
 import { OrganizadorEntidades } from '../organizador-entidades/clases/OrganizadorEntidades';
-import { MsgTipo, MsgCodigo, Mensaje } from '../clases/Mensajes';
+import { MsgTipo, MsgCodigo, Mensaje } from '../utils/Mensajes';
 import { NuevoElementoComponent } from './nuevo-elemento/nuevo-elemento.component';
 
 

@@ -1,4 +1,4 @@
-import { Organizador } from "../../clases/Organizador";
+import { Organizador } from "../../utils/Organizador";
 import { Entidad } from "../../modelos/entidad";
 import { Elemento } from "../../modelos/elemento";
 

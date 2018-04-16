@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
 import { OrganizadorAulaComponent } from './organizador-aula/organizador-aula/organizador-aula.component';
-import { Creador, CreadorDefault } from './organizador-aula/organizador-aula/clases/Creador';
+import { Creador, CreadorDefault } from './organizador-aula/organizador-aula/utils/Creador';
 import {  CreadorPropio, AlumnoEnt } from './app.module';
 import { ListaEntidad } from './organizador-aula/organizador-aula/modelos/lista-entidad';
-import { MsgTipo, Mensaje, MsgCodigo } from './organizador-aula/organizador-aula/clases/Mensajes';
+import { MsgTipo, Mensaje, MsgCodigo } from './organizador-aula/organizador-aula/utils/Mensajes';
 
 @Component({
   selector: 'app-root',
@@ -91,7 +91,7 @@ export class AppComponent {
     this.listaEntidades= alumnos;      
     //  let a = JSON.parse('{"sizeCelda":[202,114],"prNumFilas":7,"prNumColumnas":7,"prListaElementos":[{"id":"idproyector","nombre":"proyector","color":"green","posiciones":[{"xy":[0,3],"xy2":[0,3]}]},{"id":"idmesa","nombre":"nombremesa","color":"#cf7f07","posiciones":[{"xy":[0,6],"xy2":[0,6]},{"xy":[1,1],"xy2":[2,2]},{"xy":[3,4],"xy2":[3,4]}]},{"id":"idotro","nombre":"otro","color":"gray","posiciones":[{"xy":[3,5],"xy2":[5,5]},{"xy":[4,4],"xy2":[4,4]}]}],"prListaEntidades":{"id":"id","titulo":"nombre","objetos":[{"id":"12345678A","nombre":"pepe","otro":"Come mucho"},{"id":"87654321A","nombre":"pepita","otro":"Se pelea con pepete"},{"id":"82654321A","nombre":"pepete","otro":"No hace la tarea"}],"posiciones":[{"id":"12345678A","pos":[1,1]}]}}')
     //  console.log(a);
-    this.creador = new CreadorPropio(this.filas, this.columnas, this.listaElementos, this.listaEntidades);
+    //this.creador = new CreadorPropio(this.filas, this.columnas, this.listaElementos, this.listaEntidades);
     //this.creador = new CreadorPropio(a.prNumFilas, a.prNumColumnas, a.prListaElementos, a.prlistaEntidades);
     
     
@@ -109,7 +109,7 @@ export class AppComponent {
       this.creador = new CreadorDefault(data.filas, data.columnas, data.listaElementos, data.listaEntidades);
     }else{
       console.log("creando con propio");
-      this.creador = new CreadorPropio(this.filas, this.columnas, this.listaElementos, this.listaEntidades);
+      //this.creador = new CreadorPropio(this.filas, this.columnas, this.listaElementos, this.listaEntidades);
     }
     this.cargado=true;    
   }
@@ -126,6 +126,10 @@ export class AppComponent {
         console.log("Celda ocupada!");
         break;
     }
+  }
+
+  onExport(tablero: any){
+    console.log(tablero);
   }
 }
 
