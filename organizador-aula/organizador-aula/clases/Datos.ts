@@ -35,6 +35,10 @@ export class Datos{
         return this.creador.listaElementos;
     }
 
+    set listaElementos(listaElementos: ListaElemento[]){
+        this.creador.listaElementos = listaElementos;
+    }
+
     get listaEntidades(): ListaEntidad[]{
         return this.creador.listaEntidades;
     }

@@ -8,7 +8,9 @@
               <i class="addIcon fa fa-plus"></i><span> Nuevo elemento</span>
             </div>
             <app-nuevo-elemento (elemento)="nuevoElemento($event)" *ngIf="displayNuevoElemento"></app-nuevo-elemento>
+            <p-confirmDialog acceptLabel="Sí"  header="Aviso" icon="fa fa-warning" width="425"></p-confirmDialog>
             <div *ngFor="let elem of organizador.datos.listaElementos; let i= index" [ngStyle]="style" class="dragElement" [style.background-color]="elem.color" (onDragStart)="toolsDragStart(elem)" pDraggable="elementos" [attr.tipo]=elem.id>
+              <i (click)="removeElementType(elem.id)" class="fa fa-times removeIcon"></i> 
               <span>{{elem.nombre}}</span> <br/>
               <span>{{elem.ancho}}x{{elem.alto}}</span>
             </div>
@@ -53,4 +55,3 @@
     </div>
   </div>
 </div>
-<button (click)='ampliarCol()'>asd</button>

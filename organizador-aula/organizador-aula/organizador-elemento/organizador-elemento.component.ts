@@ -105,17 +105,6 @@ export class OrganizadorElementoComponent implements OnInit {
     this.clickedCelda=null;
   }
 
-
-  //Calcula el tamaño de las casillas 
-  /*calcularCasillas(): [number, number]{        
-
-    let ancho:number = Math.floor(this.tabla.nativeElement.clientWidth*0.9 / this.organizador.datos.columnas);
-    let alto:number = Math.floor(this.mainDiv.nativeElement.clientHeight / this.organizador.datos.filas);
-   return [ancho, alto];
-  }*/
-
-
-
   //Actualiza el elemento que se esta arrastrando
   celdaDragStart(celda: Celda, event: MouseEvent): void{         
     this.clickedCelda = this.organizador.getClickedCelda(celda, event.layerX, event.layerY);
@@ -140,6 +129,17 @@ export class OrganizadorElementoComponent implements OnInit {
 
   removeElement(celda: Celda): void{
     this.organizador.removeElement(celda);
+  }
+
+  removeElementType(id: string){
+    this.confirmationService.confirm({
+      message: 'Si eliminas un tipo de elemento se eliminarán todos los del mismo tipo que haya '+
+               'sobre el tablero, ¿Continuar?',
+      accept: () => {
+        this.organizador.removeElementType(id);
+      }
+    });
+    
   }
 
   nuevoElemento(elemento: Elemento){

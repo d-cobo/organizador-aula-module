@@ -69,7 +69,7 @@ export abstract class Creador{
 
 export class CreadorDefault extends Creador{
     onFilasChange(): void {
-        let newHeight:number = this.listaFilas.length/this.numFilas;     
+        let newHeight:number = this.listaFilas.length/this.numFilas;               
         if(newHeight>1){
             this.listaFilas = this.listaFilas.slice(0,this.numFilas);
             console.log(this.listaFilas);
@@ -77,7 +77,7 @@ export class CreadorDefault extends Creador{
                 fila.celdas.filter(cel=> cel.initElemento()).forEach(cel=>{
                     if(cel.elemento.x2>=this.numFilas-1){
                         cel.elemento.x2 = this.numFilas-1;
-                        
+                        cel.elemento.celdas = cel.elemento.celdas.filter(c=>c[0].x<this.numFilas);
                     }
                 })
             });
@@ -98,13 +98,18 @@ export class CreadorDefault extends Creador{
         }
     }
     onColumnasChange(): void{
-        let newWidth:number = this.listaFilas[0].celdas.length/this.numColumnas;  
+        let newWidth:number = this.listaFilas[0].celdas.length/this.numColumnas;          
         if(newWidth>1){
             this.listaFilas.forEach(fila=>{
                 fila.celdas = fila.celdas.slice(0, this.numColumnas);
                 fila.celdas.filter(cel=> cel.initElemento()).forEach(cel=>{
-                    if(cel.elemento.y2>=this.numColumnas-1){
-                        cel.elemento.y2 = this.numColumnas-1;
+                    if(cel.elemento.y2>this.numColumnas-1){
+                        cel.elemento.y2 = this.numColumnas-1;                        
+                        cel.elemento.celdas.forEach((f, index)=>{ 
+                                                       
+                            cel.elemento.celdas[index] = f.filter(c=>c.y<this.numColumnas);                          
+                        })
+                        console.log(cel.elemento.celdas);
                         
                     }
                 })

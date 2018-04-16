@@ -9,6 +9,7 @@ import { MsgTipo } from "../../clases/Mensajes";
 export class OrganizadorElementos extends Organizador{
 
 
+
     inicializar():void{        
       if(!this.datos.listaFilas){
         this.datos.inicializarFilas();
@@ -417,6 +418,15 @@ export class OrganizadorElementos extends Organizador{
     target.style.left="0";
     target.style.width= elem.getAnchoPx();
     target.style.height = elem.getAltoPx();  
+  }
+
+  removeElementType(id: string): void {
+    this.listaFilas.forEach(f=>
+      f.celdas.filter(c=>c.initElemento() && c.elemento.id===id).forEach(c=>{
+        this.removeElement(c);
+      })
+    );
+    this.datos.listaElementos = this.datos.listaElementos.filter(el => el.id!=id);
   }
   
 }
