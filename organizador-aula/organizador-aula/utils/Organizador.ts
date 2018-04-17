@@ -22,13 +22,13 @@ export abstract class Organizador{
     }
 
     get sizeCelda(): [number, number]{
-        return this.datos.creador.size;
+        return [Math.max(this.datos.creador.size[0], this.datos.creador.getMinSize[0]), Math.max(this.datos.creador.size[1], this.datos.creador.getMinSize[1])] ;
     }
 
     calcularCasillas(tabla: ElementRef, mainDiv: ElementRef): [number, number, number, number]{        
-        let ancho:number = Math.floor(tabla.nativeElement.clientWidth*0.9 / (this.datos.columnas));
-        let alto:number = Math.floor(mainDiv.nativeElement.clientHeight / this.datos.filas);
-       return [ancho, alto, tabla.nativeElement.clientWidth*0.9, mainDiv.nativeElement.clientHeight];
+        let ancho:number = Math.floor(tabla.nativeElement.clientWidth*0.99 / (this.datos.columnas));
+        let alto:number = Math.floor(mainDiv.nativeElement.clientHeight*0.99 / this.datos.filas);
+       return [ancho, alto, tabla.nativeElement.clientWidth*0.99, mainDiv.nativeElement.clientHeight*0.99];
     }
 
     cambiarSize(tabla: ElementRef, mainDiv: ElementRef): void{

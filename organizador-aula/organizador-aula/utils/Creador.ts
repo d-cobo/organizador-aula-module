@@ -9,12 +9,13 @@ export abstract class Creador{
     protected prNumColumnas:number;
     protected prListaElementos:ListaElemento[];
     protected prListaEntidades:ListaEntidad[];
+    protected minSize: [number, number];
     listaFilas: Fila[];
     //protected filas: Fila[];
-    protected sizeCelda: [number, number] = [0,0];
-    protected sizePantalla: [number, number] = [0,0];
+    protected sizeCelda: [number, number];
+    protected sizePantalla: [number, number];
     
-    constructor(numFilas:number, numColumnas:number, listaElementos: ListaElemento[] = null, listaEntidades: ListaEntidad[] = null){
+    constructor(numFilas:number, numColumnas:number, listaElementos?: ListaElemento[], listaEntidades?: ListaEntidad[], minSize?: [number, number]){
         this.prNumFilas=numFilas;
         this.prNumColumnas=numColumnas;
         if(listaElementos){
@@ -23,6 +24,9 @@ export abstract class Creador{
         if(listaEntidades){
             this.prListaEntidades=listaEntidades;
         }
+        this.minSize = minSize!=undefined ? minSize : [0, 0];
+        this.sizeCelda= [0,0];
+        this.sizePantalla = [0,0];
     };
     get numFilas(): number{
         return this.prNumFilas;
@@ -59,6 +63,10 @@ export abstract class Creador{
     get listaEntidades(): ListaEntidad[]{
         return this.prListaEntidades;
     }
+
+    get getMinSize(): [number, number]{
+        return this.minSize;
+    }
     abstract onFilasChange(): void;
     abstract onColumnasChange(): void;
     abstract inicializarFilas(): void;
@@ -71,13 +79,21 @@ export class CreadorDefault extends Creador{
     onFilasChange(): void {
         let newHeight:number = this.listaFilas.length/this.numFilas;               
         if(newHeight>1){
+            this.listaFilas.filter(f=>f.x >= this.numFilas).forEach(f=>{
+                f.celdas.filter(c=>c.initElemento()).forEach(c=>{                    
+                    c.elemento.entidades.forEach(ent=>ent.elemento=null);
+                })
+            })
             this.listaFilas = this.listaFilas.slice(0,this.numFilas);
+             
             console.log(this.listaFilas);
             this.listaFilas.forEach(fila=>{
                 fila.celdas.filter(cel=> cel.initElemento()).forEach(cel=>{
                     if(cel.elemento.x2>=this.numFilas-1){
                         cel.elemento.x2 = this.numFilas-1;
                         cel.elemento.celdas = cel.elemento.celdas.filter(c=>c[0].x<this.numFilas);
+                        console.log(cel.elemento.celdas);
+                        if(cel.elemento.celdas.length==0) cel.elemento.entidades.forEach(ent=> ent.elemento=null);
                     }
                 })
             });
@@ -101,6 +117,9 @@ export class CreadorDefault extends Creador{
         let newWidth:number = this.listaFilas[0].celdas.length/this.numColumnas;          
         if(newWidth>1){
             this.listaFilas.forEach(fila=>{
+                fila.celdas.filter(c=>c.initElemento() && c.y >= this.numColumnas).forEach(c=>{                    
+                    c.elemento.entidades.forEach(ent=>ent.elemento=null);
+                })
                 fila.celdas = fila.celdas.slice(0, this.numColumnas);
                 fila.celdas.filter(cel=> cel.initElemento()).forEach(cel=>{
                     if(cel.elemento.y2>this.numColumnas-1){
@@ -131,16 +150,16 @@ export class CreadorDefault extends Creador{
         }
 
     }
-    constructor(numFilas:number, numColumnas:number, listaElementos: ListaElemento[] = null, listaEntidades: ListaEntidad[] = null){
-        super(numFilas, numColumnas, listaElementos, listaEntidades);
+    constructor(numFilas:number, numColumnas:number, listaElementos: ListaElemento[] = null, listaEntidades: ListaEntidad[] = null, minSize: [number, number]){
+        super(numFilas, numColumnas, listaElementos, listaEntidades, minSize);
     }
     setSize(anchoCelda?:number, altoCelda?:number): void{        
         if (anchoCelda) this.sizeCelda[0]=anchoCelda;
         if (altoCelda) this.sizeCelda[1]=altoCelda;        
         if(this.listaFilas){            
             this.listaFilas.forEach(fila=>fila.celdas.forEach(cel=>{                                
-                cel.ancho=this.sizeCelda[0];                               
-                cel.alto=this.sizeCelda[1];
+                cel.ancho=Math.max(this.sizeCelda[0], this.minSize[0]);                               
+                cel.alto=Math.max(this.sizeCelda[1], this.minSize[1]);
                 /*PRUEBA PARA CAMBIAR TAMAÑOS 
                     if(cel.y==3) cel.ancho*=2;
                     if(cel.x==2) cel.alto*=1.8; 

@@ -11,11 +11,19 @@ export class Elemento{
     maxEntidades: number;
     nombre: string;
     color:string; 
-    activo: boolean = false; //Si es un elemento posicionado
-    celdas: Celda[][] = [];
-    entidades: Entidad[] = [];
+    activo: boolean; //Si es un elemento posicionado
+    celdas: Celda[][];
+    entidades: Entidad[];
 
-    
+    constructor(activo: boolean, id: string, nombre: string, color: string, maxEntidades: number){
+        this.activo=activo;
+        this.id=id;
+        this.nombre=nombre;
+        this.color=color;
+        this.maxEntidades=maxEntidades;
+        this.celdas = [];
+        this.entidades = [];
+    }
 
     getElemId():string{
         return `${this.id}_${this.x}_${this.y}`;

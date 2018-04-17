@@ -30,10 +30,10 @@
                       <div class="arrow rightArrow"> &#11020;</div>
                       <div class="arrow downArrow">&#11021;</div>
                       
-                      <div class="resize resize-up"  [dragEffect]="none" (onDragStart)="onResizeStart(col, $event)" (onDrag)="onDrag(col, directions.ARRIBA, $event)" (onDragEnd)="onDragEnd($event)" pDraggable="resize"></div>    
-                      <div class="resize resize-left"  (onDragStart)="onResizeStart(col, $event)" (onDrag)="onDrag(col, directions.IZQUIERDA, $event)" (onDragEnd)="onDragEnd($event)" pDraggable="resize"></div>    
-                      <div class="resize resize-right"  (onDragStart)="onResizeStart(col, $event)" (onDrag)="onDrag(col, directions.DERECHA, $event)" (onDragEnd)="onDragEnd($event)" pDraggable="resize"></div>    
-                      <div class="resize resize-down"  (onDragStart)="onResizeStart(col, $event)" (onDrag)="onDrag(col, directions.ABAJO, $event)" (onDragEnd)="onDragEnd($event)" pDraggable="resize"></div>    
+                      <div class="resize resize-up"  [dragEffect]="link" (onDragStart)="onResizeStart(col, $event)" (onDrag)="onDrag(col, ARRIBA, $event)" (onDragEnd)="onDragEnd($event)" pDraggable="resize"></div>    
+                      <div class="resize resize-left"  (onDragStart)="onResizeStart(col, $event)" (onDrag)="onDrag(col, IZQUIERDA, $event)" (onDragEnd)="onDragEnd($event)" pDraggable="resize"></div>    
+                      <div class="resize resize-right"  (onDragStart)="onResizeStart(col, $event)" (onDrag)="onDrag(col, DERECHA, $event)" (onDragEnd)="onDragEnd($event)" pDraggable="resize"></div>    
+                      <div class="resize resize-down"  (onDragStart)="onResizeStart(col, $event)" (onDrag)="onDrag(col, ABAJO, $event)" (onDragEnd)="onDragEnd($event)" pDraggable="resize"></div>    
                       
                       
                         <!--

@@ -1,10 +1,14 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, EventEmitter } from '@angular/core';
 
 import { OrganizadorAulaComponent } from './organizador-aula/organizador-aula/organizador-aula.component';
 import { Creador, CreadorDefault } from './organizador-aula/organizador-aula/utils/Creador';
 import {  CreadorPropio, AlumnoEnt } from './app.module';
 import { ListaEntidad } from './organizador-aula/organizador-aula/modelos/lista-entidad';
 import { MsgTipo, Mensaje, MsgCodigo } from './organizador-aula/organizador-aula/utils/Mensajes';
+import { EventosOrgAulaService } from './organizador-aula/eventos-org-aula.service';
+import { Subscription } from 'rxjs/Subscription';
+import { ListaElemento } from './organizador-aula/organizador-aula/modelos/lista-elementos';
+import { ExportTablero } from './organizador-aula/organizador-aula/utils/TableroExportInterfaces';
 
 @Component({
   selector: 'app-root',
@@ -14,14 +18,23 @@ import { MsgTipo, Mensaje, MsgCodigo } from './organizador-aula/organizador-aula
 export class AppComponent {
   @ViewChild('txt') txt: ElementRef;
   title = 'app';
-  columnas = 7;
-  filas=7;
-  listaElementos;
+  columnas: number;
+  filas: number;
+  listaElementos: ListaElemento[];
   listaEntidades: ListaEntidad [];
   cargado: boolean = true;
+  mensajeSubscription: Subscription;
+  entidadSubscription: Subscription;
   //listaElementos: Array<ListaElemento>;
   creador: Creador;
+
+  constructor(private eventos: EventosOrgAulaService){}
+
   ngOnInit(){
+    this.filas = 7;
+    this.columnas = 7;
+    this.mensajeSubscription = this.eventos.mensajes.subscribe(mens=>this.onMensaje(mens));
+    this.entidadSubscription = this.eventos.clickEntidad.subscribe(ent=>this.mostrarAlumno(ent));
     this.listaElementos = [
       {
         nombre: 'nombremesa',
@@ -101,35 +114,49 @@ export class AppComponent {
     console.log(alumnos.find(al => al[c$1==$2));*/
   }
 
-  cargar(): void{
-    let text: string = this.txt.nativeElement.value;    
-    if(text!==""){
-      let data = JSON.parse(text);
-      console.log(data);
-      this.creador = new CreadorDefault(data.filas, data.columnas, data.listaElementos, data.listaEntidades);
-    }else{
-      console.log("creando con propio");
-      //this.creador = new CreadorPropio(this.filas, this.columnas, this.listaElementos, this.listaEntidades);
-    }
-    this.cargado=true;    
+  ngOnDestroy(){
+    this.mensajeSubscription.unsubscribe();
   }
+
 
   mostrarAlumno(event: AlumnoEnt){
     console.log("funsioooona!", event);
   }
 
   onMensaje(event: Mensaje){
-    if(event.tipo == MsgTipo.AVISO) console.log("WARNING");
-    if(event.tipo == MsgTipo.ERROR) console.log("ERROR");
-    switch(event.codigo){
-      case MsgCodigo.CeldaOcupada:
-        console.log("Celda ocupada!");
-        break;
+    if(event.tipo == MsgTipo.AVISO) {
+      console.log("WARNING");
+      switch(event.codigo){
+        case MsgCodigo.ConfirmacionEliminarTipoElemento:
+          console.log("¿Seguro que quieres eliminar? ");
+          if(confirm("Eliminar?")){
+            this.eventos.confirmacion.emit(true);
+          }else{
+            this.eventos.confirmacion.emit(false);
+          }
+          break;
+      }
     }
+    if(event.tipo == MsgTipo.ERROR){
+      console.log("ERROR");
+      switch(event.codigo){
+        case MsgCodigo.CeldaOcupada:
+          console.log("Celda ocupada!");
+          break;
+      }
+    }
+
+     
+
+    
   }
 
-  onExport(tablero: any){
+  onExport(tablero: ExportTablero){
     console.log(tablero);
+  }
+
+  onConfirmacion(event: EventEmitter<boolean>){
+    event.emit(false);
   }
 }
 

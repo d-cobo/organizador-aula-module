@@ -5,6 +5,7 @@ import { ElementRef } from "@angular/core";
 import { Celda } from "../../modelos/celda";
 import { Coordenada } from "../../modelos/lista-elementos";
 import { MsgTipo } from "../../utils/Mensajes";
+import { StartingPoint, Directions } from "./interfaces";
 
 export class OrganizadorElementos extends Organizador{
 
@@ -20,71 +21,23 @@ export class OrganizadorElementos extends Organizador{
 
 
     initElementos(): void{
-      
-        this.datos.listaElementos.forEach( (lisElem) => {   
-            if(!lisElem.ancho) lisElem.ancho = 1;
-            if(!lisElem.alto) lisElem.alto = 1;    
-            if(!lisElem.maxEntidades) lisElem.maxEntidades=1;        
-            if(lisElem.posiciones){
-              lisElem.posiciones.forEach((pos) => {
-                  if(!pos.xy2){
-                    pos.xy2=pos.xy;
-                  }              
-                  //let elemento: Elemento = this.getElemento(pos.xy[0], pos.xy[1]); 
-                  let elemento:Elemento = new Elemento();
-                  elemento.setPos(pos.xy[0], pos.xy[1],pos.xy2[0], pos.xy2[1]);      
-                  this.setCeldasOcupadas(elemento); 
-                  elemento.activo=true;                
-                  elemento.id = lisElem.id;
-                  elemento.nombre = lisElem.nombre;
-                  elemento.color = lisElem.color;   
-                  elemento.maxEntidades = lisElem.maxEntidades;
-                      
-                  
-              });
-            }
-        });
-      }
-
-
-
-      comprobarResize(celda: Celda, elemento: [Elemento, HTMLElement], event: any){                
-        let nuevaCel: Celda = this.getClickedCelda(celda, event.layerX, event.layerY); 
-        let elem = elemento[0];        
-        let target = elemento[1];          
-        if(celda==nuevaCel){
-          console.log("misma celda");
-          console.log(elem);
-          target.style.width = elem.getAnchoPx();
-          target.style.height = elem.getAltoPx();    
-          return;
+      this.datos.listaElementos.forEach( (lisElem) => {   
+        if(!lisElem.ancho) lisElem.ancho = 1;
+        if(!lisElem.alto) lisElem.alto = 1;    
+        if(!lisElem.maxEntidades) lisElem.maxEntidades=1;        
+        if(lisElem.posiciones){
+          lisElem.posiciones.forEach((pos) => {
+              if(!pos.xy2){
+                pos.xy2=pos.xy;
+              }              
+              //let elemento: Elemento = this.getElemento(pos.xy[0], pos.xy[1]); 
+              let elemento:Elemento = new Elemento(true, lisElem.id, lisElem.nombre, lisElem.color, lisElem.maxEntidades);
+              elemento.setPos(pos.xy[0], pos.xy[1],pos.xy2[0], pos.xy2[1]);      
+              this.setCeldasOcupadas(elemento);                   
+          });
         }
-        let dirY: number = (nuevaCel.y - celda.y) - (elem.y2 - elem.y);       
-        let dirX: number = (nuevaCel.x - celda.x) - (elem.x2 - elem.x);
-        
-        for(let fila=celda.x;fila<=nuevaCel.x;fila++){
-          for(let col=celda.y; col<=nuevaCel.y; col++){          
-            if(this.celdaOcupada(fila,col, elem)){
-              console.log("ocupadaaa");
-              dirX = 0;
-              dirY= 0;
-              fila=nuevaCel.x+1;
-              col=nuevaCel.y+1;
-            };
-          }
-        }
-        
-        if(dirX<0){
-          this.resizeVertical(elem, dirX);  
-          this.resizeHorizontal(elem, dirY);
-        }else{
-         this.resizeHorizontal(elem, dirY);
-         this.resizeVertical(elem, dirX);
-        }
-        target.style.width = elem.getAnchoPx();
-        target.style.height = elem.getAltoPx();    
-        this.setCeldasOcupadas(elem);
-      }
+      });
+    }
 
     setCeldasOcupadas (elemento: Elemento): void{
         elemento.celdas=[];
@@ -99,7 +52,7 @@ export class OrganizadorElementos extends Organizador{
     }
       
   celdaOcupada(x:number, y:number, elem: Elemento=null): boolean{
-    //No comprobar la casilla actual   
+    //Si la casilla está fuera del tablero retorna que está ocupada    
     if(!this.listaFilas[x] || !this.listaFilas[x].celdas[y]) return true;
 
     return (this.listaFilas[x].celdas[y].elemento && this.listaFilas[x].celdas[y].elemento!=elem);
@@ -111,8 +64,7 @@ export class OrganizadorElementos extends Organizador{
         if(!(elemCoords.find(el=> el[0]==coor[0] && el[1]==coor[1]))){
           this.listaFilas[coor[0]].celdas[coor[1]].elemento = null;
         }
-    })
-    
+    });    
   }
 
   getElemento(x:number, y:number): Elemento{
@@ -120,46 +72,17 @@ export class OrganizadorElementos extends Organizador{
   }
 
 
-  removeElement(celda: Celda){
+  removeElement(elemento: Elemento): void{
     
-    if(celda.elemento.entidades){      
-      celda.elemento.entidades.forEach(ent=>{ent.elemento=null});
+    if(elemento.entidades){      
+      elemento.entidades.forEach(ent=>{ent.elemento=null});
     }
-    celda.elemento.getCoorCeldas().forEach(pos=>{
-      this.listaFilas[pos[0]].celdas[pos[1]].elemento=null;
-      //this.elementos = this.elementos.filter(el=>el.x != pos[0] || el.y != pos[1])
-    })    
-    //Y comprobamos de nuevo los resizes
+    elemento.celdas.forEach(fila=>fila.forEach(celda=>{
+      celda.elemento=null;
+    }));      
   
   }
 
-
-  resizeHorizontal(elem: Elemento, dir: number):void{
-    elem.y2+=dir;
-    //Ampliando hacia la derecha
-    if(dir<0){
-      for(let fila=elem.x;fila<=elem.x2;fila++){
-        this.listaFilas[fila].celdas[elem.y2-dir].elemento = null;
-        
-      }
-    }
-    //this.setCeldasOcupadas(elem);
-    
-    //this.comprobarResize(this.coords[index], div);
-  }
-
-  resizeVertical(elem: Elemento, dir: number):void{
-    elem.x2+=dir;
-    //Ampliando hacia abajo
-    if(dir<0){
-      for(let col=elem.y;col<=elem.y2;col++){
-        this.listaFilas[elem.x2-dir].celdas[col].elemento = null;
-      }
-    }
-    //this.setCeldasOcupadas(elem);
-    
-    //this.comprobarResize(this.coords[index], div);
-  }
 
 
   drop(cel: Celda, draggedCelda: Celda, clickedCelda: Celda): number{    
@@ -192,12 +115,13 @@ export class OrganizadorElementos extends Organizador{
     
     this.setCeldasOcupadas(draggedCelda.elemento);        
     draggedCelda.elemento.activo = true;    
-    //Despues de todo hay que volver a comprobar los resizes de los elementos
+    //Si lo estás moviendo desde otro sitio
     if(coor){
+      //pone las referencias elemento de las celdas que ya no lo contienen a null
       this.cambiarReferencias(draggedCelda.elemento, coor);
     }
   
-    //console.log(this.listaFilas);    
+    console.log(this.listaFilas);    
     return MsgTipo.OK;
   }
 
@@ -210,11 +134,17 @@ export class OrganizadorElementos extends Organizador{
     return false;
   }
 
+  //Obtiene la celda actual en función de donde se ha clicado o donde está el ratón
   getClickedCelda(celdaInicial: Celda, posX: number, posY: number): Celda{
-      
+    
+    //obtiene la fila sobre la que estás  
     let fila: Fila = this.getClickedFila(celdaInicial, posY);
+
+    //Si es una fila auxiliar la devuelve
     if(!fila.celdas[0].ancho) return fila.celdas[0];
-    let ind = celdaInicial.y;
+
+    //Si no calcula la celda en la que está de forma analoga a la funcion getClickedFila comentada abajo
+    let ind: number = celdaInicial.y;
     
     if(posX>0){
       while(posX>0){
@@ -224,7 +154,7 @@ export class OrganizadorElementos extends Organizador{
       ind--;
     }else if(posX<0){
       while(posX<0){
-        posX+=fila.celdas[ind].ancho;
+        posX+=fila.celdas[ind-1].ancho;
         ind--;
       }          
     }
@@ -239,10 +169,11 @@ export class OrganizadorElementos extends Organizador{
     
 
   }
-
+  //Obtiene la fila actual
   getClickedFila(celda: Celda, posY: number): Fila{
     let ind = celda.x;    
- 
+    //posY es la diferencia desde el punto inicial de referencia al actual. Se va sumando/restando
+    //el alto de la fila mientras haya diferencia hasta llegar a la actual
     if(posY>0){
       while(posY>0){                
         posY-=this.datos.listaFilas[ind].celdas[celda.y].alto;                
@@ -251,12 +182,13 @@ export class OrganizadorElementos extends Organizador{
       ind--;
     }else if(posY<0){
       while(posY<0){
-        posY+=this.datos.listaFilas[ind].celdas[celda.y].alto;
+        posY+=this.datos.listaFilas[ind-1].celdas[celda.y].alto;
         ind--;
       }
       
     }
     
+    //Si la celda está fuera del tablero devuelve una fila auxiliar con una celda.x = -1 o length
     if(ind < 0){
       let auxFila = new Fila(0);
       auxFila.celdas.push(new Celda(-1,0));
@@ -272,13 +204,13 @@ export class OrganizadorElementos extends Organizador{
 
   
   resize(elem: Elemento, htmlElem: HTMLElement, resizeDir: number,
-    startingPoint: {alto, ancho, top, left}, event: MouseEvent)
+    startingPoint: StartingPoint, event: MouseEvent): void
   {
     let celdaActual: Celda;    
      //ARRIBA
-    if(resizeDir==0){
+    if(resizeDir==Directions.ARRIBA){
       try{
-        celdaActual = this.getClickedCelda(elem.celdas[0][0],  0, event.clientY - startingPoint.top);
+        celdaActual = this.getClickedCelda(elem.celdas[0][0],  0, event.clientY - startingPoint.arriba);
       }catch{
         celdaActual=elem.celdas[0][0];
       }
@@ -307,11 +239,11 @@ export class OrganizadorElementos extends Organizador{
       
     }
     //ABAJO
-    else if(resizeDir==1){
+    else if(resizeDir==Directions.ABAJO){
       let celdaInicial: Celda = elem.celdas[elem.celdas.length-1][0];        
       let posx2:number; 
     //  try{
-        celdaActual = this.getClickedCelda(celdaInicial,  0, event.clientY - startingPoint.top);
+        celdaActual = this.getClickedCelda(celdaInicial,  0, event.clientY - startingPoint.arriba);
         posx2 = celdaActual.x+1;      
         console.log("try", posx2);
     //  }catch{
@@ -341,9 +273,9 @@ export class OrganizadorElementos extends Organizador{
       }
     } 
     //IZQUIERDA
-    else if(resizeDir==2){
+    else if(resizeDir==Directions.IZQUIERDA){
       try{
-        celdaActual = this.getClickedCelda(elem.celdas[0][0],  event.clientX - startingPoint.left, 0);
+        celdaActual = this.getClickedCelda(elem.celdas[0][0],  event.clientX - startingPoint.izquierda, 0);
       }catch{
         celdaActual=elem.celdas[0][0];
       }
@@ -375,11 +307,11 @@ export class OrganizadorElementos extends Organizador{
       }
     }  
     //DERECHA
-    else if(resizeDir==3){
+    else if(resizeDir==Directions.DERECHA){
       let celdaInicial: Celda = elem.celdas[0][elem.celdas[0].length-1];        
       let posy2:number; 
       try{
-        celdaActual = this.getClickedCelda(celdaInicial,  event.clientX - startingPoint.left, 0);
+        celdaActual = this.getClickedCelda(celdaInicial,  event.clientX - startingPoint.izquierda, 0);
         posy2 = celdaActual.y+1;      
       }catch{
         posy2 = elem.y2;
@@ -413,7 +345,9 @@ export class OrganizadorElementos extends Organizador{
     elem = null;
   }
 
-  setDefaultStyle(elem: Elemento, target: HTMLElement){
+  //Pone el estilo que debe tener al elemento en caso de que no se haya resizeado (no coge auto.
+  //el ngStyle)
+  setDefaultStyle(elem: Elemento, target: HTMLElement): void{
     target.style.top="0";
     target.style.left="0";
     target.style.width= elem.getAnchoPx();
@@ -423,7 +357,7 @@ export class OrganizadorElementos extends Organizador{
   removeElementType(id: string): void {
     this.listaFilas.forEach(f=>
       f.celdas.filter(c=>c.initElemento() && c.elemento.id===id).forEach(c=>{
-        this.removeElement(c);
+        this.removeElement(c.elemento);
       })
     );
     this.datos.listaElementos = this.datos.listaElementos.filter(el => el.id!=id);

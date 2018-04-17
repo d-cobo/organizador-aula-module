@@ -6,7 +6,7 @@ export class Celda{
     y:number;
     ancho:number;
     alto: number;
-    elemento: Elemento=null;
+    elemento: Elemento;
     
     /*constructor(x:number, y:number, ancho:number, alto:number){
         this.x = x;
@@ -17,7 +17,8 @@ export class Celda{
     }*/
     constructor(x:number, y:number){
         this.x = x;
-        this.y=y;        
+        this.y=y;      
+        this.elemento=null;  
         //this.elemento = new Elemento(x,y);        
     }
 
@@ -28,7 +29,9 @@ export class Celda{
     getSizePx(): object{
         return {
             width: this.ancho+'px',
-            height: this.alto+'px'
+            height: this.alto+'px',
+            minWidth: this.ancho+'px',
+            minHeight: this.alto+'px'
           };
     }
 

@@ -10,5 +10,6 @@ export enum MsgTipo{
 }
 
 export enum MsgCodigo{
-    CeldaOcupada=0 //Alguna de las celdas que intenta ocupar un elemento (en drop) esta ocupada
+    CeldaOcupada=0, //Alguna de las celdas que intenta ocupar un elemento (en drop) esta ocupada
+    ConfirmacionEliminarTipoElemento = 1 //Mensaje que pide una confirmacion sobre si eliminar un tipo de elemento
 }

@@ -8,11 +8,13 @@ import { Entidad } from "../modelos/entidad";
 export class Datos{
     creador: Creador;
     //listaFilas: Fila[];
-    entidadesCreadas: boolean = false;
-    entidades: Entidad[] = [];     
+    entidadesCreadas: boolean;
+    entidades: Entidad[];     
 
     
     constructor(creador: Creador){
+        this.entidadesCreadas = false;
+        this.entidades = [];
         this.creador = creador;
     }
 

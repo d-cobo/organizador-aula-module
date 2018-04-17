@@ -1,12 +1,13 @@
-<p-dialog header="Nuevo elemento"  [(visible)]="displayNuevoElemento">
+<p-dialog header="Nuevo elemento" (onHide)="onCancel()" [(visible)]="displayNuevoElemento">
   <form>
     <label>Nombre</label><br/><input name="nombre" [(ngModel)]="nuevoElemento.nombre" type="text"> <br/><br/>
-    <label>Color</label><br/><input name="color" [(ngModel)]="nuevoElemento.color" type="color"> <br/><br/>
+    <label>Color</label><br/><input name="color" [(ngModel)]="nuevoElemento.color" value="#000000" type="color"> <br/><br/>
     <label>Max. entidades</label><br/>                
     <input name="ancho" [(ngModel)]="nuevoElemento.maxEntidades" class='inputSize' type="number" > <br/><br/>
     <label>Tamaño</label><br/>                
     <input name="ancho" [(ngModel)]="nuevoElemento.ancho" class='inputSize' type="number" > x
     <input name="alto" [(ngModel)]="nuevoElemento.alto" class='inputSize' type="number" > <br/><br/>
-    <p-button (click)="crearNuevoElemento()" icon="fa fa-fw fa-check" label="Crear"></p-button> <p-button icon="fa fa-fw fa-close" label="Cancelar" (click)="displayNuevoElemento=false">Cancelar</p-button>
+    <p-button (click)="crearNuevoElemento()" icon="fa fa-fw fa-check" label="Crear"></p-button>
+    <p-button icon="fa fa-fw fa-close" label="Cancelar" (click)="onCancel()">Cancelar</p-button>
   </form>
 </p-dialog>            

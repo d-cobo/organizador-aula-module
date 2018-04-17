@@ -1,11 +1,12 @@
 
 <div id="main-div" #mainDiv>
     <div class="ui-g">
-      <div id="columna-izquierda" class="ui-g-2">        
+      <div id="columna-izquierda" class="ui-g-2"  *ngIf="mostrarBarraLateral">        
           <div id="drag-div"  pDroppable="entidad" (onDrop)="onDrop(null)">
-            <p>Entidades</p>
+            <p>Entidades <i class="fa fa-angle-double-left iconoOcultar" (click)="toogleColumnaLateral()"></i> </p>
+            
             <div id="elementos">
-              <div *ngFor="let entidad of organizador.getEntidadesSinPos(); let i= index" class="dragElement" (onDragStart)="onDrag(entidad)" pDraggable="entidad" (click)="mostrarDatos(entidad)" >                
+              <div *ngFor="let entidad of organizador.getEntidadesSinPos(); let i= index" class="dragElement" (onDragStart)="onDrag(entidad)" pDraggable="entidad" dragHandle=".fa-user" (click)="mostrarDatos(entidad)" >                
                 <ng-container *ngIf="templateBarra">
                   <ng-container *ngTemplateOutlet="templateBarra; context: {$implicit: entidad.objeto}"></ng-container>
                 </ng-container>
@@ -13,11 +14,14 @@
                   <i class="fa fa-user"></i>
                   <span>{{entidad.titulo}}</span>
                 </ng-container>
-
               </div>
             </div>
-          </div>            
+          </div>          
       </div>
+      <div class="ui-g-0 colOculta" *ngIf="!mostrarBarraLateral">
+          <p><i class="fa fa-angle-double-right iconoOcultar" (click)="toogleColumnaLateral()"></i> </p>
+        </div>  
+
       <p-dialog [(visible)]="display">
         <p-header>
           {{claseObjetoEntidad}}
@@ -26,7 +30,7 @@
             <li *ngFor="let dato of datosEntidad">{{dato}}</li>
           </ul>
       </p-dialog>
-      <div id="columna-derecha" class="ui-g-10">
+      <div id="columna-derecha" [ngClass]="{'ui-g-10': mostrarBarraLateral, 'ui-g-11': !mostrarBarraLateral}">
           <div id="drop-div">
             <div class="tabla" #tabla>
               <div class="fila" *ngFor="let fila of organizador.listaFilas">

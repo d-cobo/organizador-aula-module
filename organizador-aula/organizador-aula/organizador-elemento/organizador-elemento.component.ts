@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ElementRef, Renderer2, Input, ViewChild, ViewChildren, QueryList, HostListener, EventEmitter, Output, ApplicationRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, Input, ViewChild, ViewChildren, QueryList, HostListener, EventEmitter, Output, ApplicationRef } from '@angular/core';
 import { ResizeEvent, ResizableDirective } from 'angular-resizable-element';
 import { Coordenada, ListaElemento, Position } from '../modelos/lista-elementos';
 import { Fila } from '../modelos/fila';
@@ -10,6 +10,9 @@ import { ConfirmationService, Message } from 'primeng/api';
 import { OrganizadorEntidades } from '../organizador-entidades/clases/OrganizadorEntidades';
 import { MsgTipo, MsgCodigo, Mensaje } from '../utils/Mensajes';
 import { NuevoElementoComponent } from './nuevo-elemento/nuevo-elemento.component';
+import { Subscription } from 'rxjs/Subscription';
+import { StartingPoint, ResizingElement, Directions } from './clases/interfaces';
+import { EventosOrgAulaService } from '../../eventos-org-aula.service';
 
 
 @Component({
@@ -21,9 +24,9 @@ import { NuevoElementoComponent } from './nuevo-elemento/nuevo-elemento.componen
 export class OrganizadorElementoComponent implements OnInit {
   
   @Input('datos') datos: Datos;
+
   @ViewChild('mainDiv') mainDiv: ElementRef;
   @ViewChild('tabla') tabla: ElementRef;
-  @Output('mensaje') mensaje: EventEmitter<Mensaje> = new EventEmitter<Mensaje>();
 
   
   draggedCelda: Celda;  
@@ -31,41 +34,46 @@ export class OrganizadorElementoComponent implements OnInit {
   clickedCelda: Celda;  
   organizador: OrganizadorElementos;
   overElem: any;
-  msgs: Message[] = [];
-  resizingElement: {elem, htmlElem};
-  startingPoint: {left, top, ancho, alto};
-  displayNuevoElemento: boolean = false;
+  msgs: Message[];
+  resizingElement: ResizingElement;
+  startingPoint: StartingPoint;
+  displayNuevoElemento: boolean;  
+  subscription: Subscription;
   resizeDir: number;
-  directions: {ARRIBA, ABAJO, IZQUIERDA, DERECHA} = {
-    ARRIBA: 0,
-    ABAJO: 1,
-    IZQUIERDA: 2,
-    DERECHA: 3
-  }
+  readonly ARRIBA: number = Directions.ARRIBA;
+  readonly ABAJO: number = Directions.ABAJO;
+  readonly IZQUIERDA: number = Directions.IZQUIERDA;
+  readonly DERECHA: number = Directions.DERECHA;
+  
   
 
-  get style(){
+  get style(): Object{
     let size: [number, number] = this.organizador.sizeCelda;
     return {width: `${size[0]}px`, height: `${size[1]}px`};
   }
-  constructor(private confirmationService: ConfirmationService, private elementRef: ElementRef, private renderer: Renderer2) {}
+  constructor(private confirmationService: ConfirmationService, private elementRef: ElementRef, private eventos: EventosOrgAulaService) {}
 
   ngOnInit() {    
     this.organizador = new OrganizadorElementos();
     this.organizador.datos = this.datos;
+    this.displayNuevoElemento=false;
+    this.msgs = [];    
     //TODO: poner el listener cogiendo el mainDiv con #mainDiv en el html (bindear con el viewChild)  
     //window.addEventListener('resize', ()=>{this.onResize()});
-  
+    
+    //this.organizador.inicializar();
   }
 
+  
+
+
   @HostListener('window:resize', ['$event'])
-  onResize(){        
+  onResize(): void{        
     this.organizador.cambiarSize(this.tabla, this.mainDiv);        
   }
 
   ngOnDestroy(){
-    //console.log("destruction falls upon you");
-    //window.removeEventListener('resize', ()=>this.onResize());
+    if(this.subscription) this.subscription.unsubscribe();
   }
 
   ngAfterViewInit(){    
@@ -88,7 +96,7 @@ export class OrganizadorElementoComponent implements OnInit {
   }
   
   //Funcion para el drop
-  drop(cel: Celda, event: MouseEvent){     
+  drop(cel: Celda, event: MouseEvent): void{     
     if(this.resizingElement && this.resizingElement.elem){  
       //this.resize(event);         
       return;
@@ -98,9 +106,7 @@ export class OrganizadorElementoComponent implements OnInit {
       cel = this.organizador.getClickedCelda(cel, event.layerX, event.layerY);
     let status: number = this.organizador.drop(cel, this.draggedCelda, this.clickedCelda);
     if(status===MsgTipo.ERROR){
-      this.mensaje.emit({tipo: MsgTipo.ERROR, codigo: MsgCodigo.CeldaOcupada});
-      //this.msgs = [];
-      //this.msgs.push({severity:'error', summary:'Error', detail:'El elemento no cabe en esa posición.'});
+      this.eventos.mensajes.emit({tipo: MsgTipo.ERROR, codigo: MsgCodigo.CeldaOcupada});      
     }
     this.clickedCelda=null;
   }
@@ -111,16 +117,10 @@ export class OrganizadorElementoComponent implements OnInit {
     this.draggedCelda=celda;
   }
 
-  toolsDragStart(listElem: ListaElemento){
+  toolsDragStart(listElem: ListaElemento): void{
     let celda: Celda=new Celda(-1,-1)
-    let elem=new Elemento();
-    elem.color=listElem.color;
-    elem.id=listElem.id;
-    elem.x=0;
-    elem.y=0;
-    elem.x2 = elem.x + (listElem.alto-1);
-    elem.y2 = elem.y + (listElem.ancho-1);
-    elem.maxEntidades=listElem.maxEntidades;
+    let elem=new Elemento(false, listElem.id, listElem.nombre, listElem.color, listElem.maxEntidades);
+    elem.setPos(0, 0, elem.x + (listElem.alto-1), elem.y + (listElem.ancho-1));    
     //elem.activo=true;
     celda.elemento = elem;
     this.draggedCelda=celda;
@@ -128,29 +128,32 @@ export class OrganizadorElementoComponent implements OnInit {
 
 
   removeElement(celda: Celda): void{
-    this.organizador.removeElement(celda);
+    this.organizador.removeElement(celda.elemento);
   }
 
-  removeElementType(id: string){
-    this.confirmationService.confirm({
-      message: 'Si eliminas un tipo de elemento se eliminarán todos los del mismo tipo que haya '+
-               'sobre el tablero, ¿Continuar?',
-      accept: () => {
+  removeElementType(id: string): void{
+    if(this.subscription) this.subscription.unsubscribe();
+    this.subscription = this.eventos.confirmacion.subscribe(res=>{      
+      if(res){
         this.organizador.removeElementType(id);
       }
     });
     
+    this.eventos.mensajes.emit({tipo: MsgTipo.AVISO, codigo: MsgCodigo.ConfirmacionEliminarTipoElemento});
+    
+    
   }
 
-  nuevoElemento(elemento: Elemento){
+  nuevoElemento(elemento: Elemento): void{
     this.displayNuevoElemento=false;
-    this.datos.listaElementos.push(elemento);
+    if(elemento)
+      this.datos.listaElementos.push(elemento);
   }   
 
-  onResizeStart(celda: Celda, event: DragEvent){
-    this.startingPoint = {left: event.clientX, top: event.clientY, ancho: celda.elemento.getAncho(), alto: celda.elemento.getAlto()};    
+  onResizeStart(celda: Celda, event: DragEvent): void{
+    this.startingPoint = {izquierda: event.clientX, arriba: event.clientY, ancho: celda.elemento.getAncho(), alto: celda.elemento.getAlto()};    
     console.log(event);
-    this.resizingElement = {elem: celda.elemento, htmlElem:  (<HTMLElement>event.target).parentNode};    
+    this.resizingElement = {elem: celda.elemento, htmlElem:  (<HTMLElement>event.target).parentElement};    
 
   }
 
@@ -164,36 +167,37 @@ export class OrganizadorElementoComponent implements OnInit {
     this.resizeDir=dir;   
     let targElem: HTMLElement = this.resizingElement.htmlElem;
     //ARIBA
-    if(dir==this.directions.ARRIBA){
+    
+    if(dir==this.ARRIBA){
       
-      if (this.startingPoint.alto - (event.clientY - this.startingPoint.top) <= 0) return;
-        targElem.style.top = (event.clientY - this.startingPoint.top)+"px";
-        targElem.style.height = this.startingPoint.alto - (event.clientY - this.startingPoint.top)+"px";
+      if (this.startingPoint.alto - (event.clientY - this.startingPoint.arriba) <= 0) return;
+        targElem.style.top = (event.clientY - this.startingPoint.arriba)+"px";
+        targElem.style.height = this.startingPoint.alto - (event.clientY - this.startingPoint.arriba)+"px";
         
       //ABAJO
-      }else if(dir == this.directions.ABAJO){
-        targElem.style.height = this.startingPoint.alto + (event.clientY - this.startingPoint.top)+"px";
+      }else if(dir == this.ABAJO){
+        targElem.style.height = this.startingPoint.alto + (event.clientY - this.startingPoint.arriba)+"px";
         
-    }else if(dir == this.directions.IZQUIERDA){
-      if (this.startingPoint.ancho - (event.clientX - this.startingPoint.left) <= 0) return;
-        targElem.style.left = (event.clientX - this.startingPoint.left)+"px";
-        targElem.style.width = this.startingPoint.ancho - (event.clientX - this.startingPoint.left)+"px";
+    }else if(dir == this.IZQUIERDA){
+      if (this.startingPoint.ancho - (event.clientX - this.startingPoint.izquierda) <= 0) return;
+        targElem.style.left = (event.clientX - this.startingPoint.izquierda)+"px";
+        targElem.style.width = this.startingPoint.ancho - (event.clientX - this.startingPoint.izquierda)+"px";
         
-    }else if(dir == this.directions.DERECHA){      
+    }else if(dir == this.DERECHA){      
       
-      targElem.style.width = this.startingPoint.ancho + (event.clientX - this.startingPoint.left)+"px";      
+      targElem.style.width = this.startingPoint.ancho + (event.clientX - this.startingPoint.izquierda)+"px";      
       
     }
     
   }
 
-  onDragEnd(){
+  onDragEnd(): void{
     
     this.organizador.resize(this.resizingElement.elem, this.resizingElement.htmlElem, this.resizeDir, this.startingPoint, this.dragEvent);
     this.resizingElement.elem=null;
   }
 
-  tablaDragEnter(event: DragEvent){
+  tablaDragEnter(event: DragEvent): void{
     this.dragEvent=event;   
   }
 

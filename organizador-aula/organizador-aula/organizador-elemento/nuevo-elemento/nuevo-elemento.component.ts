@@ -8,21 +8,27 @@ import { ListaElemento } from '../../modelos/lista-elementos';
 })
 export class NuevoElementoComponent implements OnInit {
   nuevoElemento: ListaElemento;
-  displayNuevoElemento = true;
+  displayNuevoElemento;
   @Output('elemento') elemento: EventEmitter<ListaElemento> = new EventEmitter<ListaElemento>();
-  constructor() {
-    this.nuevoElemento = {id:"", nombre:"", color:"#0000bb", ancho:1, alto:1, maxEntidades: 1};
+  constructor() {    
+
    }
 
   ngOnInit() {
+    this.nuevoElemento = {id:"", nombre:"", color:"#1111dd", ancho:1, alto:1, maxEntidades: 1};
+    this.displayNuevoElemento = true;
   }
 
-  crearNuevoElemento(){
-    if(this.nuevoElemento.nombre==="" || this.nuevoElemento.ancho<=0 || this.nuevoElemento.alto<=0){
+  crearNuevoElemento(): void{
+    if(this.nuevoElemento.nombre==="" || this.nuevoElemento.maxEntidades<0 || this.nuevoElemento.ancho<=0 || this.nuevoElemento.alto<=0){
       return;
     }
     this.nuevoElemento.id=this.nuevoElemento.nombre;
     this.elemento.emit(this.nuevoElemento);
+  }
+
+  onCancel(): void{
+    this.elemento.emit(null);
   }
 
 }

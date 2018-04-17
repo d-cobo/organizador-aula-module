@@ -9,42 +9,47 @@ import { Entidad } from './modelos/entidad';
 import {Mensaje} from './utils/Mensajes';
 import { ExportTablero, ExportElemento } from './utils/TableroExportInterfaces';
 import { Elemento } from './modelos/elemento';
+import { Subscription } from 'rxjs/Subscription';
 @Component({
   selector: 'app-organizador-aula',
   templateUrl: './organizador-aula.component.html',
   styleUrls: ['./organizador-aula.component.less']
 })
 export class OrganizadorAulaComponent implements OnInit {
+  @Input('creador') creador: Creador;
   @Input('listaElementos') listaElementos: ListaElemento[];
   @Input('listaEntidades') listaEntidades: ListaEntidad[];
   @Input('filas') filas:number;
   @Input('columnas') columnas: number;
   @Input('templateBarra') templateBarra: TemplateRef<any>;
   @Input('templateTabla') templateTabla: TemplateRef<any>;
+  @Input('minSize') minSize: [number, number];
 
-  @Output('clickEntidad') clickEntidad: EventEmitter<Object> = new EventEmitter<Object>();
-  @Output('mensaje') mensaje: EventEmitter<Mensaje> = new EventEmitter<Mensaje>();
-  @Output('onExport') onExport: EventEmitter<ExportTablero> = new EventEmitter<ExportTablero>();
+
+  @Output('onExport') onExport: EventEmitter<ExportTablero>;
 
   @ViewChild('txtFilas') txtFilas: ElementRef;
   @ViewChild('txtColumnas') txtColumnas: ElementRef;
-  ACT_ELEMENTOS = 0;
-  ACT_ENTIDADES = 1;
-  activo=0;
-  @Input('creador') creador: Creador;
+
+  readonly ACT_ELEMENTOS: number = 0;
+  readonly ACT_ENTIDADES: number = 1;
+  activo: number;  
   datos: Datos;
-  constructor() { }
+  constructor() {
+    this.onExport  = new EventEmitter<ExportTablero>();
+  
+   }
 
   ngOnInit() {
-
+    this.activo = this.ACT_ELEMENTOS;
     if(!this.creador){
-      this.creador = new CreadorDefault(this.filas, this.columnas, this.listaElementos, this.listaEntidades);
+      this.creador = new CreadorDefault(this.filas, this.columnas, this.listaElementos, this.listaEntidades, this.minSize);
     }
     this.datos = new Datos(this.creador);
     console.log(this.datos);
   }
 
-  guardar(){
+  guardar(): void{
     let exportTablero: ExportTablero = {numFilas:this.datos.creador.numFilas, numColumnas: this.datos.creador.numColumnas,
        elementos: [], entidades: []};    
     this.datos.listaFilas.forEach(f=>
@@ -64,20 +69,14 @@ export class OrganizadorAulaComponent implements OnInit {
     this.onExport.emit(exportTablero);
   }
 
-  cambiar(){
+  cambiar(): void{
     console.log(this.txtFilas.nativeElement.value, this.txtColumnas.nativeElement.value);
     this.creador.numFilas = parseInt(this.txtFilas.nativeElement.value);
     this.creador.numColumnas = parseInt(this.txtColumnas.nativeElement.value);
     //this.creador.numFilas = parseInt(this.txtFilas.nativeElement.value);
   }
 
-  onClickEntidad(event: Object){
-    this.clickEntidad.emit(event);
-  }
 
-  onMensaje(event:Mensaje){
-    this.mensaje.emit(event);
-  }
 
 }
 

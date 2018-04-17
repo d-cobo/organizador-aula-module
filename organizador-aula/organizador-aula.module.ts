@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 import {ButtonModule} from 'primeng/button';
 import {GrowlModule} from 'primeng/growl';
 import { NuevoElementoComponent } from './organizador-aula/organizador-elemento/nuevo-elemento/nuevo-elemento.component';
+import { EventosOrgAulaService } from './eventos-org-aula.service';
 
 
 @NgModule({
@@ -32,7 +33,7 @@ import { NuevoElementoComponent } from './organizador-aula/organizador-elemento/
   exports: [
     OrganizadorAulaComponent
   ],
-  providers: [ConfirmationService],
+  providers: [ConfirmationService, EventosOrgAulaService],
   declarations: [OrganizadorElementoComponent, OrganizadorAulaComponent, OrganizadorEntidadesComponent, NuevoElementoComponent]
 })
 export class OrganizadorAulaModule { }

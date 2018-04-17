@@ -6,7 +6,7 @@
     <label>Columnas:</label> <input #txtColumnas type="number" value="{{creador.numColumnas}}"/>
     <button (click)="cambiar()">Cambiar</button>
 </div>
-<app-organizador-elemento (mensaje)='onMensaje($event)' *ngIf="activo==ACT_ELEMENTOS" [datos]="datos"></app-organizador-elemento>
-<app-organizador-entidades (clickEntidad)="onClickEntidad($event)" [templateBarra]="templateBarra" [templateTabla]="templateTabla" *ngIf="activo==ACT_ENTIDADES" [datos]="datos">
+<app-organizador-elemento *ngIf="activo==ACT_ELEMENTOS" [datos]="datos"></app-organizador-elemento>
+<app-organizador-entidades [templateBarra]="templateBarra" [templateTabla]="templateTabla" *ngIf="activo==ACT_ENTIDADES" [datos]="datos">
     <ng-template [ngTemplateOutlet]="templateVariable"></ng-template>
 </app-organizador-entidades>
