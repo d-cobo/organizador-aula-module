@@ -8,6 +8,7 @@ import { Fila } from './organizador-aula/organizador-aula/modelos/fila';
 import { Celda } from './organizador-aula/organizador-aula/modelos/celda';
 import { ListaElemento } from './organizador-aula/organizador-aula/modelos/lista-elementos';
 import { ListaEntidad } from './organizador-aula/organizador-aula/modelos/lista-entidad';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { ListaEntidad } from './organizador-aula/organizador-aula/modelos/lista-
   ],
   imports: [
     OrganizadorAulaModule,
-    BrowserModule
+    BrowserModule,
+    FormsModule 
   ],
   providers: [],
   bootstrap: [AppComponent]

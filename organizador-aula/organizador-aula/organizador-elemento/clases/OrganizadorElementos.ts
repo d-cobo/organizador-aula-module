@@ -78,13 +78,24 @@ export class OrganizadorElementos extends Organizador{
 
   removeElement(elemento: Elemento): void{
     
-    if(elemento.entidades){      
-      elemento.entidades.forEach(ent=>{ent.elemento=null});
-    }
     elemento.celdas.forEach(fila=>fila.forEach(celda=>{
       celda.elemento=null;
     }));      
-  
+
+    if(elemento.entidades){      
+      elemento.entidades.forEach(ent=>{ent.elemento=null});
+      if(this.datos.entSinElemento){
+        let elem = new Elemento(true, "id_auto", "", "rgba(0,0,0,0", 1);
+        elem.setPos(elemento.x, elemento.y, elemento.x, elemento.y);
+        
+        elemento.entidades[0].elemento = elem;
+        elemento.celdas[0][0].elemento = elem;
+        elem.celdas=[[elemento.celdas[0][0]]];
+        elem.entidades=[elemento.entidades[0]];
+      }
+    }
+
+    
   }
 
 
@@ -96,7 +107,7 @@ export class OrganizadorElementos extends Organizador{
     let posx: number;
     let posy: number;
     
-    if(cel.elemento && cel.elemento.id=="id_auto"){
+    if(cel.elemento && cel.elemento.id=="id_auto" && (!draggedCelda.elemento.entidades || draggedCelda.elemento.entidades.length==0)){
       cel.elemento.entidades[0].elemento = draggedCelda.elemento;
       draggedCelda.elemento.entidades = cel.elemento.entidades;
       cel.elemento = draggedCelda.elemento;

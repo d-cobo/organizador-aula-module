@@ -23,7 +23,23 @@ import { EventosOrgAulaService } from '../../eventos-org-aula.service';
 
 export class OrganizadorElementoComponent implements OnInit {
   
-  @Input('datos') datos: Datos;
+  prDatos: Datos;
+  
+  @Input('datos')
+  set datos(datos:Datos){
+    this.prDatos=datos;
+    if(this.organizador){
+      this.organizador.datos = datos;
+      this.organizador.cambiarSize(this.tabla, this.mainDiv);
+    }
+  }
+
+  get datos(): Datos{
+    return this.prDatos;
+  }
+
+
+
   @Input('templateElemento') templateElemento: TemplateRef<any>;
   
   @ViewChild('mainDiv') mainDiv: ElementRef;
@@ -107,10 +123,7 @@ export class OrganizadorElementoComponent implements OnInit {
     }
   }*/
   ngOnChanges(changes: SimpleChanges): void{    
-    if(this.organizador){
-      this.organizador.datos = this.datos;
-      this.organizador.cambiarSize(this.tabla, this.mainDiv);
-    }
+
    /* this.organizador = new OrganizadorElementos();
     this.organizador.datos = this.datos;
     this.organizador.cambiarSize(this.tabla, this.mainDiv);        

@@ -10,11 +10,12 @@ import {Mensaje, MsgTipo, MsgCodigo} from './utils/Mensajes';
 import { ExportTablero, ExportElemento } from './utils/TableroExportInterfaces';
 import { Elemento } from './modelos/elemento';
 import { Subscription } from 'rxjs/Subscription';
-import { ConfiguracionOrganizador } from './modelos/configuracion-organizador';
+
 import { OrganizadorElementos } from './organizador-elemento/clases/OrganizadorElementos';
 import { OrganizadorEntidades } from './organizador-entidades/clases/OrganizadorEntidades';
 import { Organizador } from './utils/Organizador';
 import { EventosOrgAulaService } from '../eventos-org-aula.service';
+import { ConfiguracionOrganizador, Botones } from './utils/configuracion-organizador';
 @Component({
   selector: 'app-organizador-aula',
   templateUrl: './organizador-aula.component.html',
@@ -26,15 +27,20 @@ export class OrganizadorAulaComponent implements OnInit {
   @Input('templateTabla') templateTabla: TemplateRef<any>;
   @Input('templateElemento') templateElemento: TemplateRef<any>;
   @Input('configuracion') configuracion: ConfiguracionOrganizador;
+  @Input('listaElementos') listaElementos: ListaElemento[];
+  @Input('listaEntidades') listaEntidades: ListaEntidad[];
 
   @Output('onExport') onExport: EventEmitter<ExportTablero>;
 
   @ViewChild('txtFilas') txtFilas: ElementRef;
   @ViewChild('txtColumnas') txtColumnas: ElementRef;
 
-  readonly ACT_ELEMENTOS: number = 0;
-  readonly ACT_ENTIDADES: number = 1;
-  readonly ACT_VISUALIZAR: number = 2;
+  readonly ACT_ELEMENTOS: number = Botones.Elementos;
+  readonly ACT_ENTIDADES: number = Botones.Entidades;
+  readonly ACT_VISUALIZAR: number = Botones.Visualizar;
+
+  subscriptionClickBoton: Subscription;
+  subscriptionCambioTamano: Subscription;
   activo: number;  
   datos: Datos;
   argsCreador: [number, number, ListaElemento[], ListaEntidad[], [number, number]];
@@ -49,12 +55,13 @@ export class OrganizadorAulaComponent implements OnInit {
       this.eventos.mensajes.emit({tipo: MsgTipo.ERROR, codigo: MsgCodigo.ConfigOrCreadorNecesario});
       return;
     }
+    
     if(this.configuracion && this.configuracion.permisoElementos) this.activo = this.ACT_ELEMENTOS;
     else if(this.configuracion && this.configuracion.permisoEntidades) this.activo = this.ACT_ENTIDADES;
     else this.activo=this.ACT_VISUALIZAR;
     
     if(!this.creador){
-      this.creador = new CreadorDefault(this.configuracion.filas, this.configuracion.columnas, this.configuracion.listaElementos, this.configuracion.listaEntidades, this.configuracion.minSize);
+      this.creador = new CreadorDefault(this.configuracion.filas, this.configuracion.columnas, this.listaElementos, this.listaEntidades, this.configuracion.minSize);
     }    
     //Guardar estado inicial
     this.argsCreador=[this.creador.numFilas, this.creador.numColumnas, this.creador.listaElementos.concat(), this.creador.listaEntidades.concat(), this.creador.getMinSize];
@@ -68,6 +75,14 @@ export class OrganizadorAulaComponent implements OnInit {
     org.datos = this.datos;
     org.inicializar();
     console.log(this.datos);
+
+    this.subscriptionClickBoton = this.eventos.clickBoton.subscribe(num=>this.onClickBoton(num));
+    this.subscriptionCambioTamano = this.eventos.cambioTamano.subscribe(tam=>this.onCambioTamano(tam));
+  }
+
+  ngOnDestroy(){
+    this.subscriptionClickBoton.unsubscribe();
+    this.subscriptionCambioTamano.unsubscribe();
   }
 
   guardar(): void{
@@ -151,6 +166,44 @@ export class OrganizadorAulaComponent implements OnInit {
     this.activo=tab;
     },0);*/
     
+  }
+
+  onClickBoton(num: number){
+    console.log(num);
+    switch(num){
+      case Botones.Elementos:
+        if(num===Botones.Elementos && this.configuracion && !this.configuracion.permisoElementos){ 
+          this.eventos.mensajes.emit({tipo: MsgTipo.ERROR, codigo: MsgCodigo.ErrorPermisos});
+          return;
+        }
+      case Botones.Entidades:
+        if(num===Botones.Entidades && this.configuracion && !this.configuracion.permisoEntidades){ 
+          this.eventos.mensajes.emit({tipo: MsgTipo.ERROR, codigo: MsgCodigo.ErrorPermisos});
+          return;
+        }
+      case Botones.Visualizar:        
+        this.activo = num;
+        break;
+      case Botones.Cancelar:
+        if(this.configuracion && !this.configuracion.permisoGuardar){ 
+          this.eventos.mensajes.emit({tipo: MsgTipo.ERROR, codigo: MsgCodigo.ErrorPermisos});
+          return;
+        }
+        this.cancelar();
+        break;
+      case Botones.Guardar:
+        if(this.configuracion && !this.configuracion.permisoGuardar){ 
+          this.eventos.mensajes.emit({tipo: MsgTipo.ERROR, codigo: MsgCodigo.ErrorPermisos});
+          return;
+        }
+        this.guardar();
+        break;      
+    }
+  }
+
+  onCambioTamano(size: [number, number]){
+    this.creador.numFilas = size[0];
+    this.creador.numColumnas = size[1];
   }
 
   

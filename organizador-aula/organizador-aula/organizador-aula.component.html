@@ -1,5 +1,5 @@
 <ng-container *ngIf="creador || (configuracion && configuracion.filas > 0 && configuracion.columnas > 0)">
-    <div id="tabs" >
+    <div *ngIf="configuracion && configuracion.mostrarBarraSuperior" id="tabs" >
         <li *ngIf="configuracion.permisoElementos"  [ngClass]="{'activo': activo==ACT_ELEMENTOS}" (click)="activo=ACT_ELEMENTOS"><span i18n>Elementos</span></li>
         <li *ngIf="configuracion.permisoEntidades" [ngClass]="{'activo': activo==ACT_ENTIDADES}" (click)="activo=ACT_ENTIDADES"><span i18n>Entidades</span></li>
         <li [ngClass]="{'activo': activo==ACT_VISUALIZAR}" (click)="activo=ACT_VISUALIZAR"><span i18n>Visualizar</span></li>        

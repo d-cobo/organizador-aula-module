@@ -21,7 +21,22 @@ export class OrganizadorEntidadesComponent implements OnInit {
   @Input('templateBarra') templateBarra: TemplateRef<any>;
   @Input('templateElemento') templateElemento: TemplateRef<any>;
   @Input('templateTabla') templateTabla: TemplateRef<any>;
-  @Input("datos") datos: Datos;
+  
+  prDatos: Datos;
+  
+  @Input('datos')
+  set datos(datos:Datos){
+    this.prDatos=datos;
+    if(this.organizador){
+      this.organizador.datos = datos;
+      this.organizador.cambiarSize(this.tabla, this.mainDiv);
+    }
+  }
+
+  get datos(): Datos{
+    return this.prDatos;
+  }
+
 
 
   
@@ -52,21 +67,7 @@ export class OrganizadorEntidadesComponent implements OnInit {
     this.organizador.cambiarSize(this.tabla, this.mainDiv);        
   }
 
-  ngOnChanges(): void{    
-    if(this.organizador){
-      this.organizador.datos = this.datos;
-      this.organizador.cambiarSize(this.tabla, this.mainDiv);
-    }
-    /*
-    let org = new OrganizadorElementos();
-    org.datos = this.datos;
-    org.inicializar();    
-    this.organizador = new OrganizadorEntidades();
-    this.organizador.datos = this.datos;
-    this.organizador.inicializar();    
-    this.organizador.cambiarSize(this.tabla, this.mainDiv);    
-    */
-  }
+
 
   onDrop(celda: Celda): void{
     if(celda && celda.elemento)

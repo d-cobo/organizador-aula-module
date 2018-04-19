@@ -9,7 +9,8 @@ import { EventosOrgAulaService } from './organizador-aula/eventos-org-aula.servi
 import { Subscription } from 'rxjs/Subscription';
 import { ListaElemento } from './organizador-aula/organizador-aula/modelos/lista-elementos';
 import { ExportTablero } from './organizador-aula/organizador-aula/utils/TableroExportInterfaces';
-import { ConfiguracionOrganizador } from './organizador-aula/organizador-aula/modelos/configuracion-organizador';
+import { ConfiguracionOrganizador, Botones } from './organizador-aula/organizador-aula/utils/configuracion-organizador';
+
 
 @Component({
   selector: 'app-root',
@@ -30,9 +31,15 @@ export class AppComponent {
   //listaElementos: Array<ListaElemento>;
   creador: Creador;
 
+readonly btnElementos = Botones.Elementos;
+readonly btnEntidades = Botones.Entidades;
+readonly btnVisualizar = Botones.Visualizar;
+readonly btnGuardar = Botones.Guardar;
+readonly btnCancelar = Botones.Cancelar;
+
   constructor(private eventos: EventosOrgAulaService){}
 
-  ngOnInit(){
+  ngOnInit(){    
     this.filas = 7;
     this.columnas = 7;
     this.mensajeSubscription = this.eventos.mensajes.subscribe(mens=>this.onMensaje(mens));
@@ -113,24 +120,12 @@ export class AppComponent {
       filas: this.filas,
       columnas: this.filas,
       minSize: [0, 0],
-      listaElementos: this.listaElementos,
-      listaEntidades: alumnos,
       permisoElementos: true,
       permisoEntidades: true,
       permisoGuardar: true,
-      entidadSinElemento: true
+      entidadSinElemento: true,
+      mostrarBarraSuperior: false
     }
-    
-    //  let a = JSON.parse('{"sizeCelda":[202,114],"prNumFilas":7,"prNumColumnas":7,"prListaElementos":[{"id":"idproyector","nombre":"proyector","color":"green","posiciones":[{"xy":[0,3],"xy2":[0,3]}]},{"id":"idmesa","nombre":"nombremesa","color":"#cf7f07","posiciones":[{"xy":[0,6],"xy2":[0,6]},{"xy":[1,1],"xy2":[2,2]},{"xy":[3,4],"xy2":[3,4]}]},{"id":"idotro","nombre":"otro","color":"gray","posiciones":[{"xy":[3,5],"xy2":[5,5]},{"xy":[4,4],"xy2":[4,4]}]}],"prListaEntidades":{"id":"id","titulo":"nombre","objetos":[{"id":"12345678A","nombre":"pepe","otro":"Come mucho"},{"id":"87654321A","nombre":"pepita","otro":"Se pelea con pepete"},{"id":"82654321A","nombre":"pepete","otro":"No hace la tarea"}],"posiciones":[{"id":"12345678A","pos":[1,1]}]}}')
-    //  console.log(a);
-    //this.creador = new CreadorPropio(this.filas, this.columnas, this.listaElementos, this.listaEntidades);
-    //this.creador = new CreadorPropio(a.prNumFilas, a.prNumColumnas, a.prListaElementos, a.prlistaEntidades);
-    
-    
-/*
-    let c = 'id';
-    let v = '87654321A';
-    console.log(alumnos.find(al => al[c$1==$2));*/
   }
 
   ngOnDestroy(){
@@ -179,5 +174,14 @@ export class AppComponent {
   onConfirmacion(event: EventEmitter<boolean>){
     event.emit(false);
   }
+
+  clickBoton(num: number){    
+    this.eventos.clickBoton.emit(num);
+  }
+
+  cambioTam(){
+    this.eventos.cambioTamano.emit([this.filas, this.columnas]);
+  }
+
 }
 
