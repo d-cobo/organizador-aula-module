@@ -9,6 +9,7 @@ import { EventosOrgAulaService } from './organizador-aula/eventos-org-aula.servi
 import { Subscription } from 'rxjs/Subscription';
 import { ListaElemento } from './organizador-aula/organizador-aula/modelos/lista-elementos';
 import { ExportTablero } from './organizador-aula/organizador-aula/utils/TableroExportInterfaces';
+import { ConfiguracionOrganizador } from './organizador-aula/organizador-aula/modelos/configuracion-organizador';
 
 @Component({
   selector: 'app-root',
@@ -25,6 +26,7 @@ export class AppComponent {
   cargado: boolean = true;
   mensajeSubscription: Subscription;
   entidadSubscription: Subscription;
+  config: ConfiguracionOrganizador;
   //listaElementos: Array<ListaElemento>;
   creador: Creador;
 
@@ -37,41 +39,41 @@ export class AppComponent {
     this.entidadSubscription = this.eventos.clickEntidad.subscribe(ent=>this.mostrarAlumno(ent));
     this.listaElementos = [
       {
-        nombre: 'nombremesa',
+        nombre: 'Mesa',
         id: 'idmesa',
-        maxEntidades: 3,
+        maxEntidades: 2,
         color: '#cf7f07',
-        posiciones: [
-          {
-            xy: [1,1],
-            xy2: [2, 2]
-          },
-          {
-            xy: [0,6]
-          },
-          {
-            xy: [3,4]
-          }
+        posiciones: [          
+          { xy: [2,0] },
+          { xy: [2,2] },
+          { xy: [2,4] },
+          { xy: [2,6] },
+          { xy: [4,0] },
+          { xy: [4,2] },
+          { xy: [4,4] },
+          { xy: [4,6] },
+          { xy: [6,0] },
+          { xy: [6,2] },
+          { xy: [6,4] },
+          { xy: [6,6] }          
         ]
       },
       {
-        nombre: 'otro',
-        id: 'idotro',
+        nombre: 'Mesa profesor',
+        id: 'idmesaprof',
         color: 'gray',
         posiciones: [
           {
-            xy: [3,5],
-            xy2: [5, 5]
-          },
-          {
-            xy: [4,4]
-          }
+            xy: [0,0],
+            xy2: [0, 2]
+          }          
         ]
       },
       {
-        nombre: 'proyector',
-        id: 'idproyector',
+        nombre: 'Pizarra',
+        id: 'idpizarra',
         color: 'green',
+        ancho: 4,
         posiciones: [
           {
             xy: [0,3]
@@ -81,27 +83,44 @@ export class AppComponent {
     ];
 
     let alumnos: AlumnoEnt[] = [];
-    alumnos.push(new AlumnoEnt());    
-    alumnos[0].id='12345678A';
-    alumnos[0].nombre='pepe';
-    alumnos[0].otro='Come mucho';
-    alumnos.push(new AlumnoEnt());
-    alumnos[1].id='87654321A';
-    alumnos[1].nombre='pepita';  
-    alumnos[1].otro='Se pelea con pepete';  
-    alumnos.push(new AlumnoEnt());
-    alumnos[2].id='82654321A';
-    alumnos[2].nombre='pepete';    
-    alumnos[2].otro='No hace la tarea';
-    alumnos.push(new AlumnoEnt());
-    alumnos[3].id='72654321A';
-    alumnos[3].nombre='carla';    
-    alumnos[3].otro='asdfasd';
-    alumnos.push(new AlumnoEnt());
-    alumnos[4].id='62654321A';
-    alumnos[4].nombre='josean';    
-    alumnos[4].otro='zzzasd';
-    this.listaEntidades= alumnos;      
+    alumnos.push(new AlumnoEnt('12345678A', 'Pepe', 'Come mucho'));       
+    alumnos.push(new AlumnoEnt('12345678A', 'Pepita', 'Se pelea con pepete'));        
+    alumnos.push(new AlumnoEnt('82654321A', 'Pepete', 'otro 3'));
+    alumnos.push(new AlumnoEnt('72654321A', 'Carla', 'otro 4'));   
+    alumnos.push(new AlumnoEnt('62654321A', 'Josean', 'otro 5'));      
+    alumnos.push(new AlumnoEnt('22654521A', 'Lucia', 'otro 6')); 
+    alumnos.push(new AlumnoEnt('52654323A', 'Alvaro', 'otro 7'));
+    alumnos.push(new AlumnoEnt('35654323A', 'Manolo', 'otro 8')); 
+    alumnos.push(new AlumnoEnt('54654323A', 'Lola', 'otro 9'));   
+    alumnos.push(new AlumnoEnt('11654323A', 'Sara', 'otro 10'));  
+    alumnos.push(new AlumnoEnt('19654323A', 'Josetxo', 'otro 11'));    
+    alumnos.push(new AlumnoEnt('75654323A', 'Rubén', 'otro 12'));   
+    alumnos[0].posicion = [2,0];    
+    alumnos[1].posicion = [2,2];    
+    alumnos[2].posicion = [2,4];     
+    alumnos[3].posicion = [2,6];     
+    alumnos[4].posicion = [4,0];       
+    alumnos[5].posicion = [4,2];               
+    alumnos[6].posicion = [4,4];           
+    alumnos[7].posicion = [4,6];         
+    alumnos[8].posicion = [6,0];           
+    alumnos[9].posicion = [6,2];        
+    alumnos[10].posicion = [6,4];         
+    alumnos[11].posicion = [6,6];
+    this.listaEntidades= alumnos; 
+    this.creador = new CreadorPropio(this.filas, this.columnas, this.listaElementos, this.listaEntidades, [100, 100]);     
+    this.config = {
+      filas: this.filas,
+      columnas: this.filas,
+      minSize: [0, 0],
+      listaElementos: this.listaElementos,
+      listaEntidades: alumnos,
+      permisoElementos: true,
+      permisoEntidades: true,
+      permisoGuardar: true,
+      entidadSinElemento: true
+    }
+    
     //  let a = JSON.parse('{"sizeCelda":[202,114],"prNumFilas":7,"prNumColumnas":7,"prListaElementos":[{"id":"idproyector","nombre":"proyector","color":"green","posiciones":[{"xy":[0,3],"xy2":[0,3]}]},{"id":"idmesa","nombre":"nombremesa","color":"#cf7f07","posiciones":[{"xy":[0,6],"xy2":[0,6]},{"xy":[1,1],"xy2":[2,2]},{"xy":[3,4],"xy2":[3,4]}]},{"id":"idotro","nombre":"otro","color":"gray","posiciones":[{"xy":[3,5],"xy2":[5,5]},{"xy":[4,4],"xy2":[4,4]}]}],"prListaEntidades":{"id":"id","titulo":"nombre","objetos":[{"id":"12345678A","nombre":"pepe","otro":"Come mucho"},{"id":"87654321A","nombre":"pepita","otro":"Se pelea con pepete"},{"id":"82654321A","nombre":"pepete","otro":"No hace la tarea"}],"posiciones":[{"id":"12345678A","pos":[1,1]}]}}')
     //  console.log(a);
     //this.creador = new CreadorPropio(this.filas, this.columnas, this.listaElementos, this.listaEntidades);
@@ -143,6 +162,8 @@ export class AppComponent {
         case MsgCodigo.CeldaOcupada:
           console.log("Celda ocupada!");
           break;
+        case MsgCodigo.ConfigOrCreadorNecesario:
+          console.log("Creador o configuracion necesario");
       }
     }
 

@@ -2,17 +2,18 @@
   <div class="ui-g">
     <div id="columna-izquierda" class="ui-g-2">        
         <div id="drag-div">
-          <p>Elementos</p>
+          <p i18n>Elementos</p>
           <div id="elementos">
             <div class="add" (click)="displayNuevoElemento=true">
-              <i class="addIcon fa fa-plus"></i><span> Nuevo elemento</span>
+              <i class="addIcon fa fa-plus"></i><span i18n> Nuevo elemento</span>
             </div>
             <app-nuevo-elemento (elemento)="nuevoElemento($event)" *ngIf="displayNuevoElemento"></app-nuevo-elemento>
             <p-confirmDialog acceptLabel="Sí"  header="Aviso" icon="fa fa-warning" width="425"></p-confirmDialog>
             <div *ngFor="let elem of organizador.datos.listaElementos; let i= index" [ngStyle]="style" class="dragElement" [style.background-color]="elem.color" (onDragStart)="toolsDragStart(elem)" pDraggable="elementos" [attr.tipo]=elem.id>
-              <i (click)="removeElementType(elem.id)" class="fa fa-times removeIcon"></i> 
-              <span>{{elem.nombre}}</span> <br/>
-              <span>{{elem.ancho}}x{{elem.alto}}</span>
+                <i (click)="removeElementType(elem.id)" class="fa fa-times removeIcon"></i> 
+                <ng-container *ngIf="templateElemento">
+                    <ng-container *ngTemplateOutlet="templateElemento; context: {$implicit: elem}"></ng-container>
+                </ng-container>              
             </div>
           </div>
         </div>            
@@ -24,26 +25,24 @@
             <div class="fila" *ngFor="let fila of organizador.listaFilas">                  
                   <div [ngStyle]="col.getSizePx()" pDroppable="elementos" (onDrop)="drop(col,$event)" class="columna"   *ngFor="let col of fila.celdas" [attr.fila]="i" [attr.columna]="j">                    
                   
-                    <div pDraggable="elementos"  (onDragStart)="celdaDragStart(col, $event)" *ngIf="col.initElemento()"  id="elem_{{i}}_{{j}}" [ngClass]="col.elemento.getClasses()" [ngStyle]="col.elemento.getEstilo()">
+                    <div  *ngIf="col.initElemento()"  id="elem_{{i}}_{{j}}" [ngClass]="col.elemento.getClasses()" [ngStyle]="col.elemento.getEstilo()">
+                      <div id="tempWrapper" [dragEffect]="move" pDraggable="elementos"  (onDragStart)="celdaDragStart(col, $event)">
+                        <ng-container *ngIf="templateElemento">
+                          <ng-container *ngTemplateOutlet="templateElemento; context: {$implicit: col.elemento}"></ng-container>
+                        </ng-container>
+                      </div>
                       <div class="arrow upArrow">&#11021;</div>
                       <div class="arrow leftArrow"> &#11020;</div>
                       <div class="arrow rightArrow"> &#11020;</div>
                       <div class="arrow downArrow">&#11021;</div>
                       
-                      <div class="resize resize-up"  [dragEffect]="link" (onDragStart)="onResizeStart(col, $event)" (onDrag)="onDrag(col, ARRIBA, $event)" (onDragEnd)="onDragEnd($event)" pDraggable="resize"></div>    
+                      <div class="resize resize-up"   (onDragStart)="onResizeStart(col, $event)" (onDrag)="onDrag(col, ARRIBA, $event)" (onDragEnd)="onDragEnd($event)" pDraggable="resize"></div>    
                       <div class="resize resize-left"  (onDragStart)="onResizeStart(col, $event)" (onDrag)="onDrag(col, IZQUIERDA, $event)" (onDragEnd)="onDragEnd($event)" pDraggable="resize"></div>    
                       <div class="resize resize-right"  (onDragStart)="onResizeStart(col, $event)" (onDrag)="onDrag(col, DERECHA, $event)" (onDragEnd)="onDragEnd($event)" pDraggable="resize"></div>    
                       <div class="resize resize-down"  (onDragStart)="onResizeStart(col, $event)" (onDrag)="onDrag(col, ABAJO, $event)" (onDragEnd)="onDragEnd($event)" pDraggable="resize"></div>    
-                      
-                      
-                        <!--
-                          <i (click)="organizador.resizeHorizontal(col.elemento, -1)" class="fa fa-arrow-left resize resizeLeftIcon"></i>
-                          <i (click)="organizador.resizeVertical(col.elemento, -1)" class="fa fa-arrow-up resize resizeUpIcon"></i>
-                        -->
                         <i (click)="removeElement(col)" class="fa fa-times removeIcon"></i> 
                                              
-                        <div class='separator'></div>
-                        <!--<i (click)="organizador.resizeHorizontal(col.elemento, 1)" class="fa fa-arrow-right resize resizeRightIcon"></i>-->                        
+                        <!--<div class='separator'></div>-->          
                         <div  class="resizeHandler"></div>
                         
                       

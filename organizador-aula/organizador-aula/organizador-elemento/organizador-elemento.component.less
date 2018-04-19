@@ -19,19 +19,7 @@
     margin-top: 5px;
     width:90%;
     height: 90%;   
-    border: 1px solid;
-    border-color: gray;
-    opacity:0.9; 
-
-    //pointer-events: none;
-    .resizeUpIcon, .resizeLeftIcon{
-        float:left;
-        cursor: pointer;        
-    }
-    .resizeDownIcon, .resizeRightIcon{
-        float: right;
-        cursor: pointer;    
-    }
+    border: 0.5px solid gray;
 }
 
 
@@ -85,7 +73,7 @@
 }
 #main-div{
 margin:0;
-height:800px;
+height:100%;
 }
 
 #main-div .ui-g{
@@ -243,6 +231,7 @@ span{
 .removeIcon{
     position: absolute;
     margin-left: 2px;
+    top: 0px;
     left: calc(~"100%" - ~"1.5vw");
     cursor: pointer;
     z-index: 100;
@@ -254,7 +243,11 @@ span{
     }
 }
 
-
+.elemento:active{
+     .arrow{
+        visibility: hidden;
+        }
+}
 
 
 
@@ -262,13 +255,7 @@ span{
 .inactivo .removeIcon, .inactivo .expandRightIcon{
     visibility: hidden;
 }*/
-.separator{
-    height: ~"-moz-calc(100% - 10px)";
-    height: ~"-webkit-calc(100% - 10px)";
-    height: ~"-o-calc(100% - 10px)";
-    height: ~"calc(100% - 10px)";
-    width:0;
-}
+
 /*
 .resizeHandler{
     position:absolute;
@@ -289,28 +276,14 @@ span{
     }
 }
 
-.noUp .resizeUpIcon, .noDown .resizeDownIcon, .noLeft .resizeLeftIcon, .noRight .resizeRightIcon{
-    visibility: hidden;
-    width:0;
-    margin:0;
-}
+
 
 .filler{
     width:100%;
     height:100%;
 }
 
-.inputSize{
-    width: 3em;
-}
 
-.ghost{
-    position: absolute;
-    top:0;
-    left:0;
-    width:100%;
-    height: 100%;
-}
 
 .elemento{
     .resize{    
@@ -330,6 +303,9 @@ span{
         width:10px;   
         cursor: e-resize;     
     }    
+    .resize-up{
+        top: 0px;
+    }
     .resize-down{        
         top: calc(~"100%" - ~"10px");
     }
@@ -341,4 +317,10 @@ span{
 
 #columna-izquierda, #columna-derecha{
     height: 100%;
+}
+
+#tempWrapper{
+    width:100%;
+    height:100%;
+    cursor:move;
 }

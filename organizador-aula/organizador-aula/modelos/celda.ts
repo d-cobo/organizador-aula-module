@@ -7,19 +7,11 @@ export class Celda{
     ancho:number;
     alto: number;
     elemento: Elemento;
-    
-    /*constructor(x:number, y:number, ancho:number, alto:number){
-        this.x = x;
-        this.y=y;
-        this.ancho = ancho;
-        this.alto = alto;
-        //this.elemento = new Elemento(x,y);        
-    }*/
+
     constructor(x:number, y:number){
         this.x = x;
         this.y=y;      
         this.elemento=null;  
-        //this.elemento = new Elemento(x,y);        
     }
 
     getAnchoPx(): string{

@@ -1,5 +1,6 @@
 import { ListaEntidad } from "../modelos/lista-entidad";
 import { Elemento } from "../modelos/elemento";
+import { ListaElemento } from "../modelos/lista-elementos";
 
 export interface ExportElemento{
     x: number;
@@ -20,6 +21,8 @@ export interface ExportEntidad{
 export interface ExportTablero{
     numFilas: number;
     numColumnas: number;
-    elementos: ExportElemento[];
-    entidades: ExportEntidad[];
+    /*elementos: ExportElemento[];
+    entidades: ExportEntidad[];*/
+    listaElementos: ListaElemento[];
+    listaEntidades: ListaEntidad[];
 }

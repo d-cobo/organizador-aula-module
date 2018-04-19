@@ -6,6 +6,7 @@ import { Celda } from "../../modelos/celda";
 import { Coordenada } from "../../modelos/lista-elementos";
 import { MsgTipo } from "../../utils/Mensajes";
 import { StartingPoint, Directions } from "./interfaces";
+import { EventosOrgAulaService } from "../../../eventos-org-aula.service";
 
 export class OrganizadorElementos extends Organizador{
 
@@ -21,6 +22,9 @@ export class OrganizadorElementos extends Organizador{
 
 
     initElementos(): void{
+      if(!this.datos.listaElementos){
+        return;
+      }
       this.datos.listaElementos.forEach( (lisElem) => {   
         if(!lisElem.ancho) lisElem.ancho = 1;
         if(!lisElem.alto) lisElem.alto = 1;    
@@ -28,7 +32,7 @@ export class OrganizadorElementos extends Organizador{
         if(lisElem.posiciones){
           lisElem.posiciones.forEach((pos) => {
               if(!pos.xy2){
-                pos.xy2=pos.xy;
+                pos.xy2 = [pos.xy[0]+(lisElem.alto-1), pos.xy[1]+(lisElem.ancho-1)];
               }              
               //let elemento: Elemento = this.getElemento(pos.xy[0], pos.xy[1]); 
               let elemento:Elemento = new Elemento(true, lisElem.id, lisElem.nombre, lisElem.color, lisElem.maxEntidades);
@@ -91,7 +95,15 @@ export class OrganizadorElementos extends Organizador{
     //Si estas moviendo un elemento de la barra izquierda a una casilla ocupada return
     let posx: number;
     let posy: number;
-    if(cel.elemento && !draggedCelda.elemento.activo) return MsgTipo.ERROR;            
+    
+    if(cel.elemento && cel.elemento.id=="id_auto"){
+      cel.elemento.entidades[0].elemento = draggedCelda.elemento;
+      draggedCelda.elemento.entidades = cel.elemento.entidades;
+      cel.elemento = draggedCelda.elemento;
+      
+    }else{
+      if(cel.elemento && !draggedCelda.elemento.activo) return MsgTipo.ERROR;            
+    }
     let coor: any = null;    
     if(!draggedCelda.elemento.activo){
       posx=cel.x;
@@ -154,7 +166,7 @@ export class OrganizadorElementos extends Organizador{
       ind--;
     }else if(posX<0){
       while(posX<0){
-        posX+=fila.celdas[ind-1].ancho;
+        posX+=fila.celdas[ind].ancho;
         ind--;
       }          
     }
@@ -182,7 +194,7 @@ export class OrganizadorElementos extends Organizador{
       ind--;
     }else if(posY<0){
       while(posY<0){
-        posY+=this.datos.listaFilas[ind-1].celdas[celda.y].alto;
+        posY+=this.datos.listaFilas[ind].celdas[celda.y].alto;
         ind--;
       }
       

@@ -1,0 +1,32 @@
+
+<div id="main-div" #mainDiv>
+    <div class="ui-g">     
+      <div id="columna-derecha" class="ui-g-12">
+          <div id="drop-div">
+            <div class="tabla" #tabla>
+              <div class="fila" *ngFor="let fila of organizador.listaFilas">
+                    
+                <div [ngStyle]="col.getSizePx()" class="columna"   *ngFor="let col of fila.celdas" [attr.fila]="i" [attr.columna]="j">                      
+                  <div  *ngIf="col.initElemento()"  [ngClass]="col.elemento.getClasses()" [ngStyle]="col.elemento.getEstilo()">                                                  
+                      <div pDraggable='entidad' [ngStyle]="getEstilo(entidad)" (click)="mostrarDatos(entidad)" (onDragStart)="onDrag(entidad)" class='entidad' *ngFor="let entidad of col.elemento.entidades">                                
+
+                          <ng-container *ngIf="templateTabla">
+                              <ng-container *ngTemplateOutlet="templateTabla; context: {$implicit: entidad.objeto}"></ng-container>
+                          </ng-container>
+                            <ng-container *ngIf="!templateTabla">
+                              <i class="fa fa-user"></i>
+                              <span>{{entidad.titulo}}</span>
+                            </ng-container>
+                              
+                      </div>
+                      <ng-container *ngIf="templateElemento">
+                          <ng-container *ngTemplateOutlet="templateElemento; context: {$implicit: col.elemento}"></ng-container>
+                      </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>          
+      </div>
+    </div>
+  </div>

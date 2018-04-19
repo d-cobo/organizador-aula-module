@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ElementRef, Input, ViewChild, ViewChildren, QueryList, HostListener, EventEmitter, Output, ApplicationRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, Input, ViewChild, ViewChildren, QueryList, HostListener, EventEmitter, Output, ApplicationRef, TemplateRef, SimpleChanges } from '@angular/core';
 import { ResizeEvent, ResizableDirective } from 'angular-resizable-element';
 import { Coordenada, ListaElemento, Position } from '../modelos/lista-elementos';
 import { Fila } from '../modelos/fila';
@@ -24,7 +24,8 @@ import { EventosOrgAulaService } from '../../eventos-org-aula.service';
 export class OrganizadorElementoComponent implements OnInit {
   
   @Input('datos') datos: Datos;
-
+  @Input('templateElemento') templateElemento: TemplateRef<any>;
+  
   @ViewChild('mainDiv') mainDiv: ElementRef;
   @ViewChild('tabla') tabla: ElementRef;
 
@@ -38,7 +39,8 @@ export class OrganizadorElementoComponent implements OnInit {
   resizingElement: ResizingElement;
   startingPoint: StartingPoint;
   displayNuevoElemento: boolean;  
-  subscription: Subscription;
+  confirmSubscription: Subscription;
+  mensajeSubscription: Subscription;
   resizeDir: number;
   readonly ARRIBA: number = Directions.ARRIBA;
   readonly ABAJO: number = Directions.ABAJO;
@@ -58,12 +60,14 @@ export class OrganizadorElementoComponent implements OnInit {
     this.organizador.datos = this.datos;
     this.displayNuevoElemento=false;
     this.msgs = [];    
+    this.organizador.cambiarSize(this.tabla, this.mainDiv);   
+   // this.mensajeSubscription = this.eventos.mensajes.subscribe(mens=>this.onMensaje(mens));
     //TODO: poner el listener cogiendo el mainDiv con #mainDiv en el html (bindear con el viewChild)  
     //window.addEventListener('resize', ()=>{this.onResize()});
     
     //this.organizador.inicializar();
   }
-
+  
   
 
 
@@ -73,14 +77,15 @@ export class OrganizadorElementoComponent implements OnInit {
   }
 
   ngOnDestroy(){
-    if(this.subscription) this.subscription.unsubscribe();
-  }
+    //this.mensajeSubscription.unsubscribe();
+    if(this.confirmSubscription) this.confirmSubscription.unsubscribe();
+  }  
 
   ngAfterViewInit(){    
     setTimeout(()=>{      
       if(this.organizador.datos.listaElementos && !this.organizador.datos.listaFilas){      
         this.organizador.cambiarSize(this.tabla, this.mainDiv);        
-        this.organizador.inicializar();
+        //this.organizador.inicializar();
         console.log(this.organizador.listaFilas);
         //TODO: Esta bien tener esto aqui?
         let org = new OrganizadorEntidades();
@@ -89,6 +94,31 @@ export class OrganizadorElementoComponent implements OnInit {
       } 
     }, 0);      
        
+  }
+/*
+  onMensaje(mens: Mensaje){
+    if(mens.codigo===MsgCodigo.Cancelar){
+      console.log("a");
+      this.organizador = new OrganizadorElementos();
+      this.organizador.datos = this.datos;
+      this.organizador.cambiarSize(this.tabla, this.mainDiv);        
+      this.organizador.inicializar();
+      this.displayNuevoElemento=false;
+    }
+  }*/
+  ngOnChanges(changes: SimpleChanges): void{    
+    if(this.organizador){
+      this.organizador.datos = this.datos;
+      this.organizador.cambiarSize(this.tabla, this.mainDiv);
+    }
+   /* this.organizador = new OrganizadorElementos();
+    this.organizador.datos = this.datos;
+    this.organizador.cambiarSize(this.tabla, this.mainDiv);        
+    this.organizador.inicializar();
+    let org = new OrganizadorEntidades();
+    org.datos=this.datos;
+    org.inicializar();
+    this.displayNuevoElemento=false;*/
   }
 
   clearMap(): void{
@@ -120,7 +150,13 @@ export class OrganizadorElementoComponent implements OnInit {
   toolsDragStart(listElem: ListaElemento): void{
     let celda: Celda=new Celda(-1,-1)
     let elem=new Elemento(false, listElem.id, listElem.nombre, listElem.color, listElem.maxEntidades);
-    elem.setPos(0, 0, elem.x + (listElem.alto-1), elem.y + (listElem.ancho-1));    
+    elem.setPos(0,0, (listElem.alto-1) ,(listElem.ancho-1));
+    
+    /*elem.x = 0
+    elem.y = 0
+    elem.x2= elem.x + (listElem.alto-1) 
+    elem.y2 = elem.y + (listElem.ancho-1);    */
+    console.log(elem);
     //elem.activo=true;
     celda.elemento = elem;
     this.draggedCelda=celda;
@@ -132,8 +168,8 @@ export class OrganizadorElementoComponent implements OnInit {
   }
 
   removeElementType(id: string): void{
-    if(this.subscription) this.subscription.unsubscribe();
-    this.subscription = this.eventos.confirmacion.subscribe(res=>{      
+    if(this.confirmSubscription) this.confirmSubscription.unsubscribe();
+    this.confirmSubscription = this.eventos.confirmacion.subscribe(res=>{      
       if(res){
         this.organizador.removeElementType(id);
       }

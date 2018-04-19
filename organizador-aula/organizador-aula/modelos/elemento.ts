@@ -67,8 +67,7 @@ export class Elemento{
     getEstilo():object{
         return{
             width: this.getAnchoPx(),
-            height: this.getAltoPx(),
-            backgroundColor: this.color
+            height: this.getAltoPx()            
         }
     }
 

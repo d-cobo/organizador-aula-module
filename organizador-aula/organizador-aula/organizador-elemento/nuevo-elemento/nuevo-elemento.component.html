@@ -1,5 +1,6 @@
 <p-dialog header="Nuevo elemento" (onHide)="onCancel()" [(visible)]="displayNuevoElemento">
   <form>
+    <label>Id</label><br/><input name="id" [(ngModel)]="nuevoElemento.id" type="text"> <br/><br/>
     <label>Nombre</label><br/><input name="nombre" [(ngModel)]="nuevoElemento.nombre" type="text"> <br/><br/>
     <label>Color</label><br/><input name="color" [(ngModel)]="nuevoElemento.color" value="#000000" type="color"> <br/><br/>
     <label>Max. entidades</label><br/>                

@@ -20,10 +20,9 @@ export class NuevoElementoComponent implements OnInit {
   }
 
   crearNuevoElemento(): void{
-    if(this.nuevoElemento.nombre==="" || this.nuevoElemento.maxEntidades<0 || this.nuevoElemento.ancho<=0 || this.nuevoElemento.alto<=0){
+    if(this.nuevoElemento.nombre==="" || this.nuevoElemento.id==="" || this.nuevoElemento.maxEntidades<0 || this.nuevoElemento.ancho<=0 || this.nuevoElemento.alto<=0){
       return;
-    }
-    this.nuevoElemento.id=this.nuevoElemento.nombre;
+    }    
     this.elemento.emit(this.nuevoElemento);
   }
 

@@ -5,7 +5,7 @@ import { ListaEntidad } from './organizador-aula/modelos/lista-entidad';
 @Injectable()
 export class EventosOrgAulaService {
   mensajes: EventEmitter<Mensaje>;
-  confirmacion: EventEmitter<boolean>;
+  confirmacion: EventEmitter<boolean>;  
   clickEntidad: EventEmitter<ListaEntidad>;
   constructor() {
     this.mensajes = new EventEmitter<Mensaje>();

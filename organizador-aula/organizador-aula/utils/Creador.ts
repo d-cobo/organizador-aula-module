@@ -16,6 +16,7 @@ export abstract class Creador{
     protected sizePantalla: [number, number];
     
     constructor(numFilas:number, numColumnas:number, listaElementos?: ListaElemento[], listaEntidades?: ListaEntidad[], minSize?: [number, number]){
+       
         this.prNumFilas=numFilas;
         this.prNumColumnas=numColumnas;
         if(listaElementos){
@@ -27,7 +28,14 @@ export abstract class Creador{
         this.minSize = minSize!=undefined ? minSize : [0, 0];
         this.sizeCelda= [0,0];
         this.sizePantalla = [0,0];
+        //this.inicializar(numFilas, numColumnas, listaElementos, listaEntidades, minSize);
     };
+/*
+    inicializar(numFilas:number, numColumnas:number, listaElementos?: ListaElemento[], listaEntidades?: ListaEntidad[], minSize?: [number, number]){
+        //this.listaFilas = [];
+
+    }*/
+
     get numFilas(): number{
         return this.prNumFilas;
     }
@@ -67,12 +75,17 @@ export abstract class Creador{
     get getMinSize(): [number, number]{
         return this.minSize;
     }
+
+    clone() {
+        return new (<any>this.constructor(this.prNumFilas, this.prNumColumnas, this.listaElementos, this.listaEntidades, this.minSize));
+    }
+
+    
     abstract onFilasChange(): void;
     abstract onColumnasChange(): void;
     abstract inicializarFilas(): void;
     abstract setSize(anchoCelda:number, altoCelda:number): void;    
-    abstract setTotalSize(anchoTotal:number, altoTotal:number): void;    
-    
+    abstract setTotalSize(anchoTotal:number, altoTotal:number): void;        
 }
 
 export class CreadorDefault extends Creador{
@@ -153,6 +166,12 @@ export class CreadorDefault extends Creador{
     constructor(numFilas:number, numColumnas:number, listaElementos: ListaElemento[] = null, listaEntidades: ListaEntidad[] = null, minSize: [number, number]){
         super(numFilas, numColumnas, listaElementos, listaEntidades, minSize);
     }
+
+    setTotalSize(anchoTotal: number, altoTotal: number): void{
+        this.sizePantalla[0]=anchoTotal;
+        this.sizePantalla[1]=altoTotal;
+    }
+
     setSize(anchoCelda?:number, altoCelda?:number): void{        
         if (anchoCelda) this.sizeCelda[0]=anchoCelda;
         if (altoCelda) this.sizeCelda[1]=altoCelda;        
@@ -168,10 +187,7 @@ export class CreadorDefault extends Creador{
         }
     }
 
-    setTotalSize(anchoTotal: number, altoTotal: number): void{
-        this.sizePantalla[0]=anchoTotal;
-        this.sizePantalla[1]=altoTotal;
-    }
+
     /*inicializarFilas():Fila[]{                
         let filas: Fila[] = [];
         for(let numFila=0; numFila<this.numFilas;numFila++){

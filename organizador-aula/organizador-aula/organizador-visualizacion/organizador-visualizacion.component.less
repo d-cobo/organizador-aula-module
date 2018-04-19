@@ -1,0 +1,128 @@
+@colorMesa: rgb(207, 127, 7);
+@colorOtro: rgb(100, 91, 91);
+@backgroundTabla: rgba(146, 86, 34, 0.2);
+@colorInactivo: rgba(45, 44, 44, 0.9);
+@iconSize: 2vw;
+
+.elemento{
+
+    text-align:center;
+    position:relative;
+
+}
+
+
+.activo{
+    margin-left: 5%;
+    margin-top: 0.25em;
+    width:90%;
+    height: 90%;       
+    opacity:1; 
+    pointer-events: none;
+    overflow:hidden;
+}
+
+
+
+
+
+#main-div{
+margin:0;
+height:100%;
+}
+
+#main-div .ui-g{
+    height:100%;
+}
+#columna-izquierda, #columna-derecha{
+    padding: 0;   
+    
+}
+
+
+
+.tabla{
+  //  display:table;
+    width: 100%;
+    height:100%;
+    overflow:auto;
+    //table-layout: fixed;
+}
+
+.columna{
+    display: inline-block;
+    //display: table-cell;
+    
+    background-color:@backgroundTabla;
+    //padding: 1%;
+    //max-width:0px;   
+}
+
+.fila:first-child .columna{
+    border-top:1px solid;    
+}
+
+.fila:last-child .columna{
+    border-bottom: 1px solid;
+    padding-bottom: 10px;
+}
+
+.columna:first-child{
+    border-left: 1px solid;    
+}
+
+.columna:last-child{
+    border-right:1px solid;
+    
+}
+
+.fila{
+    display: flex;
+}
+
+
+
+span{
+    height:0px;
+}
+
+
+
+
+
+
+
+
+.activo{
+    i{
+        pointer-events: auto;
+    }
+}
+
+
+
+.entidad{
+    margin-top: 1vw;
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.colOculta{    
+    p{
+        background-color: @colorInactivo;
+        margin-top: 0px;
+        padding-top: 0.5em;
+        padding-bottom: 0.5em;
+        padding:5px;
+    }
+}
+
+.iconoOcultar{
+    margin-right: 5%;
+    color: red;
+    font-size: 21px;
+}
+
+#columna-izquierda, #columna-derecha{
+    height: 100%;
+}

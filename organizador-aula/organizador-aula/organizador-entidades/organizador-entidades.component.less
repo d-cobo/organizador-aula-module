@@ -20,11 +20,11 @@
 
 .activo{
     margin-left: 5%;
-    margin-top: 0.25em;
+    margin-top: 5px;
     width:90%;
     height: 90%;   
-    border: 1px solid;
-    border-color: gray;
+    border: 0.5px solid gray;
+
     opacity:1; 
     pointer-events: none;
     overflow:hidden;
@@ -90,6 +90,7 @@
     margin-top: 0px;
     padding-top: 0.5em;
     padding-bottom: 0.5em;
+    margin-bottom:0px;
     i{
         
         float: right;
@@ -101,7 +102,7 @@
 
 #main-div{
 margin:0;
-height:800px;
+height:100%;
 }
 
 #main-div .ui-g{
@@ -180,8 +181,6 @@ height:800px;
     border-style: solid;
     border-width: 0.5px 0.5px 0px 0px;
     background-color:@backgroundTabla;
-    min-width: 70px;
-    min-height: 70px;
     //padding: 1%;
     //max-width:0px;   
 }
@@ -207,37 +206,8 @@ span{
 .activo i{
     font-size: @iconSize;
 }
-.removeIcon{
-    float:right;
-    margin-left:2px;
-    cursor: pointer;
-}
 
 
-
-.activo{
-    .resizeUpIcon, .resizeLeftIcon{
-        float:left;
-        cursor: pointer;        
-    }
-    .resizeDownIcon, .resizeRightIcon{
-        float: right;
-        cursor: pointer;    
-    }
-}
-
-
-/*
-.inactivo .removeIcon, .inactivo .expandRightIcon{
-    visibility: hidden;
-}*/
-.separator{
-    height: ~"-moz-calc(100% - 1.5vw)";
-    height: ~"-webkit-calc(100% - 1.5vw)";
-    height: ~"-o-calc(100% - 1.5vw)";
-    height: ~"calc(100% - 1.5vw)";
-    width:0;
-}
 
 .inactivo{
     i{
@@ -250,11 +220,7 @@ span{
     }
 }
 
-.noUp .resizeUpIcon, .noDown .resizeDownIcon, .noLeft .resizeLeftIcon, .noRight .resizeRightIcon{
-    visibility: hidden;
-    width:0;
-    margin:0;
-}
+
 
 .filler{
     width:100%;
@@ -280,8 +246,19 @@ span{
     margin-right: 5%;
     color: red;
     font-size: 21px;
+    cursor: pointer;
 }
 
 #columna-izquierda, #columna-derecha{
     height: 100%;
+}
+
+#filtro{
+    padding-top:5px;
+    input{
+        width: 50%;
+    }
+    label, input{
+        margin-left: 5%;
+    }
 }

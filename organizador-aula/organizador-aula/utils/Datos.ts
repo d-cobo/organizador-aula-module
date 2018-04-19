@@ -7,15 +7,17 @@ import { Entidad } from "../modelos/entidad";
 
 export class Datos{
     creador: Creador;
+    entSinElemento: boolean;
     //listaFilas: Fila[];
     entidadesCreadas: boolean;
     entidades: Entidad[];     
 
     
-    constructor(creador: Creador){
+    constructor(creador: Creador, entSinElemento?: boolean){
         this.entidadesCreadas = false;
         this.entidades = [];
-        this.creador = creador;
+        this.creador = creador;   
+        this.entSinElemento = entSinElemento;     
     }
 
 

@@ -35,16 +35,19 @@ export class AlumnoEnt extends Alumno implements ListaEntidad {
   }
   atributo_titulo: string;
   posicion?: [number, number];
-  constructor(){
+  constructor(id: string, nombre: string, otro:string){
     super();
     //this.atributo_id="id";
     this.atributo_titulo="nombre";
+    this.id=id;
+    this.nombre=nombre;
+    this.otro=otro;
   }
 }
 
 export class CreadorPropio extends Creador {
   setTotalSize(anchoTotal: number, altoTotal: number): void {
-    throw new Error("Method not implemented.");
+    this.sizePantalla= [anchoTotal, altoTotal];
   }
   onFilasChange(): void {
     console.log("asdasd");
@@ -59,21 +62,22 @@ export class CreadorPropio extends Creador {
   }
 
 
-  constructor(numFilas:number, numColumnas:number, listaElementos: ListaElemento[] = null, listaEntidades: ListaEntidad[] = null){
-    super(numFilas, numColumnas, listaElementos, listaEntidades);
+  constructor(numFilas:number, numColumnas:number, listaElementos: ListaElemento[] = null, listaEntidades: ListaEntidad[] = null, minSize: [number, number]){
+    super(numFilas, numColumnas, listaElementos, listaEntidades, minSize);
   }
 
   inicializarFilas(): void {
     this.listaFilas=[];
     for(let f=0; f<this.numFilas; f++){
-      this.listaFilas.push(new Fila(f));
-      if(f==7){
-        //this.listaFilas[f].celdas.push(new Celda(f,0,this.sizeCelda[0]*7 + 7*0.5, this.sizeCelda[1]));
-      }else{
+      this.listaFilas.push(new Fila(f));           
         for(let c=0; c<this.numColumnas; c++){
-          //this.listaFilas[f].celdas.push(new Celda(f,c,this.sizeCelda[0], this.sizeCelda[1]));
+          let celda = new Celda(f,c);
+          celda.ancho=100;
+          celda.alto=100;
+          this.listaFilas[f].celdas.push(celda);
+          
         }
       }
     }
   }
-}
+

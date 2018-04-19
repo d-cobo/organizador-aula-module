@@ -15,6 +15,7 @@ import {ButtonModule} from 'primeng/button';
 import {GrowlModule} from 'primeng/growl';
 import { NuevoElementoComponent } from './organizador-aula/organizador-elemento/nuevo-elemento/nuevo-elemento.component';
 import { EventosOrgAulaService } from './eventos-org-aula.service';
+import { OrganizadorVisualizacionComponent } from './organizador-aula/organizador-visualizacion/organizador-visualizacion.component';
 
 
 @NgModule({
@@ -34,7 +35,7 @@ import { EventosOrgAulaService } from './eventos-org-aula.service';
     OrganizadorAulaComponent
   ],
   providers: [ConfirmationService, EventosOrgAulaService],
-  declarations: [OrganizadorElementoComponent, OrganizadorAulaComponent, OrganizadorEntidadesComponent, NuevoElementoComponent]
+  declarations: [OrganizadorElementoComponent, OrganizadorAulaComponent, OrganizadorEntidadesComponent, NuevoElementoComponent, OrganizadorVisualizacionComponent]
 })
 export class OrganizadorAulaModule { }
 
