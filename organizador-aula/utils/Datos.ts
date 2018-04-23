@@ -6,7 +6,8 @@ import { ListaEntidad } from "../modelos/lista-entidad";
 import { Entidad } from "../modelos/entidad";
 
 export class Datos{
-    creador: Creador;
+    //todo echar un ojo a creador
+    private creador: Creador;
     entSinElemento: boolean;
     //listaFilas: Fila[];
     entidadesCreadas: boolean;
@@ -49,6 +50,23 @@ export class Datos{
 
     get listaFilas(): Fila[]{
         return this.creador.listaFilas;
+    }
+
+    
+    get sizeCelda(): [number, number]{
+        return this.creador.size;
+    }
+
+    set sizeCelda(size: [number, number]){
+        this.creador.setSize(size[0], size[1]);
+    }
+    
+    get minSize(): [number, number]{
+        return this.creador.getMinSize;
+    }
+
+    set sizeTotal(size: [number, number]){
+        this.creador.setTotalSize(size[0], size[1]);
     }
 
     inicializarFilas(): void{

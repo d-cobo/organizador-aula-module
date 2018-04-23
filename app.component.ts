@@ -1,15 +1,15 @@
 import { Component, OnInit, ViewChild, ElementRef, EventEmitter } from '@angular/core';
 
 import { OrganizadorAulaComponent } from './organizador-aula/organizador-aula/organizador-aula.component';
-import { Creador, CreadorDefault } from './organizador-aula/organizador-aula/utils/Creador';
+import { Creador, CreadorDefault } from './organizador-aula/utils/Creador';
 import {  CreadorPropio, AlumnoEnt } from './app.module';
-import { ListaEntidad } from './organizador-aula/organizador-aula/modelos/lista-entidad';
-import { MsgTipo, Mensaje, MsgCodigo } from './organizador-aula/organizador-aula/utils/Mensajes';
+import { ListaEntidad } from './organizador-aula/modelos/lista-entidad';
+import { MsgTipo, Mensaje, MsgCodigo } from './organizador-aula/utils/Mensajes';
 import { EventosOrgAulaService } from './organizador-aula/eventos-org-aula.service';
 import { Subscription } from 'rxjs/Subscription';
-import { ListaElemento } from './organizador-aula/organizador-aula/modelos/lista-elementos';
-import { ExportTablero } from './organizador-aula/organizador-aula/utils/TableroExportInterfaces';
-import { ConfiguracionOrganizador, Botones } from './organizador-aula/organizador-aula/utils/configuracion-organizador';
+import { ListaElemento } from './organizador-aula/modelos/lista-elementos';
+import { ExportTablero } from './organizador-aula/utils/TableroExportInterfaces';
+import { ConfiguracionOrganizador, Botones } from './organizador-aula/utils/configuracion-organizador';
 
 
 @Component({
@@ -30,7 +30,7 @@ export class AppComponent {
   config: ConfiguracionOrganizador;
   //listaElementos: Array<ListaElemento>;
   creador: Creador;
-
+ 
 readonly btnElementos = Botones.Elementos;
 readonly btnEntidades = Botones.Entidades;
 readonly btnVisualizar = Botones.Visualizar;
@@ -119,12 +119,12 @@ readonly btnCancelar = Botones.Cancelar;
     this.config = {
       filas: this.filas,
       columnas: this.filas,
-      minSize: [0, 0],
+      minSize: [80, 80],
       permisoElementos: true,
       permisoEntidades: true,
       permisoGuardar: true,
       entidadSinElemento: true,
-      mostrarBarraSuperior: false
+      mostrarBarraSuperior: true
     }
   }
 

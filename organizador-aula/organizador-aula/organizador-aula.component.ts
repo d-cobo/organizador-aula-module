@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, TemplateRef, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, TemplateRef, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { OrganizadorElementoComponent } from './organizador-elemento/organizador-elemento.component';
 import { Datos } from './utils/Datos';
 import { Creador, CreadorDefault } from './utils/Creador';
@@ -21,7 +21,7 @@ import { ConfiguracionOrganizador, Botones } from './utils/configuracion-organiz
   templateUrl: './organizador-aula.component.html',
   styleUrls: ['./organizador-aula.component.less']
 })
-export class OrganizadorAulaComponent implements OnInit {
+export class OrganizadorAulaComponent implements OnInit, OnDestroy {
   @Input('creador') creador: Creador;
   @Input('templateBarra') templateBarra: TemplateRef<any>;
   @Input('templateTabla') templateTabla: TemplateRef<any>;
@@ -35,13 +35,13 @@ export class OrganizadorAulaComponent implements OnInit {
   @ViewChild('txtFilas') txtFilas: ElementRef;
   @ViewChild('txtColumnas') txtColumnas: ElementRef;
 
-  readonly ACT_ELEMENTOS: number = Botones.Elementos;
-  readonly ACT_ENTIDADES: number = Botones.Entidades;
-  readonly ACT_VISUALIZAR: number = Botones.Visualizar;
+  readonly ACT_ELEMENTOS: Botones = Botones.Elementos;
+  readonly ACT_ENTIDADES: Botones = Botones.Entidades;
+  readonly ACT_VISUALIZAR: Botones = Botones.Visualizar;
 
   subscriptionClickBoton: Subscription;
   subscriptionCambioTamano: Subscription;
-  activo: number;  
+  activo: Botones;  
   datos: Datos;
   argsCreador: [number, number, ListaElemento[], ListaEntidad[], [number, number]];
 
@@ -64,6 +64,7 @@ export class OrganizadorAulaComponent implements OnInit {
       this.creador = new CreadorDefault(this.configuracion.filas, this.configuracion.columnas, this.listaElementos, this.listaEntidades, this.configuracion.minSize);
     }    
     //Guardar estado inicial
+    //TODO a objeto
     this.argsCreador=[this.creador.numFilas, this.creador.numColumnas, this.creador.listaElementos.concat(), this.creador.listaEntidades.concat(), this.creador.getMinSize];
     
     this.datos = new Datos(this.creador, (this.configuracion && this.configuracion.entidadSinElemento));    
@@ -139,6 +140,7 @@ export class OrganizadorAulaComponent implements OnInit {
     this.onExport.emit({numFilas: this.datos.filas, numColumnas: this.datos.columnas, listaElementos: lisElementos, listaEntidades: lisEntidades});
   }
   
+  //cambiar tamaño
   cambiar(): void{
     console.log(this.txtFilas.nativeElement.value, this.txtColumnas.nativeElement.value);
     this.creador.numFilas = parseInt(this.txtFilas.nativeElement.value);
@@ -168,7 +170,7 @@ export class OrganizadorAulaComponent implements OnInit {
     
   }
 
-  onClickBoton(num: number){
+  onClickBoton(num: Botones){
     console.log(num);
     switch(num){
       case Botones.Elementos:
@@ -205,6 +207,8 @@ export class OrganizadorAulaComponent implements OnInit {
     this.creador.numFilas = size[0];
     this.creador.numColumnas = size[1];
   }
+
+  //todo mover modelos a nivel modulo
 
   
 

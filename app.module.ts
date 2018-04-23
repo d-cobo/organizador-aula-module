@@ -3,11 +3,11 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { OrganizadorAulaModule } from './organizador-aula/organizador-aula.module';
-import { Creador } from './organizador-aula/organizador-aula/utils/Creador';
-import { Fila } from './organizador-aula/organizador-aula/modelos/fila';
-import { Celda } from './organizador-aula/organizador-aula/modelos/celda';
-import { ListaElemento } from './organizador-aula/organizador-aula/modelos/lista-elementos';
-import { ListaEntidad } from './organizador-aula/organizador-aula/modelos/lista-entidad';
+import { Creador } from './organizador-aula/utils/Creador';
+import { Fila } from './organizador-aula/modelos/fila';
+import { Celda } from './organizador-aula/modelos/celda';
+import { ListaElemento } from './organizador-aula/modelos/lista-elementos';
+import { ListaEntidad } from './organizador-aula/modelos/lista-entidad';
 import { FormsModule } from '@angular/forms';
 
 @NgModule({

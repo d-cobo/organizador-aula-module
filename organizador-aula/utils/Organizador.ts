@@ -15,12 +15,12 @@ export abstract class Organizador{
     }
 
     set size(sizeCelda: [number, number, number, number]){        
-        this.datos.creador.setSize(sizeCelda[0], sizeCelda[1]);  
-        this.datos.creador.setTotalSize(sizeCelda[2], sizeCelda[3]);  
+        this.datos.sizeCelda = [sizeCelda[0], sizeCelda[1]]; //(sizeCelda[0], sizeCelda[1]);  
+        this.datos.sizeTotal = [sizeCelda[2], sizeCelda[3]];  
     }
 
     get sizeCelda(): [number, number]{
-        return [Math.max(this.datos.creador.size[0], this.datos.creador.getMinSize[0]), Math.max(this.datos.creador.size[1], this.datos.creador.getMinSize[1])] ;
+        return [Math.max(this.datos.sizeCelda[0], this.datos.minSize[0]), Math.max(this.datos.sizeCelda[1], this.datos.minSize[1])] ;
     }
 
     calcularCasillas(tabla: ElementRef, mainDiv: ElementRef): [number, number, number, number]{        

@@ -14,7 +14,7 @@
         
     </div>
     <div id="comps">
-        <app-organizador-elemento *ngIf="activo==ACT_ELEMENTOS" [templateElemento]="templateElemento" [datos]="datos"></app-organizador-elemento>
+        <app-organizador-elemento *ngIf="activo===ACT_ELEMENTOS" [templateElemento]="templateElemento" [datos]="datos"></app-organizador-elemento>
         <app-organizador-entidades [templateElemento]="templateElemento" [templateBarra]="templateBarra" [templateTabla]="templateTabla" *ngIf="activo==ACT_ENTIDADES" [datos]="datos"></app-organizador-entidades>    
         <app-organizador-visualizacion [templateElemento]="templateElemento" [templateBarra]="templateBarra" [templateTabla]="templateTabla" *ngIf="activo==ACT_VISUALIZAR" [datos]="datos">    </app-organizador-visualizacion>
     </div>

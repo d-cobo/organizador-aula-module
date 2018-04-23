@@ -1,7 +1,7 @@
-import { Organizador } from "../../utils/Organizador";
-import { Entidad } from "../../modelos/entidad";
-import { Elemento } from "../../modelos/elemento";
-import { Celda } from "../../modelos/celda";
+import { Organizador } from "../../../utils/Organizador";
+import { Entidad } from "../../../modelos/entidad";
+import { Elemento } from "../../../modelos/elemento";
+import { Celda } from "../../../modelos/celda";
 
 export class OrganizadorEntidades extends Organizador{
     attrId: string;

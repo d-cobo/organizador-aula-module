@@ -1,14 +1,14 @@
-import { Component, OnInit, AfterViewInit, ElementRef, Input, ViewChild, ViewChildren, QueryList, HostListener, EventEmitter, Output, ApplicationRef, TemplateRef, SimpleChanges } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, Input, ViewChild, ViewChildren, QueryList, HostListener, EventEmitter, Output, ApplicationRef, TemplateRef, SimpleChanges, OnDestroy } from '@angular/core';
 import { ResizeEvent, ResizableDirective } from 'angular-resizable-element';
-import { Coordenada, ListaElemento, Position } from '../modelos/lista-elementos';
-import { Fila } from '../modelos/fila';
-import { Celda } from '../modelos/celda';
-import { Elemento } from '../modelos/elemento';
+import { Coordenada, ListaElemento, Position } from '../../modelos/lista-elementos';
+import { Fila } from '../../modelos/fila';
+import { Celda } from '../../modelos/celda';
+import { Elemento } from '../../modelos/elemento';
 import { OrganizadorElementos } from './clases/OrganizadorElementos';
-import { Datos } from '../utils/Datos';
+import { Datos } from '../../utils/Datos';
 import { ConfirmationService, Message } from 'primeng/api';
 import { OrganizadorEntidades } from '../organizador-entidades/clases/OrganizadorEntidades';
-import { MsgTipo, MsgCodigo, Mensaje } from '../utils/Mensajes';
+import { MsgTipo, MsgCodigo, Mensaje } from '../../utils/Mensajes';
 import { NuevoElementoComponent } from './nuevo-elemento/nuevo-elemento.component';
 import { Subscription } from 'rxjs/Subscription';
 import { StartingPoint, ResizingElement, Directions } from './clases/interfaces';
@@ -21,7 +21,7 @@ import { EventosOrgAulaService } from '../../eventos-org-aula.service';
   styleUrls: ['./organizador-elemento.component.less']
 })
 
-export class OrganizadorElementoComponent implements OnInit {
+export class OrganizadorElementoComponent implements OnInit, OnDestroy, AfterViewInit {
   
   prDatos: Datos;
   
@@ -122,17 +122,7 @@ export class OrganizadorElementoComponent implements OnInit {
       this.displayNuevoElemento=false;
     }
   }*/
-  ngOnChanges(changes: SimpleChanges): void{    
 
-   /* this.organizador = new OrganizadorElementos();
-    this.organizador.datos = this.datos;
-    this.organizador.cambiarSize(this.tabla, this.mainDiv);        
-    this.organizador.inicializar();
-    let org = new OrganizadorEntidades();
-    org.datos=this.datos;
-    org.inicializar();
-    this.displayNuevoElemento=false;*/
-  }
 
   clearMap(): void{
     this.organizador.datos.inicializarFilas();    
@@ -180,6 +170,7 @@ export class OrganizadorElementoComponent implements OnInit {
     this.organizador.removeElement(celda.elemento);
   }
 
+  //TODO: ConfirmSubscription cambiar añadir a que
   removeElementType(id: string): void{
     if(this.confirmSubscription) this.confirmSubscription.unsubscribe();
     this.confirmSubscription = this.eventos.confirmacion.subscribe(res=>{      
@@ -190,7 +181,6 @@ export class OrganizadorElementoComponent implements OnInit {
     
     this.eventos.mensajes.emit({tipo: MsgTipo.AVISO, codigo: MsgCodigo.ConfirmacionEliminarTipoElemento});
     
-    
   }
 
   nuevoElemento(elemento: Elemento): void{
@@ -198,6 +188,7 @@ export class OrganizadorElementoComponent implements OnInit {
     if(elemento)
       this.datos.listaElementos.push(elemento);
   }   
+
 
   onResizeStart(celda: Celda, event: DragEvent): void{
     this.startingPoint = {izquierda: event.clientX, arriba: event.clientY, ancho: celda.elemento.getAncho(), alto: celda.elemento.getAlto()};    

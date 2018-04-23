@@ -1,15 +1,15 @@
-import { Organizador } from "../../utils/Organizador";
-import { Fila } from "../../modelos/fila";
-import { Elemento } from "../../modelos/elemento";
+import { Organizador } from "../../../utils/Organizador";
+import { Fila } from "../../../modelos/fila";
+import { Elemento } from "../../../modelos/elemento";
 import { ElementRef } from "@angular/core";
-import { Celda } from "../../modelos/celda";
-import { Coordenada } from "../../modelos/lista-elementos";
-import { MsgTipo } from "../../utils/Mensajes";
+import { Celda } from "../../../modelos/celda";
+import { Coordenada } from "../../../modelos/lista-elementos";
+import { MsgTipo } from "../../../utils/Mensajes";
 import { StartingPoint, Directions } from "./interfaces";
 import { EventosOrgAulaService } from "../../../eventos-org-aula.service";
 
 export class OrganizadorElementos extends Organizador{
-
+//todo que es privado y que no
 
 
     inicializar():void{        
@@ -85,7 +85,8 @@ export class OrganizadorElementos extends Organizador{
     if(elemento.entidades){      
       elemento.entidades.forEach(ent=>{ent.elemento=null});
       if(this.datos.entSinElemento){
-        let elem = new Elemento(true, "id_auto", "", "rgba(0,0,0,0", 1);
+        //todo arreglar y poner en funcion el churro
+        let elem: Elemento = new Elemento(true, "id_auto", "", "rgba(0,0,0,0)", 1);
         elem.setPos(elemento.x, elemento.y, elemento.x, elemento.y);
         
         elemento.entidades[0].elemento = elem;
@@ -371,8 +372,8 @@ export class OrganizadorElementos extends Organizador{
   //Pone el estilo que debe tener al elemento en caso de que no se haya resizeado (no coge auto.
   //el ngStyle)
   setDefaultStyle(elem: Elemento, target: HTMLElement): void{
-    target.style.top="0";
-    target.style.left="0";
+    target.style.top="0px";
+    target.style.left="0px";
     target.style.width= elem.getAnchoPx();
     target.style.height = elem.getAltoPx();  
   }
@@ -383,7 +384,7 @@ export class OrganizadorElementos extends Organizador{
         this.removeElement(c.elemento);
       })
     );
-    this.datos.listaElementos = this.datos.listaElementos.filter(el => el.id!=id);
+    this.datos.listaElementos = this.datos.listaElementos.filter(el => el.id!==id);
   }
   
 }

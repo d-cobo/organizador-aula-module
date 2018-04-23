@@ -15,7 +15,7 @@ export abstract class Creador{
     protected sizeCelda: [number, number];
     protected sizePantalla: [number, number];
     
-    constructor(numFilas:number, numColumnas:number, listaElementos?: ListaElemento[], listaEntidades?: ListaEntidad[], minSize?: [number, number]){
+    constructor(numFilas:number, numColumnas:number,  listaElementos?: ListaElemento[], listaEntidades?: ListaEntidad[], minSize?: [number, number]){
        
         this.prNumFilas=numFilas;
         this.prNumColumnas=numColumnas;
@@ -87,6 +87,8 @@ export abstract class Creador{
     abstract setSize(anchoCelda:number, altoCelda:number): void;    
     abstract setTotalSize(anchoTotal:number, altoTotal:number): void;        
 }
+
+//TODO cambiar nombres
 
 export class CreadorDefault extends Creador{
     onFilasChange(): void {
@@ -163,7 +165,8 @@ export class CreadorDefault extends Creador{
         }
 
     }
-    constructor(numFilas:number, numColumnas:number, listaElementos: ListaElemento[] = null, listaEntidades: ListaEntidad[] = null, minSize: [number, number]){
+    
+    constructor(numFilas:number, numColumnas:number, listaElementos?: ListaElemento[], listaEntidades?: ListaEntidad[], minSize?: [number, number]){
         super(numFilas, numColumnas, listaElementos, listaEntidades, minSize);
     }
 

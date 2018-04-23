@@ -1,6 +1,6 @@
 export interface Mensaje{
-    tipo: number;
-    codigo: number;    
+    tipo: MsgTipo;
+    codigo: MsgCodigo;    
 }
 
 export enum MsgTipo{

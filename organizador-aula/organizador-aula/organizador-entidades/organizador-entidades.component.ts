@@ -1,11 +1,11 @@
 import { Component, OnInit, Input, TemplateRef, Output, EventEmitter, ViewChild, ElementRef, HostListener } from '@angular/core';
-import { Datos } from '../utils/Datos';
+import { Datos } from '../../utils/Datos';
 import { OrganizadorEntidades } from './clases/OrganizadorEntidades';
-import { Elemento } from '../modelos/elemento';
-import { Entidad } from '../modelos/entidad';
+import { Elemento } from '../../modelos/elemento';
+import { Entidad } from '../../modelos/entidad';
 import { Subscription } from 'rxjs/Subscription';
 import { EventosOrgAulaService } from '../../eventos-org-aula.service';
-import { Celda } from '../modelos/celda';
+import { Celda } from '../../modelos/celda';
 import { OrganizadorElementos } from '../organizador-elemento/clases/OrganizadorElementos';
 
 
