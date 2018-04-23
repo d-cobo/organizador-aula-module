@@ -16,6 +16,7 @@ import { OrganizadorEntidades } from './organizador-entidades/clases/Organizador
 import { Organizador } from '../utils/organizador.util';
 import { EventosOrgAulaService } from '../eventos-org-aula.service';
 import { ConfiguracionOrganizador, Botones } from '../modelos/configuracion-organizador.modelo';
+import { ArgsCreador } from '../modelos/args-creador-interface.modelo';
 @Component({
   selector: 'app-organizador-aula',
   templateUrl: './organizador-aula.component.html',
@@ -43,7 +44,7 @@ export class OrganizadorAulaComponent implements OnInit, OnDestroy {
   subscriptionCambioTamano: Subscription;
   activo: Botones;  
   datos: Datos;
-  argsCreador: [number, number, ListaElemento[], ListaEntidad[], [number, number]];
+  argsCreador: ArgsCreador;
 
   constructor(private eventos: EventosOrgAulaService) {
     this.onExport  = new EventEmitter<ExportTablero>();
@@ -65,7 +66,13 @@ export class OrganizadorAulaComponent implements OnInit, OnDestroy {
     }    
     //Guardar estado inicial
     //TODO a objeto
-    this.argsCreador=[this.creador.numFilas, this.creador.numColumnas, this.creador.listaElementos.concat(), this.creador.listaEntidades.concat(), this.creador.getMinSize];
+    this.argsCreador={
+      numFilas: this.creador.numFilas,
+      numColumnas: this.creador.numColumnas, 
+      listaElementos: this.creador.listaElementos.concat(),
+      listaEntidades: this.creador.listaEntidades.concat(),
+      minSize: this.creador.getMinSize
+    };
     
     this.datos = new Datos(this.creador, (this.configuracion && this.configuracion.entidadSinElemento));    
     //Inicializar las pantallas
@@ -87,23 +94,6 @@ export class OrganizadorAulaComponent implements OnInit, OnDestroy {
   }
 
   guardar(): void{
-    /*let exportTablero: ExportTablero = {numFilas:this.datos.creador.numFilas, numColumnas: this.datos.creador.numColumnas,
-       elementos: [], entidades: []};    
-    this.datos.listaFilas.forEach(f=>
-      f.celdas.filter(celda=>celda.initElemento()).forEach(celda=>{
-        let elem: Elemento = celda.elemento;
-        let exportElemento: ExportElemento = {x: elem.x, y: elem.y, x2: elem.x2, y2: elem.y2,
-          nombre: elem.nombre, id: elem.id, color: elem.color, maxEntidades: elem.maxEntidades}
-        elem.entidades.forEach(entidad=>{
-          exportTablero.entidades.push({elemento: exportElemento, objeto: entidad.objeto});
-        })
-        exportTablero.elementos.push(exportElemento);
-      })
-    );
-    this.datos.entidades.filter(ent => ent.elemento == null).forEach(entidad=>{
-      exportTablero.entidades.push({elemento: null, objeto: entidad.objeto});
-    });    
-    this.onExport.emit(exportTablero);*/    
     let lisElementos: ListaElemento[] = [];
     let lisEntidades: ListaEntidad[] = [];
     this.datos.listaElementos.forEach(lisElem=>{
@@ -119,7 +109,7 @@ export class OrganizadorAulaComponent implements OnInit, OnDestroy {
     this.datos.listaFilas.forEach(fila=>
       fila.celdas.filter(celda=>celda.initElemento()).forEach(celda=>{
           let elem: Elemento = celda.elemento;
-          let listaElemento: ListaElemento = lisElementos.find(lis=>lis.id==elem.id);
+          let listaElemento: ListaElemento = lisElementos.find(lis=>lis.id===elem.id);
           if(listaElemento){
             if(!listaElemento.posiciones){            
               listaElemento.posiciones = [];
@@ -136,7 +126,13 @@ export class OrganizadorAulaComponent implements OnInit, OnDestroy {
       ent.objeto.posicion=pos;
       lisEntidades.push(ent.objeto);
     })    
-    this.argsCreador = [this.datos.filas, this.datos.columnas, lisElementos.concat(), lisEntidades.concat(), this.creador.getMinSize];
+    this.argsCreador={
+      numFilas: this.datos.filas,
+      numColumnas: this.datos.columnas, 
+      listaElementos: lisElementos.concat(),
+      listaEntidades: lisEntidades.concat(),
+      minSize: this.creador.getMinSize
+    };    
     this.onExport.emit({numFilas: this.datos.filas, numColumnas: this.datos.columnas, listaElementos: lisElementos, listaEntidades: lisEntidades});
   }
   
@@ -151,8 +147,13 @@ export class OrganizadorAulaComponent implements OnInit, OnDestroy {
   cancelar(): void{
     
     //Resetear al estado inicial
-    this.creador = Object.create(this.creador.constructor.prototype);    
-    this.creador.constructor.apply(this.creador, this.argsCreador);    
+    this.creador = this.creador.nuevaInstancia(
+      this.argsCreador.numFilas,
+      this.argsCreador.numColumnas,
+      this.argsCreador.listaElementos,
+      this.argsCreador.listaEntidades,
+      this.argsCreador.minSize
+    )
     this.datos = new Datos(this.creador, (this.configuracion && this.configuracion.entidadSinElemento));
     this.eventos.mensajes.emit({tipo: MsgTipo.OK, codigo: MsgCodigo.Cancelar})
     let org: Organizador = new OrganizadorElementos();
@@ -208,7 +209,7 @@ export class OrganizadorAulaComponent implements OnInit, OnDestroy {
     this.creador.numColumnas = size[1];
   }
 
-  //todo mover modelos a nivel modulo
+
 
   
 

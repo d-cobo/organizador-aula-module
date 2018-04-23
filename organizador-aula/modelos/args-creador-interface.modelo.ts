@@ -1,0 +1,10 @@
+import { ListaElemento } from "./lista-elemento.modelo";
+import { ListaEntidad } from "./lista-entidad.modelo";
+
+export interface ArgsCreador{
+    numFilas: number,
+    numColumnas: number,
+    listaElementos: ListaElemento[],
+    listaEntidades: ListaEntidad[],
+    minSize: [number, number]
+}

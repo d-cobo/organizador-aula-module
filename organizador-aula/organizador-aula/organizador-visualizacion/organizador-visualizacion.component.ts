@@ -69,7 +69,7 @@ export class OrganizadorVisualizacionComponent implements OnInit {
   getEstilo(entidad: Entidad): object{
     let percent: number = 100/(entidad.elemento.entidades.length+1);
     return {
-      marginLeft: `calc(${percent}% - 2vw)`,
+      //marginLeft: `calc(${percent}% - 2vw)`,
       float: 'left'
     }
   }

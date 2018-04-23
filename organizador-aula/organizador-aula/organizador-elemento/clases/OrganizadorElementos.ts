@@ -11,7 +11,6 @@ import { EventosOrgAulaService } from "../../../eventos-org-aula.service";
 export class OrganizadorElementos extends Organizador{
 //todo que es privado y que no
 
-
     inicializar():void{        
       if(!this.datos.listaFilas){
         this.datos.inicializarFilas();
@@ -85,8 +84,8 @@ export class OrganizadorElementos extends Organizador{
     if(elemento.entidades){      
       elemento.entidades.forEach(ent=>{ent.elemento=null});
       if(this.datos.entSinElemento){
-        //todo arreglar y poner en funcion el churro
-        let elem: Elemento = new Elemento(true, "id_auto", "", "rgba(0,0,0,0)", 1);
+        let elem: Elemento = Elemento.getElementoVacio();
+        console.log(elem);
         elem.setPos(elemento.x, elemento.y, elemento.x, elemento.y);
         
         elemento.entidades[0].elemento = elem;

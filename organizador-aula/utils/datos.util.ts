@@ -6,7 +6,6 @@ import { ListaEntidad } from "../modelos/lista-entidad.modelo";
 import { Entidad } from "../modelos/entidad.modelo";
 
 export class Datos{
-    //todo echar un ojo a creador
     private creador: Creador;
     entSinElemento: boolean;
     //listaFilas: Fila[];

@@ -57,11 +57,11 @@ export class OrganizadorElementoComponent implements OnInit, OnDestroy, AfterVie
   displayNuevoElemento: boolean;  
   confirmSubscription: Subscription;
   mensajeSubscription: Subscription;
-  resizeDir: number;
-  readonly ARRIBA: number = Directions.ARRIBA;
-  readonly ABAJO: number = Directions.ABAJO;
-  readonly IZQUIERDA: number = Directions.IZQUIERDA;
-  readonly DERECHA: number = Directions.DERECHA;
+  resizeDir: Directions;
+  readonly ARRIBA: Directions = Directions.ARRIBA;
+  readonly ABAJO: Directions = Directions.ABAJO;
+  readonly IZQUIERDA: Directions = Directions.IZQUIERDA;
+  readonly DERECHA: Directions = Directions.DERECHA;
   
   
 
@@ -198,7 +198,7 @@ export class OrganizadorElementoComponent implements OnInit, OnDestroy, AfterVie
   }
 
   
-  onDrag(celda: Celda, dir:number)
+  onDrag(celda: Celda, dir:Directions)
   {
     if(!this.dragEvent) return;
     let event=this.dragEvent;
@@ -208,22 +208,22 @@ export class OrganizadorElementoComponent implements OnInit, OnDestroy, AfterVie
     let targElem: HTMLElement = this.resizingElement.htmlElem;
     //ARIBA
     
-    if(dir==this.ARRIBA){
+    if(dir===this.ARRIBA){
       
       if (this.startingPoint.alto - (event.clientY - this.startingPoint.arriba) <= 0) return;
         targElem.style.top = (event.clientY - this.startingPoint.arriba)+"px";
         targElem.style.height = this.startingPoint.alto - (event.clientY - this.startingPoint.arriba)+"px";
         
       //ABAJO
-      }else if(dir == this.ABAJO){
+      }else if(dir === this.ABAJO){
         targElem.style.height = this.startingPoint.alto + (event.clientY - this.startingPoint.arriba)+"px";
         
-    }else if(dir == this.IZQUIERDA){
+    }else if(dir === this.IZQUIERDA){
       if (this.startingPoint.ancho - (event.clientX - this.startingPoint.izquierda) <= 0) return;
         targElem.style.left = (event.clientX - this.startingPoint.izquierda)+"px";
         targElem.style.width = this.startingPoint.ancho - (event.clientX - this.startingPoint.izquierda)+"px";
         
-    }else if(dir == this.DERECHA){      
+    }else if(dir === this.DERECHA){      
       
       targElem.style.width = this.startingPoint.ancho + (event.clientX - this.startingPoint.izquierda)+"px";      
       

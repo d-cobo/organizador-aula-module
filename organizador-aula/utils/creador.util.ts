@@ -30,11 +30,8 @@ export abstract class Creador{
         this.sizePantalla = [0,0];
         //this.inicializar(numFilas, numColumnas, listaElementos, listaEntidades, minSize);
     };
-/*
-    inicializar(numFilas:number, numColumnas:number, listaElementos?: ListaElemento[], listaEntidades?: ListaEntidad[], minSize?: [number, number]){
-        //this.listaFilas = [];
 
-    }*/
+    
 
     get numFilas(): number{
         return this.prNumFilas;
@@ -80,7 +77,7 @@ export abstract class Creador{
         return new (<any>this.constructor(this.prNumFilas, this.prNumColumnas, this.listaElementos, this.listaEntidades, this.minSize));
     }
 
-    
+    abstract nuevaInstancia(numFilas:number, numColumnas:number, listaElementos?: ListaElemento[], listaEntidades?: ListaEntidad[], minSize?: [number, number]): Creador;
     abstract onFilasChange(): void;
     abstract onColumnasChange(): void;
     abstract inicializarFilas(): void;
@@ -91,6 +88,11 @@ export abstract class Creador{
 //TODO cambiar nombres
 
 export class CreadorDefault extends Creador{
+
+    nuevaInstancia(numFilas: number, numColumnas: number, listaElementos?: ListaElemento[], listaEntidades?: ListaEntidad[], minSize?: [number, number]): Creador {
+        return new CreadorDefault(numFilas, numColumnas, listaElementos, listaEntidades, minSize);
+    }
+
     onFilasChange(): void {
         let newHeight:number = this.listaFilas.length/this.numFilas;               
         if(newHeight>1){
@@ -108,7 +110,7 @@ export class CreadorDefault extends Creador{
                         cel.elemento.x2 = this.numFilas-1;
                         cel.elemento.celdas = cel.elemento.celdas.filter(c=>c[0].x<this.numFilas);
                         console.log(cel.elemento.celdas);
-                        if(cel.elemento.celdas.length==0) cel.elemento.entidades.forEach(ent=> ent.elemento=null);
+                        if(cel.elemento.celdas.length===0) cel.elemento.entidades.forEach(ent=> ent.elemento=null);
                     }
                 })
             });
@@ -183,8 +185,8 @@ export class CreadorDefault extends Creador{
                 cel.ancho=Math.max(this.sizeCelda[0], this.minSize[0]);                               
                 cel.alto=Math.max(this.sizeCelda[1], this.minSize[1]);
                 /*PRUEBA PARA CAMBIAR TAMAÑOS 
-                    if(cel.y==3) cel.ancho*=2;
-                    if(cel.x==2) cel.alto*=1.8; 
+                    if(cel.y===3) cel.ancho*=2;
+                    if(cel.x===2) cel.alto*=1.8; 
                 */
             }));
         }

@@ -151,11 +151,17 @@ height:100%;
 
 .entidad{
     opacity: 1;
+    
+    text-align: center;
+    width: 100%;
     pointer-events:auto;
     i{
         display: block;
-        font-size: @iconSize;
+        //font-size: @iconSize;
     }
+    /*span{
+        font-size: @iconSize+1vw;
+    }*/
 }
 
 
@@ -166,6 +172,7 @@ height:100%;
     height:100%;    
     
 }
+
 
 .tabla{
   //  display:table;
@@ -201,10 +208,6 @@ height:100%;
 
 span{
     height:0px;
-}
-
-.activo i{
-    font-size: @iconSize;
 }
 
 
@@ -247,6 +250,14 @@ span{
     color: red;
     font-size: 21px;
     cursor: pointer;
+}
+
+#columna-izquierda{
+    min-width: 140px;
+}
+
+#columna-derecha{
+    max-width: calc(~"100%" - ~"140px");
 }
 
 #columna-izquierda, #columna-derecha{

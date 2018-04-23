@@ -3,10 +3,10 @@
     <button (click)="cargar()">Cargar</button>
 </div>
 <!--<app-organizador-aula *ngIf="cargado" [creador]="creador"></app-organizador-aula>-->
-<!-- -->
+<!-- [templateTabla]="tempTabla" [templateBarra]="tempBarra" -->
 <div style="height: 800px">
 <app-organizador-aula
-        *ngIf="cargado" [templateTabla]="tempTabla" [templateBarra]="tempBarra" (onExport)="onExport($event)" [templateElemento]="tempElemento"   [configuracion]="config" [listaElementos]="listaElementos" [listaEntidades]="listaEntidades"
+        *ngIf="cargado"  (onExport)="onExport($event)" [templateElemento]="tempElemento"   [configuracion]="config" [listaElementos]="listaElementos" [listaEntidades]="listaEntidades"
 >
     <ng-template #tempBarra let-objeto>
         <span>{{objeto.nombre}}</span>        
@@ -33,6 +33,7 @@
     </ng-template>
 </app-organizador-aula>
 </div>
+<!--
 <div style="border: 1px solid gray; margin-top:20px">
         <span>Prueba botones fuera del modulo</span> <br>
         <button  (click)="clickBoton(btnElementos)"><span i18n>Elementos</span></button>
@@ -43,7 +44,8 @@
         <button (click)="cambioTam()" i18n>Cambiar</button>
         <button (click)="clickBoton(btnGuardar)">Guardar</button>
         <button (click)="clickBoton(btnCancelar)">Cancelar</button>
-        <!--<button class="export" *ngIf="configuracion.permisoGuardar" id="btnCancelar" (click)="cancelar()"><span i18n>Cancelar</span></button>
-        <button class="export" *ngIf="configuracion.permisoGuardar"  id="btnGuardar" (click)="guardar()"><span i18n>Guardar</span></button>-->
+        <button class="export" *ngIf="configuracion.permisoGuardar" id="btnCancelar" (click)="cancelar()"><span i18n>Cancelar</span></button>
+        <button class="export" *ngIf="configuracion.permisoGuardar"  id="btnGuardar" (click)="guardar()"><span i18n>Guardar</span></button>
+    
         
-</div>
+</div>-->

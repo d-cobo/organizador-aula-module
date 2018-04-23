@@ -33,14 +33,14 @@ class Alumno{
 
 export class AlumnoEnt extends Alumno implements ListaEntidad {
   equals(entidad: Object) {
-    return entidad["id"]===this.id;
+    return entidad['id']===this.id;
   }
   atributo_titulo: string;
   posicion?: [number, number];
   constructor(id: string, nombre: string, otro:string){
     super();
     //this.atributo_id="id";
-    this.atributo_titulo="nombre";
+    this.atributo_titulo='nombre';
     this.id=id;
     this.nombre=nombre;
     this.otro=otro;
@@ -48,6 +48,9 @@ export class AlumnoEnt extends Alumno implements ListaEntidad {
 }
 
 export class CreadorPropio extends Creador {
+  nuevaInstancia(numFilas: number, numColumnas: number, listaElementos?: ListaElemento[], listaEntidades?: ListaEntidad[], minSize?: [number, number]): Creador {
+    return new CreadorPropio(numFilas, numColumnas, listaElementos, listaEntidades, minSize);
+  }
   setTotalSize(anchoTotal: number, altoTotal: number): void {
     this.sizePantalla= [anchoTotal, altoTotal];
   }

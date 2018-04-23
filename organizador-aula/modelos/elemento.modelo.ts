@@ -101,6 +101,10 @@ export class Elemento{
         return this.entidades.findIndex(ent=>ent.objeto.equals(entidad.objeto));        
     }
 
+    static getElementoVacio(): Elemento{
+        return new Elemento(true, 'id_auto', '', '', 1);
+    }
+
 
     
 }

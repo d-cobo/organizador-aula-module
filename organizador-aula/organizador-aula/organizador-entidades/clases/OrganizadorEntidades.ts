@@ -27,7 +27,7 @@ export class OrganizadorEntidades extends Organizador{
                     elem.entidades.push(ent);
                     this.datos.entidades.push(ent);
                 }else if(this.datos.entSinElemento){
-                    let elem: Elemento = new Elemento(true, "id_auto", "", "rgba(0,0,0,0)", 1);
+                    let elem: Elemento = Elemento.getElementoVacio();
                     let x = lisEnt.posicion[0];
                     let y = lisEnt.posicion[1];
                     elem.setPos(x,y,x,y);
@@ -79,7 +79,7 @@ export class OrganizadorEntidades extends Organizador{
         else if(draggedEntidad.elemento)                            
             draggedEntidad.elemento.entidades.splice(draggedEntidad.elemento.getIndexEntidad(draggedEntidad), 1);            
 
-        let elem: Elemento = new Elemento(true, "id_auto", "", "rgba(0,0,0,0)", 1);
+        let elem: Elemento = Elemento.getElementoVacio();
         elem.setPos(celda.x, celda.y, celda.x, celda.y);
         elem.celdas = [[celda]];
         celda.elemento = elem;

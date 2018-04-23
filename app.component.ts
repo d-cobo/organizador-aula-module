@@ -119,7 +119,7 @@ readonly btnCancelar = Botones.Cancelar;
     this.config = {
       filas: this.filas,
       columnas: this.filas,
-      minSize: [80, 80],
+      minSize: [70, 20],
       permisoElementos: true,
       permisoEntidades: true,
       permisoGuardar: true,
@@ -138,7 +138,7 @@ readonly btnCancelar = Botones.Cancelar;
   }
 
   onMensaje(event: Mensaje){
-    if(event.tipo == MsgTipo.AVISO) {
+    if(event.tipo === MsgTipo.AVISO) {
       console.log("WARNING");
       switch(event.codigo){
         case MsgCodigo.ConfirmacionEliminarTipoElemento:
@@ -151,7 +151,7 @@ readonly btnCancelar = Botones.Cancelar;
           break;
       }
     }
-    if(event.tipo == MsgTipo.ERROR){
+    if(event.tipo === MsgTipo.ERROR){
       console.log("ERROR");
       switch(event.codigo){
         case MsgCodigo.CeldaOcupada:
