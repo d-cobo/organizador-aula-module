@@ -1,4 +1,4 @@
-import { Celda } from "./celda";
+import { Celda } from "./celda.modelo";
 
 export class Fila{
     x: number;

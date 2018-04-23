@@ -1,21 +1,21 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, TemplateRef, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { OrganizadorElementoComponent } from './organizador-elemento/organizador-elemento.component';
-import { Datos } from './utils/Datos';
-import { Creador, CreadorDefault } from './utils/Creador';
-import { Celda } from './modelos/celda';
-import { ListaElemento } from './modelos/lista-elementos';
-import { ListaEntidad } from './modelos/lista-entidad';
-import { Entidad } from './modelos/entidad';
-import {Mensaje, MsgTipo, MsgCodigo} from './utils/Mensajes';
-import { ExportTablero, ExportElemento } from './utils/TableroExportInterfaces';
-import { Elemento } from './modelos/elemento';
+import { Datos } from '../utils/datos.util';
+import { Creador, CreadorDefault } from '../utils/creador.util';
+import { Celda } from '../modelos/celda.modelo';
+import { ListaElemento } from '../modelos/lista-elemento.modelo';
+import { ListaEntidad } from '../modelos/lista-entidad.modelo';
+import { Entidad } from '../modelos/entidad.modelo';
+import {Mensaje, MsgTipo, MsgCodigo} from '../modelos/mensajes.modelo';
+import { ExportTablero, ExportElemento } from '../modelos/tablero-export-interfaces.modelo';
+import { Elemento } from '../modelos/elemento.modelo';
 import { Subscription } from 'rxjs/Subscription';
 
 import { OrganizadorElementos } from './organizador-elemento/clases/OrganizadorElementos';
 import { OrganizadorEntidades } from './organizador-entidades/clases/OrganizadorEntidades';
-import { Organizador } from './utils/Organizador';
+import { Organizador } from '../utils/organizador.util';
 import { EventosOrgAulaService } from '../eventos-org-aula.service';
-import { ConfiguracionOrganizador, Botones } from './utils/configuracion-organizador';
+import { ConfiguracionOrganizador, Botones } from '../modelos/configuracion-organizador.modelo';
 @Component({
   selector: 'app-organizador-aula',
   templateUrl: './organizador-aula.component.html',

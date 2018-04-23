@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, Input, TemplateRef, HostListener } from '@angular/core';
-import { Datos } from '../utils/Datos';
+import { Datos } from '../../utils/datos.util';
 import { OrganizadorEntidades } from '../organizador-entidades/clases/OrganizadorEntidades';
-import { Entidad } from '../modelos/entidad';
+import { Entidad } from '../../modelos/entidad.modelo';
 import { EventosOrgAulaService } from '../../eventos-org-aula.service';
 import { OrganizadorElementos } from '../organizador-elemento/clases/OrganizadorElementos';
 

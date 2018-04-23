@@ -1,8 +1,8 @@
-import { Fila } from "../modelos/fila";
-import { Celda } from "../modelos/celda";
-import { Elemento } from "../modelos/elemento";
-import { ListaElemento } from "../modelos/lista-elementos";
-import { ListaEntidad } from "../modelos/lista-entidad";
+import { Fila } from "../modelos/fila.modelo";
+import { Celda } from "../modelos/celda.modelo";
+import { Elemento } from "../modelos/elemento.modelo";
+import { ListaElemento } from "../modelos/lista-elemento.modelo";
+import { ListaEntidad } from "../modelos/lista-entidad.modelo";
 
 export abstract class Creador{
     protected prNumFilas:number;

@@ -16,7 +16,7 @@ export enum MsgCodigo{
     ErrorPermisos=2, //No se tiene los permisos necesarios
 
     //WARNINGS
-    ConfirmacionEliminarTipoElemento = 3, //Mensaje que pide una confirmacion sobre si eliminar un tipo de elemento
+    ConfirmacionEliminarTipoElemento = 3, //mensaje que pide una confirmacion sobre si eliminar un tipo de elemento
 
     //OK
     Cancelar = 4 //Se lanza cuando el usuario pulsa cancelar, usado para avisar a los componentes hijos

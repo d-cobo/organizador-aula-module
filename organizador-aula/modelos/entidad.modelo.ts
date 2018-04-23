@@ -1,5 +1,5 @@
-import { Elemento } from "./elemento";
-import { ListaEntidad } from "./lista-entidad";
+import { Elemento } from "./elemento.modelo";
+import { ListaEntidad } from "./lista-entidad.modelo";
 
 export class Entidad{    
     objeto: ListaEntidad;

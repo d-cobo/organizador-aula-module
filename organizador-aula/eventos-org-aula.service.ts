@@ -1,6 +1,6 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { Mensaje } from './organizador-aula/utils/Mensajes';
-import { ListaEntidad } from './organizador-aula/modelos/lista-entidad';
+import { Mensaje } from './modelos/mensajes.modelo';
+import { ListaEntidad } from './modelos/lista-entidad.modelo';
 
 @Injectable()
 export class EventosOrgAulaService {

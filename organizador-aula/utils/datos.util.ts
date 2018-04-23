@@ -1,9 +1,9 @@
-import { Creador } from "./Creador";
-import { Fila } from "../modelos/fila";
-import { Elemento } from "../modelos/elemento";
-import { ListaElemento } from "../modelos/lista-elementos";
-import { ListaEntidad } from "../modelos/lista-entidad";
-import { Entidad } from "../modelos/entidad";
+import { Creador } from "./creador.util";
+import { Fila } from "../modelos/fila.modelo";
+import { Elemento } from "../modelos/elemento.modelo";
+import { ListaElemento } from "../modelos/lista-elemento.modelo";
+import { ListaEntidad } from "../modelos/lista-entidad.modelo";
+import { Entidad } from "../modelos/entidad.modelo";
 
 export class Datos{
     //todo echar un ojo a creador

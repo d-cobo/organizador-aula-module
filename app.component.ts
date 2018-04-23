@@ -1,15 +1,15 @@
 import { Component, OnInit, ViewChild, ElementRef, EventEmitter } from '@angular/core';
-
+import { Creador } from './organizador-aula/utils/creador.util';
 import { OrganizadorAulaComponent } from './organizador-aula/organizador-aula/organizador-aula.component';
-import { Creador, CreadorDefault } from './organizador-aula/utils/Creador';
 import {  CreadorPropio, AlumnoEnt } from './app.module';
-import { ListaEntidad } from './organizador-aula/modelos/lista-entidad';
-import { MsgTipo, Mensaje, MsgCodigo } from './organizador-aula/utils/Mensajes';
+import { ListaEntidad } from './organizador-aula/modelos/lista-entidad.modelo';
+import { MsgTipo, Mensaje, MsgCodigo } from './organizador-aula/modelos/mensajes.modelo';
 import { EventosOrgAulaService } from './organizador-aula/eventos-org-aula.service';
 import { Subscription } from 'rxjs/Subscription';
-import { ListaElemento } from './organizador-aula/modelos/lista-elementos';
-import { ExportTablero } from './organizador-aula/utils/TableroExportInterfaces';
-import { ConfiguracionOrganizador, Botones } from './organizador-aula/utils/configuracion-organizador';
+import { ListaElemento } from './organizador-aula/modelos/lista-elemento.modelo';
+import { ExportTablero } from './organizador-aula/modelos/tablero-export-interfaces.modelo';
+import { ConfiguracionOrganizador, Botones } from './organizador-aula/modelos/configuracion-organizador.modelo';
+
 
 
 @Component({

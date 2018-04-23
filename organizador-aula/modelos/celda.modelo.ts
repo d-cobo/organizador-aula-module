@@ -1,5 +1,6 @@
-import { Elemento } from "./elemento";
-import { Entidad } from "./entidad";
+
+import { Entidad } from "./entidad.modelo";
+import { Elemento } from "./elemento.modelo";
 
 export class Celda{
     x:number;

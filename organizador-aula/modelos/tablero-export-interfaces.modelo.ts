@@ -1,6 +1,8 @@
-import { ListaEntidad } from "../modelos/lista-entidad";
-import { Elemento } from "../modelos/elemento";
-import { ListaElemento } from "../modelos/lista-elementos";
+import { ListaEntidad } from "../modelos/lista-entidad.modelo";
+import { Elemento } from "../modelos/elemento.modelo";
+import { ListaElemento } from "./lista-elemento.modelo";
+
+
 
 export interface ExportElemento{
     x: number;

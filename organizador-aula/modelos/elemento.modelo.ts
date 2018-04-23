@@ -1,6 +1,5 @@
-import { Coordenada } from "./lista-elementos";
-import { Entidad } from "./entidad";
-import { Celda } from "./celda";
+import { Entidad } from "./entidad.modelo";
+import { Celda } from "./celda.modelo";
 
 export class Elemento{
     x: number;

@@ -1,4 +1,5 @@
-import { Elemento } from "../../modelos/elemento";
+import { Elemento } from "../../../modelos/elemento.modelo";
+
 
 export interface StartingPoint{
     arriba: number;

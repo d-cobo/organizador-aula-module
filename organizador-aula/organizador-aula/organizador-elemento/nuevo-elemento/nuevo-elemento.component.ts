@@ -1,5 +1,6 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { ListaElemento } from '../../modelos/lista-elementos';
+import { ListaElemento } from '../../../modelos/lista-elemento.modelo';
+
 
 @Component({
   selector: 'app-nuevo-elemento',

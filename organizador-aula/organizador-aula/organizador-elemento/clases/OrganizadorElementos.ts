@@ -1,10 +1,10 @@
 import { Organizador } from "../../../utils/Organizador";
-import { Fila } from "../../../modelos/fila";
-import { Elemento } from "../../../modelos/elemento";
+import { Fila } from "../../../modelos/fila.modelo";
+import { Elemento } from "../../../modelos/elemento.modelo";
 import { ElementRef } from "@angular/core";
-import { Celda } from "../../../modelos/celda";
-import { Coordenada } from "../../../modelos/lista-elementos";
-import { MsgTipo } from "../../../utils/Mensajes";
+import { Celda } from "../../../modelos/celda.modelo";
+import { Coordenada } from "../../../modelos/lista-elemento.modelo";
+import { MsgTipo } from "../../../modelos/mensajes.modelo";
 import { StartingPoint, Directions } from "./interfaces";
 import { EventosOrgAulaService } from "../../../eventos-org-aula.service";
 
