@@ -1,27 +1,29 @@
 <ng-container *ngIf="creador || (configuracion && configuracion.filas > 0 && configuracion.columnas > 0)">
-    <div *ngIf="configuracion && configuracion.mostrarBarraSuperior" id="tabs" >
-        <div class="inline-block">
-        <li *ngIf="configuracion.permisoElementos"  [ngClass]="{'activo': activo===ACT_ELEMENTOS}" (click)="activo=ACT_ELEMENTOS"><span i18n>Elementos</span></li>
-        <li *ngIf="configuracion.permisoEntidades" [ngClass]="{'activo': activo===ACT_ENTIDADES}" (click)="activo=ACT_ENTIDADES"><span i18n>Entidades</span></li>
-        <li [ngClass]="{'activo': activo===ACT_VISUALIZAR}" (click)="activo=ACT_VISUALIZAR"><span i18n>Visualizar</span></li>        
-        </div>
-        <ng-container *ngIf="activo===ACT_ELEMENTOS ||activo===ACT_ENTIDADES">
+    <div id="org-container">
+        <div *ngIf="configuracion && configuracion.mostrarBarraSuperior" id="tabs" >
             <div class="inline-block">
-                <label i18n>Filas:</label> <input #txtFilas type="number" value="{{creador.numFilas}}"/>
-                <label i18n>Columnas:</label> <input #txtColumnas type="number" value="{{creador.numColumnas}}"/>
-                <button (click)="cambiar()" i18n>Cambiar</button>
+            <li *ngIf="configuracion.permisoElementos"  [ngClass]="{'activo': activo===ACT_ELEMENTOS}" (click)="activo=ACT_ELEMENTOS"><span i18n>Elementos</span></li>
+            <li *ngIf="configuracion.permisoEntidades" [ngClass]="{'activo': activo===ACT_ENTIDADES}" (click)="activo=ACT_ENTIDADES"><span i18n>Entidades</span></li>
+            <li [ngClass]="{'activo': activo===ACT_VISUALIZAR}" (click)="activo=ACT_VISUALIZAR"><span i18n>Visualizar</span></li>        
             </div>
-        </ng-container>
-        <div class="inline">
-            <li class="export" *ngIf="configuracion.permisoGuardar" id="btnCancelar" (click)="cancelar()"><span i18n>Cancelar</span></li>
-            <li class="export" *ngIf="configuracion.permisoGuardar"  id="btnGuardar" (click)="guardar()"><span i18n>Guardar</span></li>
+            <ng-container *ngIf="activo===ACT_ELEMENTOS ||activo===ACT_ENTIDADES">
+                <div class="inline-block">
+                    <label i18n>Filas:</label> <input #txtFilas type="number" value="{{creador.numFilas}}"/>
+                    <label i18n>Columnas:</label> <input #txtColumnas type="number" value="{{creador.numColumnas}}"/>
+                    <button (click)="cambiar()" i18n>Cambiar</button>
+                </div>
+            </ng-container>
+            <div class="inline">
+                <li class="export" *ngIf="configuracion.permisoGuardar" id="btnCancelar" (click)="cancelar()"><span i18n>Cancelar</span></li>
+                <li class="export" *ngIf="configuracion.permisoGuardar"  id="btnGuardar" (click)="guardar()"><span i18n>Guardar</span></li>
+            </div>
         </div>
-    </div>
-    <div id="comps">
-        <app-organizador-elemento *ngIf="activo===ACT_ELEMENTOS" [templateElemento]="templateElemento" [datos]="datos"></app-organizador-elemento>
-        <app-organizador-entidades [templateElemento]="templateElemento" [templateBarra]="templateBarra" [templateTabla]="templateTabla" *ngIf="activo===ACT_ENTIDADES" [datos]="datos"></app-organizador-entidades>    
-        <app-organizador-visualizacion [templateElemento]="templateElemento" [templateBarra]="templateBarra" [templateTabla]="templateTabla" *ngIf="activo===ACT_VISUALIZAR" [datos]="datos">    </app-organizador-visualizacion>
-    </div>
+        <div id="comps">
+            <app-organizador-elemento class="componente" *ngIf="activo===ACT_ELEMENTOS" [templateElemento]="templateElemento" [datos]="datos"></app-organizador-elemento>
+            <app-organizador-entidades class="componente" [templateElemento]="templateElemento" [templateBarra]="templateBarra" [templateTabla]="templateTabla" *ngIf="activo===ACT_ENTIDADES" [datos]="datos"></app-organizador-entidades>    
+            <app-organizador-visualizacion class="componente" [templateElemento]="templateElemento" [templateBarra]="templateBarra" [templateTabla]="templateTabla" *ngIf="activo===ACT_VISUALIZAR" [datos]="datos">    </app-organizador-visualizacion>
+        </div>
+    </div> 
 </ng-container>
 
 

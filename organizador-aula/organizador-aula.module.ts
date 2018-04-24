@@ -12,7 +12,6 @@ import {ConfirmationService} from 'primeng/api';
 import {DialogModule} from 'primeng/dialog';
 import { FormsModule } from '@angular/forms';
 import {ButtonModule} from 'primeng/button';
-import {GrowlModule} from 'primeng/growl';
 import { NuevoElementoComponent } from './organizador-aula/organizador-elemento/nuevo-elemento/nuevo-elemento.component';
 import { EventosOrgAulaService } from './eventos-org-aula.service';
 import { OrganizadorVisualizacionComponent } from './organizador-aula/organizador-visualizacion/organizador-visualizacion.component';
@@ -28,7 +27,6 @@ import { OrganizadorVisualizacionComponent } from './organizador-aula/organizado
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
-    GrowlModule,
     ButtonModule
   ],
   exports: [

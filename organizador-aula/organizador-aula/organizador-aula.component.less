@@ -30,8 +30,17 @@ li.activo{
     margin-left: 1%;
 }
 
-#comps{
+#org-container{
+    display: flex;
+    flex-flow: column;
     height: 100%;
+    #tabs{
+        flex: 0 1 auto;
+    }
+    #comps{
+        flex: 1 1 auto;
+        position: relative;
+    }
 }
 
 .inline{
@@ -40,4 +49,11 @@ li.activo{
 
 .inline-block{
     display: inline-block;
+}
+
+.componente{
+
+    position: absolute;
+    height: 100%;
+    width: 100%;
 }

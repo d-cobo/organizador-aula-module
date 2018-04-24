@@ -7,7 +7,7 @@ import { ListaElemento } from '../modelos/lista-elemento.modelo';
 import { ListaEntidad } from '../modelos/lista-entidad.modelo';
 import { Entidad } from '../modelos/entidad.modelo';
 import {Mensaje, MsgTipo, MsgCodigo} from '../modelos/mensajes.modelo';
-import { ExportTablero, ExportElemento } from '../modelos/tablero-export-interfaces.modelo';
+import { ExportTablero } from '../modelos/tablero-export-interfaces.modelo';
 import { Elemento } from '../modelos/elemento.modelo';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -23,28 +23,30 @@ import { ArgsCreador } from '../modelos/args-creador-interface.modelo';
   styleUrls: ['./organizador-aula.component.less']
 })
 export class OrganizadorAulaComponent implements OnInit, OnDestroy {
-  @Input('creador') creador: Creador;
-  @Input('templateBarra') templateBarra: TemplateRef<any>;
-  @Input('templateTabla') templateTabla: TemplateRef<any>;
-  @Input('templateElemento') templateElemento: TemplateRef<any>;
-  @Input('configuracion') configuracion: ConfiguracionOrganizador;
-  @Input('listaElementos') listaElementos: ListaElemento[];
-  @Input('listaEntidades') listaEntidades: ListaEntidad[];
+  @Input('creador') creador: Creador; //opcional; instancia de una implementacion de Creador
+  @Input('templateBarra') templateBarra: TemplateRef<any>; //opt; template de entidades en la barra
+  @Input('templateTabla') templateTabla: TemplateRef<any>; //opt; template de entidades en la tabla
+  @Input('templateElemento') templateElemento: TemplateRef<any>; //opt; template de elementos
+  @Input('configuracion') configuracion: ConfiguracionOrganizador; //oblig; opciones de configuración
+  @Input('listaElementos') listaElementos: ListaElemento[]; //opt; lista de elementos iniciales
+  @Input('listaEntidades') listaEntidades: ListaEntidad[]; //opt; lista de entidades iniciales
 
-  @Output('onExport') onExport: EventEmitter<ExportTablero>;
+  @Output('onExport') onExport: EventEmitter<ExportTablero>; //devuelve los datos del tablero
 
   @ViewChild('txtFilas') txtFilas: ElementRef;
   @ViewChild('txtColumnas') txtColumnas: ElementRef;
 
+  //Los diferentes estados/pantallas
   readonly ACT_ELEMENTOS: Botones = Botones.Elementos;
   readonly ACT_ENTIDADES: Botones = Botones.Entidades;
   readonly ACT_VISUALIZAR: Botones = Botones.Visualizar;
 
+
   subscriptionClickBoton: Subscription;
   subscriptionCambioTamano: Subscription;
-  activo: Botones;  
-  datos: Datos;
-  argsCreador: ArgsCreador;
+  activo: Botones;  //la pantalla activa actual
+  datos: Datos; //datos con el estado del tablero para compartir entre los componentes
+  argsCreador: ArgsCreador; //argumentos para construir un creador
 
   constructor(private eventos: EventosOrgAulaService) {
     this.onExport  = new EventEmitter<ExportTablero>();
@@ -52,20 +54,22 @@ export class OrganizadorAulaComponent implements OnInit, OnDestroy {
    }
 
   ngOnInit() {
+    //Si no estan los parametros obligatorios
     if(!((this.configuracion && this.configuracion.filas > 0 && this.configuracion.columnas > 0) || this.creador)){
       this.eventos.mensajes.emit({tipo: MsgTipo.ERROR, codigo: MsgCodigo.ConfigOrCreadorNecesario});
       return;
     }
     
+    //Activa la primera pantalla disponible
     if(this.configuracion && this.configuracion.permisoElementos) this.activo = this.ACT_ELEMENTOS;
     else if(this.configuracion && this.configuracion.permisoEntidades) this.activo = this.ACT_ENTIDADES;
     else this.activo=this.ACT_VISUALIZAR;
-    
+        
     if(!this.creador){
       this.creador = new CreadorDefault(this.configuracion.filas, this.configuracion.columnas, this.listaElementos, this.listaEntidades, this.configuracion.minSize);
     }    
+
     //Guardar estado inicial
-    //TODO a objeto
     this.argsCreador={
       numFilas: this.creador.numFilas,
       numColumnas: this.creador.numColumnas, 
@@ -84,6 +88,7 @@ export class OrganizadorAulaComponent implements OnInit, OnDestroy {
     org.inicializar();
     console.log(this.datos);
 
+    //suscripcion a pulsación de los botones o a cambio de tamaño desde el exterior
     this.subscriptionClickBoton = this.eventos.clickBoton.subscribe(num=>this.onClickBoton(num));
     this.subscriptionCambioTamano = this.eventos.cambioTamano.subscribe(tam=>this.onCambioTamano(tam));
   }
@@ -93,6 +98,7 @@ export class OrganizadorAulaComponent implements OnInit, OnDestroy {
     this.subscriptionCambioTamano.unsubscribe();
   }
 
+  //guarda el estado de la tabla y la exporta fuera del módulo
   guardar(): void{
     let lisElementos: ListaElemento[] = [];
     let lisEntidades: ListaEntidad[] = [];
@@ -144,9 +150,10 @@ export class OrganizadorAulaComponent implements OnInit, OnDestroy {
     //this.creador.numFilas = parseInt(this.txtFilas.nativeElement.value);
   }
 
+  //Pone el último estado de la tabla guardado (o el inicial en su defecto)
   cancelar(): void{
     
-    //Resetear al estado inicial
+    //Resetear al estado inicial del creador con los datos guardados
     this.creador = this.creador.nuevaInstancia(
       this.argsCreador.numFilas,
       this.argsCreador.numColumnas,
@@ -154,6 +161,8 @@ export class OrganizadorAulaComponent implements OnInit, OnDestroy {
       this.argsCreador.listaEntidades,
       this.argsCreador.minSize
     )
+
+    //actualizar los datos
     this.datos = new Datos(this.creador, (this.configuracion && this.configuracion.entidadSinElemento));
     this.eventos.mensajes.emit({tipo: MsgTipo.OK, codigo: MsgCodigo.Cancelar})
     let org: Organizador = new OrganizadorElementos();
@@ -163,14 +172,10 @@ export class OrganizadorAulaComponent implements OnInit, OnDestroy {
     org.datos = this.datos;
     org.inicializar();
     console.log(this.datos);
-    /*let tab = this.activo;
-    this.activo=-1;
-    setTimeout(()=>{
-    this.activo=tab;
-    },0);*/
     
   }
 
+  //si llega un evento de clickBoton del exterior, realiza la acción correspondiente
   onClickBoton(num: Botones){
     console.log(num);
     switch(num){
@@ -187,6 +192,7 @@ export class OrganizadorAulaComponent implements OnInit, OnDestroy {
       case Botones.Visualizar:        
         this.activo = num;
         break;
+
       case Botones.Cancelar:
         if(this.configuracion && !this.configuracion.permisoGuardar){ 
           this.eventos.mensajes.emit({tipo: MsgTipo.ERROR, codigo: MsgCodigo.ErrorPermisos});
@@ -203,7 +209,7 @@ export class OrganizadorAulaComponent implements OnInit, OnDestroy {
         break;      
     }
   }
-
+  
   onCambioTamano(size: [number, number]){
     this.creador.numFilas = size[0];
     this.creador.numColumnas = size[1];

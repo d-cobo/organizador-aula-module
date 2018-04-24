@@ -1,6 +1,7 @@
 import { Entidad } from "./entidad.modelo";
 import { Celda } from "./celda.modelo";
 
+//Representa a un elemento del tablero
 export class Elemento{
     x: number;
     y: number;
@@ -11,8 +12,8 @@ export class Elemento{
     nombre: string;
     color:string; 
     activo: boolean; //Si es un elemento posicionado
-    celdas: Celda[][];
-    entidades: Entidad[];
+    celdas: Celda[][]; //Celdas que lo contienen
+    entidades: Entidad[]; //Entidades asignadas a el
 
     constructor(activo: boolean, id: string, nombre: string, color: string, maxEntidades: number){
         this.activo=activo;
@@ -24,10 +25,7 @@ export class Elemento{
         this.entidades = [];
     }
 
-    getElemId():string{
-        return `${this.id}_${this.x}_${this.y}`;
-    }
-
+    //Funciones que calculan el ancho y el alto del elemento segun los tamaños de las celdas
     getAncho():number{
         if(this.activo){
             let suma=0;
@@ -63,6 +61,7 @@ export class Elemento{
         return this.getAlto()+"px";
     }
 
+    //Para un ngStyle; asigna ancho y alto a un elemento
     getEstilo():object{
         return{
             width: this.getAnchoPx(),
@@ -70,14 +69,13 @@ export class Elemento{
         }
     }
 
+    //devuelve una lista con las coordenadas de sus celdas
     getCoorCeldas():number[][]{
         let lista: number[][]=[];
-        for(let fila=this.x; fila<=this.x2; fila++){            
-            for(let col=this.y;col<=this.y2;col++){
-              lista.push([fila, col]);
-            }
-          }
-          return lista;
+        this.celdas.forEach(f=>f.forEach(cel=>
+            lista.push([cel.x, cel.y])
+        ));              
+        return lista;
     }
 
     setPos(x:number, y:number, x2:number, y2: number):void{
@@ -88,7 +86,7 @@ export class Elemento{
     }
 
     
-
+    //para ngClass segun elemento esté activo o no
     getClasses():object{
         return{
             elemento: true,
@@ -97,10 +95,12 @@ export class Elemento{
         }
     }
 
+    //Devuelve el indice de una entidad de la lista
     getIndexEntidad(entidad: Entidad):number{
         return this.entidades.findIndex(ent=>ent.objeto.equals(entidad.objeto));        
     }
 
+    //Crea un elemento vacío/automático para entidades colocadas en celdas sin elemento
     static getElementoVacio(): Elemento{
         return new Elemento(true, 'id_auto', '', '', 1);
     }

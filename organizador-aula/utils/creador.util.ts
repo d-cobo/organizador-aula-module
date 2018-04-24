@@ -4,17 +4,18 @@ import { Elemento } from "../modelos/elemento.modelo";
 import { ListaElemento } from "../modelos/lista-elemento.modelo";
 import { ListaEntidad } from "../modelos/lista-entidad.modelo";
 
+//Clase abstracta que se encarga de inicializar las celdas del tablero y actualizar el tamaño
 export abstract class Creador{
-    protected prNumFilas:number;
-    protected prNumColumnas:number;
-    protected prListaElementos:ListaElemento[];
-    protected prListaEntidades:ListaEntidad[];
-    protected minSize: [number, number];
-    listaFilas: Fila[];
-    //protected filas: Fila[];
-    protected sizeCelda: [number, number];
-    protected sizePantalla: [number, number];
+    protected prNumFilas:number; //numero de filas
+    protected prNumColumnas:number; //numero de columnas
+    protected prListaElementos:ListaElemento[]; //lista de elementos inicial
+    protected prListaEntidades:ListaEntidad[]; //lista de entidades inicial
+    protected minSize: [number, number]; //tamaño minimo de celda
+    protected listaFilas: Fila[]; //lista de filas (el tablero)    
+    protected sizeCelda: [number, number]; //tamaño de una celda
+    protected sizePantalla: [number, number]; //tamaño total de la pantalla para calculos
     
+    //inicializa las propiedades
     constructor(numFilas:number, numColumnas:number,  listaElementos?: ListaElemento[], listaEntidades?: ListaEntidad[], minSize?: [number, number]){
        
         this.prNumFilas=numFilas;
@@ -32,7 +33,7 @@ export abstract class Creador{
     };
 
     
-
+    //getters y setters
     get numFilas(): number{
         return this.prNumFilas;
     }
@@ -73,10 +74,12 @@ export abstract class Creador{
         return this.minSize;
     }
 
-    clone() {
-        return new (<any>this.constructor(this.prNumFilas, this.prNumColumnas, this.listaElementos, this.listaEntidades, this.minSize));
+    get getListaFilas(): Fila[]{
+        return this.listaFilas;
     }
 
+    
+    //funciones a implementar
     abstract nuevaInstancia(numFilas:number, numColumnas:number, listaElementos?: ListaElemento[], listaEntidades?: ListaEntidad[], minSize?: [number, number]): Creador;
     abstract onFilasChange(): void;
     abstract onColumnasChange(): void;
@@ -85,14 +88,15 @@ export abstract class Creador{
     abstract setTotalSize(anchoTotal:number, altoTotal:number): void;        
 }
 
-//TODO cambiar nombres
-
+//implementacion de Creador por defecto
 export class CreadorDefault extends Creador{
 
+    //devuelve una nueva instancia de CreadorDefault con los datos que recibe
     nuevaInstancia(numFilas: number, numColumnas: number, listaElementos?: ListaElemento[], listaEntidades?: ListaEntidad[], minSize?: [number, number]): Creador {
         return new CreadorDefault(numFilas, numColumnas, listaElementos, listaEntidades, minSize);
     }
 
+    //Si cambia el número de filas actualiza los elementos para que se adecuen y el tamaño de las celdas
     onFilasChange(): void {
         let newHeight:number = this.listaFilas.length/this.numFilas;               
         if(newHeight>1){
@@ -130,6 +134,7 @@ export class CreadorDefault extends Creador{
             this.setSize(this.sizeCelda[0], this.sizeCelda[1]*newHeight);
         }
     }
+    //Lo mismo con el numero de columnas
     onColumnasChange(): void{
         let newWidth:number = this.listaFilas[0].celdas.length/this.numColumnas;          
         if(newWidth>1){
@@ -168,15 +173,18 @@ export class CreadorDefault extends Creador{
 
     }
     
+    //El constructor no realiza ninguna operacion extra
     constructor(numFilas:number, numColumnas:number, listaElementos?: ListaElemento[], listaEntidades?: ListaEntidad[], minSize?: [number, number]){
         super(numFilas, numColumnas, listaElementos, listaEntidades, minSize);
     }
 
+    //Pone el tamaño de la pantalla al recibido
     setTotalSize(anchoTotal: number, altoTotal: number): void{
         this.sizePantalla[0]=anchoTotal;
         this.sizePantalla[1]=altoTotal;
     }
 
+    //Pone el tamaño de las celdas al maximo entre el minSize y el recibido
     setSize(anchoCelda?:number, altoCelda?:number): void{        
         if (anchoCelda) this.sizeCelda[0]=anchoCelda;
         if (altoCelda) this.sizeCelda[1]=altoCelda;        
@@ -193,16 +201,7 @@ export class CreadorDefault extends Creador{
     }
 
 
-    /*inicializarFilas():Fila[]{                
-        let filas: Fila[] = [];
-        for(let numFila=0; numFila<this.numFilas;numFila++){
-            filas.push(new Fila());
-            for(let numCol=0; numCol<this.numColumnas;numCol++){
-              filas[numFila].celdas.push(new Celda(numFila, numCol, this.sizeCelda[0], this.sizeCelda[1]));
-            }
-        }
-        return filas;
-    }*/
+    //Inicializa las filas y celdas del tablero y les pone el tamaño
     inicializarFilas():void{                        
         this.listaFilas=[];
         for(let numFila=0; numFila<this.numFilas;numFila++){
@@ -215,6 +214,7 @@ export class CreadorDefault extends Creador{
         this.actualizarTamano();        
     }
 
+    //Actualiza el tamaño si suman más que el total de la pantalla para que no se pasen de largo
     actualizarTamano(): void{
         let sumAlto: number = 0;
         let sumAncho: number = 0;

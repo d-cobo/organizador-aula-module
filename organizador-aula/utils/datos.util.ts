@@ -5,12 +5,13 @@ import { ListaElemento } from "../modelos/lista-elemento.modelo";
 import { ListaEntidad } from "../modelos/lista-entidad.modelo";
 import { Entidad } from "../modelos/entidad.modelo";
 
+//Tiene todos los datos necesarios para la aplicación
 export class Datos{
-    private creador: Creador;
-    entSinElemento: boolean;
-    //listaFilas: Fila[];
-    entidadesCreadas: boolean;
-    entidades: Entidad[];     
+    private creador: Creador; //el creador usado que contiene los datos del tablero
+    entSinElemento: boolean; //opcion para permitir entidades sin elementos    
+    entidadesCreadas: boolean; //indica si las entidades ya han sido inicializadas o no
+    entidades: Entidad[]; //Guarda la lista de entidades; necesario porque puede haber algunas que
+                         //no estén en el tablero y asi pues no las tenga el creador
 
     
     constructor(creador: Creador, entSinElemento?: boolean){
@@ -48,7 +49,7 @@ export class Datos{
     }
 
     get listaFilas(): Fila[]{
-        return this.creador.listaFilas;
+        return this.creador.getListaFilas;
     }
 
     

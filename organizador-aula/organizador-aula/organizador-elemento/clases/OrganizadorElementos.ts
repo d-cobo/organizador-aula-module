@@ -1,25 +1,24 @@
-import { Organizador } from "../../../utils/Organizador";
+import { Organizador } from "../../../utils/organizador.util";
 import { Fila } from "../../../modelos/fila.modelo";
 import { Elemento } from "../../../modelos/elemento.modelo";
 import { ElementRef } from "@angular/core";
 import { Celda } from "../../../modelos/celda.modelo";
-import { Coordenada } from "../../../modelos/lista-elemento.modelo";
 import { MsgTipo } from "../../../modelos/mensajes.modelo";
 import { StartingPoint, Directions } from "./interfaces";
 import { EventosOrgAulaService } from "../../../eventos-org-aula.service";
 
+//Gestiona la organización de elementos en el tablero
 export class OrganizadorElementos extends Organizador{
-//todo que es privado y que no
+
 
     inicializar():void{        
       if(!this.datos.listaFilas){
         this.datos.inicializarFilas();
         this.initElementos();
-
       }
     }
 
-
+    //Incializa los elementos recibidos en el módulo y los pone en sus posiciones (si tienen)
     initElementos(): void{
       if(!this.datos.listaElementos){
         return;
@@ -42,6 +41,7 @@ export class OrganizadorElementos extends Organizador{
       });
     }
 
+    //Recibe un elemento y lo enlaza a las celdas que lo contienen en función de su posición
     setCeldasOcupadas (elemento: Elemento): void{
         elemento.celdas=[];
         for(let fila=elemento.x;fila<=elemento.x2;fila++){
@@ -54,6 +54,8 @@ export class OrganizadorElementos extends Organizador{
         
     }
       
+  //Comprueba si una celda está ocupada por un elemento (si se pasa elem como parámetro,
+  //no cuenta al propio elemento)
   celdaOcupada(x:number, y:number, elem: Elemento=null): boolean{
     //Si la casilla está fuera del tablero retorna que está ocupada    
     if(!this.listaFilas[x] || !this.listaFilas[x].celdas[y]) return true;
@@ -61,6 +63,7 @@ export class OrganizadorElementos extends Organizador{
     return (this.listaFilas[x].celdas[y].elemento && this.listaFilas[x].celdas[y].elemento!=elem);
   }
 
+  //Al mover un elemento, todas las celdas que antes ocupada y ahora no, actualizan su elemento a nulo
   cambiarReferencias(elem: Elemento, coords: number[][]):void{
     let elemCoords: number[][] = elem.getCoorCeldas();
     coords.forEach(coor=>{
@@ -70,19 +73,16 @@ export class OrganizadorElementos extends Organizador{
     });    
   }
 
-  getElemento(x:number, y:number): Elemento{
-    return this.listaFilas[x].celdas[y].elemento;
-  }
-
-
+  //Elimina un elemento del tablero; pone a nulo todas las referencias a él
   removeElement(elemento: Elemento): void{
     
     elemento.celdas.forEach(fila=>fila.forEach(celda=>{
       celda.elemento=null;
     }));      
 
-    if(elemento.entidades){      
+    if(elemento.entidades && elemento.entidades.length>0){      
       elemento.entidades.forEach(ent=>{ent.elemento=null});
+      //Si se puede tener entidades sin elementos, y tenía alguna entidad, la pone a un elemento vacio
       if(this.datos.entSinElemento){
         let elem: Elemento = Elemento.getElementoVacio();
         console.log(elem);
@@ -99,19 +99,19 @@ export class OrganizadorElementos extends Organizador{
   }
 
 
-
-  drop(cel: Celda, draggedCelda: Celda, clickedCelda: Celda): number{    
+  //Mueve un elemento de la barra o la tabla a una celda vacía
+  drop(cel: Celda, draggedCelda: Celda, clickedCelda: Celda): MsgTipo{    
     
-    let coord: Coordenada = null;
-    //Si estas moviendo un elemento de la barra izquierda a una casilla ocupada return
+    let coord: number[][] = null;
     let posx: number;
     let posy: number;
     
-    if(cel.elemento && cel.elemento.id=="id_auto" && (!draggedCelda.elemento.entidades || draggedCelda.elemento.entidades.length==0)){
+    //Si estás moviendo un elemento a una casilla con un elemento vacío lo sustituye
+    if(cel.elemento && cel.elemento.id==='id_auto' && (!draggedCelda.elemento.entidades || draggedCelda.elemento.entidades.length==0)){
       cel.elemento.entidades[0].elemento = draggedCelda.elemento;
       draggedCelda.elemento.entidades = cel.elemento.entidades;
       cel.elemento = draggedCelda.elemento;
-      
+    //Si estás moviendo un elemento a una casilla con un elemento no vacío devuelve un error
     }else{
       if(cel.elemento && !draggedCelda.elemento.activo) return MsgTipo.ERROR;            
     }
@@ -148,6 +148,8 @@ export class OrganizadorElementos extends Organizador{
     return MsgTipo.OK;
   }
 
+  //Comprueba si una serie de celdas están ocupada ignorando al elemento que se le pase
+  //por parámetro
   celdasOcupadas(x: number,x2: number,y: number,y2: number, elem: Elemento): boolean{
     for(let fila=x;fila<=x2;fila++){
       for(let col=y; col<=y2; col++){          
@@ -226,6 +228,8 @@ export class OrganizadorElementos extends Organizador{
   }
 
   
+  //Al finalizar de resizear un elemento en la vista se llama a esta función con el elemento,
+  //la dirección, el punto inicial y el final para calcular su nueva posición
   resize(elem: Elemento, htmlElem: HTMLElement, resizeDir: number,
     startingPoint: StartingPoint, event: MouseEvent): void
   {
@@ -377,6 +381,8 @@ export class OrganizadorElementos extends Organizador{
     target.style.height = elem.getAltoPx();  
   }
 
+  //Elimina un tipo de elemento en la barra lateral izquierda y todos los de su tipo que haya
+  //colocados en el tablero
   removeElementType(id: string): void {
     this.listaFilas.forEach(f=>
       f.celdas.filter(c=>c.initElemento() && c.elemento.id===id).forEach(c=>{

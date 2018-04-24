@@ -18,12 +18,13 @@ export class OrganizadorEntidadesComponent implements OnInit {
   @ViewChild('mainDiv') mainDiv: ElementRef;
   @ViewChild('tabla') tabla: ElementRef;
   
-  @Input('templateBarra') templateBarra: TemplateRef<any>;
-  @Input('templateElemento') templateElemento: TemplateRef<any>;
-  @Input('templateTabla') templateTabla: TemplateRef<any>;
+  @Input('templateBarra') templateBarra: TemplateRef<any>; //template de las entidades en la barra
+  @Input('templateElemento') templateElemento: TemplateRef<any>; //temp de los elementos
+  @Input('templateTabla') templateTabla: TemplateRef<any>; //temp de las entidades en la tabla
   
   prDatos: Datos;
   
+  //Datos compartidos con la info de la tabla, si se actualizan recargarlos en el organizador
   @Input('datos')
   set datos(datos:Datos){
     this.prDatos=datos;
@@ -37,23 +38,17 @@ export class OrganizadorEntidadesComponent implements OnInit {
     return this.prDatos;
   }
 
-
-
-  
-  datosEntidad: string[];
-  claseObjetoEntidad: string;
-  organizador: OrganizadorEntidades;
-  draggedEntidad:Entidad;  
-  mostrarBarraLateral: boolean;
-  display: boolean;
-  filtro: string;
+  organizador: OrganizadorEntidades; //El organizador que lleva a cabo la mayoria de las funciones
+  draggedEntidad:Entidad;   //Entidad que esta siendo arrastrada
+  mostrarBarraLateral: boolean; //Muestra/oculta barra lateral
+  filtro: string; //Filtra elementos por su atributo de titulo, bindeada al input de la vista
 
   constructor(private eventos: EventosOrgAulaService) {    
    }
 
+  //inicializa las variables
   ngOnInit() {
-    this.mostrarBarraLateral=true;
-    this.datosEntidad=[];
+    this.mostrarBarraLateral=true;    
     this.organizador = new OrganizadorEntidades();
     this.organizador.datos = this.datos;
     this.filtro="";
@@ -68,7 +63,7 @@ export class OrganizadorEntidadesComponent implements OnInit {
   }
 
 
-
+//llama a la función de drop correspondiente del organizador según donde caigas
   onDrop(celda: Celda): void{
     if(celda && celda.elemento)
       this.organizador.dropOnElement(this.draggedEntidad, celda.elemento);
@@ -83,19 +78,12 @@ export class OrganizadorEntidadesComponent implements OnInit {
     this.draggedEntidad=entidad;
   }
 
+  //al hacer clcik en entidad
   mostrarDatos(entidad: Entidad): void{
     this.eventos.clickEntidad.emit(entidad.objeto);
-
   }
 
-  getEstilo(entidad: Entidad): object{
-    let percent: number = 100/(entidad.elemento.entidades.length+1);
-    return {
-      //marginLeft: `calc(${percent}% - 2vw)`,
-      float: 'left'
-    }
-  }
-
+  //muestra u oculta la columna lateral
   toogleColumnaLateral(): void{
     this.mostrarBarraLateral = this.mostrarBarraLateral ? false : true;
     setTimeout(()=>{
@@ -103,10 +91,12 @@ export class OrganizadorEntidadesComponent implements OnInit {
     }, 0);
   }
 
+  //llama a la funcion de obtener las entidas nulas y las filtra con el texto del filtro
   getEntidadesSinPos(): Entidad[]{
     return this.organizador.getEntidadesSinPos().filter(ent=>ent.titulo.toUpperCase().includes(this.filtro.toUpperCase()));
   }
 
+  //determina si se puede hacer drop en una celda  
   droppable(cel: Celda): boolean{
     if(this.organizador.datos.entSinElemento) return true;
     else if(cel.elemento) return true;

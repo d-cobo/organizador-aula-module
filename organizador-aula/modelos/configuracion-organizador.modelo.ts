@@ -1,5 +1,5 @@
 
-
+//Opciones de configuracion para el módulo
 export interface ConfiguracionOrganizador{
     filas: number,
     columnas: number,
@@ -11,6 +11,7 @@ export interface ConfiguracionOrganizador{
     mostrarBarraSuperior?: boolean
 }
 
+//Numeración de los botones de cambio de pantalla / tamaño / cancelar guardar
 export enum Botones{
     Elementos=0,
     Entidades=1,

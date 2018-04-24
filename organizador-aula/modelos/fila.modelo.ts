@@ -1,5 +1,6 @@
 import { Celda } from "./celda.modelo";
 
+//Representa una fila de la tabla
 export class Fila{
     x: number;
     celdas:Celda[];    

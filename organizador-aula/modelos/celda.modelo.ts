@@ -2,6 +2,7 @@
 import { Entidad } from "./entidad.modelo";
 import { Elemento } from "./elemento.modelo";
 
+//Representa una celda de la tabla
 export class Celda{
     x:number;
     y:number;

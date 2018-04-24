@@ -1,3 +1,4 @@
+//Representa un tipo de elemento y sus posiciones iniciales
 export interface ListaElemento{
     nombre: string;
     id: string;
@@ -8,15 +9,9 @@ export interface ListaElemento{
     posiciones?: Array<Position>
   }
   
+  //xy: cuadrado superior izquierdo
+  //xy2: cuadrado inferior derecho
   export interface Position{
     xy: [number, number];
     xy2?: [number,number];  
-  }
-
-  export interface Coordenada{
-      id?: string;
-      x: number;
-      y: number;
-      x2?:number;
-      y2?:number;
   }

@@ -1,3 +1,4 @@
+//Mensajes que se envian al exterior de la aplicacion; tipo y código
 export interface Mensaje{
     tipo: MsgTipo;
     codigo: MsgCodigo;    

@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, ElementRef, Input, ViewChild, ViewChildren, QueryList, HostListener, EventEmitter, Output, ApplicationRef, TemplateRef, SimpleChanges, OnDestroy } from '@angular/core';
 import { ResizeEvent, ResizableDirective } from 'angular-resizable-element';
-import { Coordenada, ListaElemento, Position } from '../../modelos/lista-elemento.modelo';
+import { ListaElemento, Position } from '../../modelos/lista-elemento.modelo';
 import { Fila } from '../../modelos/fila.modelo';
 import { Celda } from '../../modelos/celda.modelo';
 import { Elemento } from '../../modelos/elemento.modelo';
@@ -21,10 +21,12 @@ import { EventosOrgAulaService } from '../../eventos-org-aula.service';
   styleUrls: ['./organizador-elemento.component.less']
 })
 
-export class OrganizadorElementoComponent implements OnInit, OnDestroy, AfterViewInit {
+export class OrganizadorElementoComponent implements OnInit, OnDestroy {
+  
   
   prDatos: Datos;
   
+  //clase datos para tener/compartir los elementos y demás entre los componentes
   @Input('datos')
   set datos(datos:Datos){
     this.prDatos=datos;
@@ -38,26 +40,25 @@ export class OrganizadorElementoComponent implements OnInit, OnDestroy, AfterVie
     return this.prDatos;
   }
 
-
-
   @Input('templateElemento') templateElemento: TemplateRef<any>;
   
   @ViewChild('mainDiv') mainDiv: ElementRef;
   @ViewChild('tabla') tabla: ElementRef;
 
   
-  draggedCelda: Celda;  
-  dragEvent: DragEvent;
-  clickedCelda: Celda;  
-  organizador: OrganizadorElementos;
-  overElem: any;
-  msgs: Message[];
-  resizingElement: ResizingElement;
-  startingPoint: StartingPoint;
-  displayNuevoElemento: boolean;  
-  confirmSubscription: Subscription;
-  mensajeSubscription: Subscription;
+  organizador: OrganizadorElementos; //El organizador que tiene todas las funciones y demas
+  draggedCelda: Celda;  //Celda arrastrada al hacer drag&drop
+  dragEvent: DragEvent; //Evento del drag para tener posiciones
+  clickedCelda: Celda;  // Celda clicada cuando vas a mover un elemento para saber como ponerlo cuando caiga  
+  resizingElement: ResizingElement; //Elemento que se está resizeando
+  startingPoint: StartingPoint; //Punto inicial del resize
+  displayNuevoElemento: boolean;  //Mostrar la ventana de crear nuevo elemento?
+  confirmSubscription: Subscription; //Suscripcion al evento de confirmacion
+  //mensajeSubscription: Subscription; //Sub al evento de mensajes
+  //Direccion del resize
   resizeDir: Directions;
+
+  //Direcciones
   readonly ARRIBA: Directions = Directions.ARRIBA;
   readonly ABAJO: Directions = Directions.ABAJO;
   readonly IZQUIERDA: Directions = Directions.IZQUIERDA;
@@ -65,76 +66,43 @@ export class OrganizadorElementoComponent implements OnInit, OnDestroy, AfterVie
   
   
 
-  get style(): Object{
-    let size: [number, number] = this.organizador.sizeCelda;
-    return {width: `${size[0]}px`, height: `${size[1]}px`};
-  }
-  constructor(private confirmationService: ConfirmationService, private elementRef: ElementRef, private eventos: EventosOrgAulaService) {}
+  constructor(private eventos: EventosOrgAulaService) {}
 
+  //Crea el organizador y ajusta el tamaño
   ngOnInit() {    
     this.organizador = new OrganizadorElementos();
     this.organizador.datos = this.datos;
-    this.displayNuevoElemento=false;
-    this.msgs = [];    
+    this.displayNuevoElemento=false;    
     this.organizador.cambiarSize(this.tabla, this.mainDiv);   
-   // this.mensajeSubscription = this.eventos.mensajes.subscribe(mens=>this.onMensaje(mens));
-    //TODO: poner el listener cogiendo el mainDiv con #mainDiv en el html (bindear con el viewChild)  
-    //window.addEventListener('resize', ()=>{this.onResize()});
-    
-    //this.organizador.inicializar();
   }
   
-  
-
-
+  //cambia el tamaño de la tabla si cambia el de la ventana
   @HostListener('window:resize', ['$event'])
   onResize(): void{        
     this.organizador.cambiarSize(this.tabla, this.mainDiv);        
   }
 
+  //destruye las subscripciones
   ngOnDestroy(){
     //this.mensajeSubscription.unsubscribe();
     if(this.confirmSubscription) this.confirmSubscription.unsubscribe();
   }  
 
-  ngAfterViewInit(){    
-    setTimeout(()=>{      
-      if(this.organizador.datos.listaElementos && !this.organizador.datos.listaFilas){      
-        this.organizador.cambiarSize(this.tabla, this.mainDiv);        
-        //this.organizador.inicializar();
-        console.log(this.organizador.listaFilas);
-        //TODO: Esta bien tener esto aqui?
-        let org = new OrganizadorEntidades();
-        org.datos=this.datos;
-        org.inicializar();
-      } 
-    }, 0);      
-       
+
+  get style(): Object{
+    let size: [number, number] = this.organizador.sizeCelda;
+    return {width: `${size[0]}px`, height: `${size[1]}px`};
   }
-/*
-  onMensaje(mens: Mensaje){
-    if(mens.codigo===MsgCodigo.Cancelar){
-      console.log("a");
-      this.organizador = new OrganizadorElementos();
-      this.organizador.datos = this.datos;
-      this.organizador.cambiarSize(this.tabla, this.mainDiv);        
-      this.organizador.inicializar();
-      this.displayNuevoElemento=false;
-    }
-  }*/
 
 
-  clearMap(): void{
-    this.organizador.datos.inicializarFilas();    
-  }
-  
   //Funcion para el drop
   drop(cel: Celda, event: MouseEvent): void{     
-    if(this.resizingElement && this.resizingElement.elem){  
-      //this.resize(event);         
+    //Si el drop viene durante un resize se sale
+    if(this.resizingElement && this.resizingElement.elem){        
       return;
     }
-    //cel = this.organizador.getClickedCelda(cel, event.layerX, event.layerY);
+
+    //Si no calcula en que celda se ha caido y llama a la función de drop del org    
     if(cel.elemento)      
       cel = this.organizador.getClickedCelda(cel, event.layerX, event.layerY);
     let status: number = this.organizador.drop(cel, this.draggedCelda, this.clickedCelda);
@@ -150,27 +118,23 @@ export class OrganizadorElementoComponent implements OnInit, OnDestroy, AfterVie
     this.draggedCelda=celda;
   }
 
+  //Coge un elemento de la toolbar
   toolsDragStart(listElem: ListaElemento): void{
     let celda: Celda=new Celda(-1,-1)
     let elem=new Elemento(false, listElem.id, listElem.nombre, listElem.color, listElem.maxEntidades);
     elem.setPos(0,0, (listElem.alto-1) ,(listElem.ancho-1));
-    
-    /*elem.x = 0
-    elem.y = 0
-    elem.x2= elem.x + (listElem.alto-1) 
-    elem.y2 = elem.y + (listElem.ancho-1);    */
     console.log(elem);
-    //elem.activo=true;
     celda.elemento = elem;
     this.draggedCelda=celda;
   }
 
 
+  //Eliminar a un elem
   removeElement(celda: Celda): void{
     this.organizador.removeElement(celda.elemento);
   }
 
-  //TODO: ConfirmSubscription cambiar añadir a que
+  //TODO: ConfirmSubscription cambiar añadir a qué estás confirmando
   removeElementType(id: string): void{
     if(this.confirmSubscription) this.confirmSubscription.unsubscribe();
     this.confirmSubscription = this.eventos.confirmacion.subscribe(res=>{      
@@ -183,13 +147,14 @@ export class OrganizadorElementoComponent implements OnInit, OnDestroy, AfterVie
     
   }
 
-  nuevoElemento(elemento: Elemento): void{
+  //recibe un elemento del componente nuevo elemento y lo añade a la lista
+  nuevoElemento(elemento: ListaElemento): void{
     this.displayNuevoElemento=false;
     if(elemento)
       this.datos.listaElementos.push(elemento);
   }   
 
-
+  //al empezar un resize pone el starting point y el resizing element
   onResizeStart(celda: Celda, event: DragEvent): void{
     this.startingPoint = {izquierda: event.clientX, arriba: event.clientY, ancho: celda.elemento.getAncho(), alto: celda.elemento.getAlto()};    
     console.log(event);
@@ -197,7 +162,7 @@ export class OrganizadorElementoComponent implements OnInit, OnDestroy, AfterVie
 
   }
 
-  
+  //durante el drag de un resize actualiza el tamaño/posicion de un elemento
   onDrag(celda: Celda, dir:Directions)
   {
     if(!this.dragEvent) return;
@@ -231,15 +196,14 @@ export class OrganizadorElementoComponent implements OnInit, OnDestroy, AfterVie
     
   }
 
+  //al acabar llama a la función de resize del organizador para que actualize el elemento como corresponda
   onDragEnd(): void{
     
     this.organizador.resize(this.resizingElement.elem, this.resizingElement.htmlElem, this.resizeDir, this.startingPoint, this.dragEvent);
     this.resizingElement.elem=null;
   }
 
-  tablaDragEnter(event: DragEvent): void{
-    this.dragEvent=event;   
-  }
+  
 
 
 }

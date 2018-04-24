@@ -10,6 +10,7 @@ import { OrganizadorElementos } from '../organizador-elemento/clases/Organizador
   templateUrl: './organizador-visualizacion.component.html',
   styleUrls: ['./organizador-visualizacion.component.less']
 })
+//Component para la visualización del tablero
 export class OrganizadorVisualizacionComponent implements OnInit {
 
   @ViewChild('mainDiv') mainDiv: ElementRef;
@@ -20,7 +21,7 @@ export class OrganizadorVisualizacionComponent implements OnInit {
   @Input('templateTabla') templateTabla: TemplateRef<any>;
   
   prDatos: Datos;
-  
+  //Actualiza los datos compartidos en el organizador si hay un cambio
   @Input('datos')
   set datos(datos:Datos){
     this.prDatos=datos;
@@ -37,18 +38,13 @@ export class OrganizadorVisualizacionComponent implements OnInit {
 
 
   
-  datosEntidad: string[];
   claseObjetoEntidad: string;
   organizador: OrganizadorEntidades;
-  draggedEntidad:Entidad;  
-  mostrarBarraLateral: boolean;
-  display: boolean;
 
   constructor(private eventos: EventosOrgAulaService){}
 
+  //Inicia los datos
   ngOnInit() {
-    this.mostrarBarraLateral=true;
-    this.datosEntidad=[];
     this.organizador = new OrganizadorEntidades();
     this.organizador.datos = this.datos;
     this.onResize();
@@ -61,18 +57,11 @@ export class OrganizadorVisualizacionComponent implements OnInit {
 
  
 
-
+  //click en entidad envia un mensaje con sus datos
   mostrarDatos(entidad: Entidad): void{
     this.eventos.clickEntidad.emit(entidad.objeto);
   }
 
-  getEstilo(entidad: Entidad): object{
-    let percent: number = 100/(entidad.elemento.entidades.length+1);
-    return {
-      //marginLeft: `calc(${percent}% - 2vw)`,
-      float: 'left'
-    }
-  }
 
 
 }

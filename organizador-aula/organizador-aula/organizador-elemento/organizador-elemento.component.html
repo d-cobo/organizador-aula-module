@@ -18,7 +18,6 @@
           </div>
         </div>            
     </div>
-    <p-growl [(value)]="msgs"></p-growl>
     <div id="columna-derecha" class="ui-g-10">
         <div id="drop-div">
           <div class="tabla" (dragover)="tablaDragEnter($event)" pDroppable="elementos" #tabla>
@@ -26,7 +25,7 @@
                   <div [ngStyle]="col.getSizePx()" pDroppable="elementos" (onDrop)="drop(col,$event)" class="columna"   *ngFor="let col of fila.celdas" [attr.fila]="i" [attr.columna]="j">                    
                   
                     <div  *ngIf="col.initElemento()"  id="elem_{{i}}_{{j}}" [ngClass]="col.elemento.getClasses()" [ngStyle]="col.elemento.getEstilo()">
-                      <ng-container *ngIf="col.elemento.id!='id_auto'">
+                      <ng-container *ngIf="col.elemento.id!=='id_auto'">
                         <div id="tempWrapper" [dragEffect]="move" pDraggable="elementos"  (onDragStart)="celdaDragStart(col, $event)">
                           <ng-container *ngIf="templateElemento">
                             <ng-container *ngTemplateOutlet="templateElemento; context: {$implicit: col.elemento}"></ng-container>
