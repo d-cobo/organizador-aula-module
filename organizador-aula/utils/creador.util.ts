@@ -28,8 +28,7 @@ export abstract class Creador{
         }
         this.minSize = minSize!=undefined ? minSize : [0, 0];
         this.sizeCelda= [0,0];
-        this.sizePantalla = [0,0];
-        //this.inicializar(numFilas, numColumnas, listaElementos, listaEntidades, minSize);
+        this.sizePantalla = [0,0];        
     };
 
     

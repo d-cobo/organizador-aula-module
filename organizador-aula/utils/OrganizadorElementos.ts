@@ -1,11 +1,10 @@
-import { Organizador } from "../../../utils/organizador.util";
-import { Fila } from "../../../modelos/fila.modelo";
-import { Elemento } from "../../../modelos/elemento.modelo";
 import { ElementRef } from "@angular/core";
-import { Celda } from "../../../modelos/celda.modelo";
-import { MsgTipo } from "../../../modelos/mensajes.modelo";
-import { StartingPoint, Directions } from "./interfaces";
-import { EventosOrgAulaService } from "../../../eventos-org-aula.service";
+import { Organizador } from "./organizador.util";
+import { Elemento } from "../modelos/elemento.modelo";
+import { Celda } from "../modelos/celda.modelo";
+import { MsgTipo } from "../modelos/mensajes.modelo";
+import { Fila } from "../modelos/fila.modelo";
+import { Directions, StartingPoint } from "../organizador-aula/organizador-elemento/interfaces";
 
 //Gestiona la organización de elementos en el tablero
 export class OrganizadorElementos extends Organizador{

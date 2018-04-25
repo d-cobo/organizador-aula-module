@@ -1,6 +1,6 @@
 <ng-container *ngIf="creador || (configuracion && configuracion.filas > 0 && configuracion.columnas > 0)">
     <div id="org-container">
-        <div *ngIf="configuracion && configuracion.mostrarBarraSuperior" id="tabs" >
+        <div *ngIf="configuracion && (configuracion.mostrarBarraSuperior==undefined || configuracion.mostrarBarraSuperior)" id="tabs" >
             <div class="inline-block">
             <li *ngIf="configuracion.permisoElementos"  [ngClass]="{'activo': activo===ACT_ELEMENTOS}" (click)="activo=ACT_ELEMENTOS"><span i18n>Elementos</span></li>
             <li *ngIf="configuracion.permisoEntidades" [ngClass]="{'activo': activo===ACT_ENTIDADES}" (click)="activo=ACT_ENTIDADES"><span i18n>Entidades</span></li>

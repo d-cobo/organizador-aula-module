@@ -4,15 +4,14 @@ import { ListaElemento, Position } from '../../modelos/lista-elemento.modelo';
 import { Fila } from '../../modelos/fila.modelo';
 import { Celda } from '../../modelos/celda.modelo';
 import { Elemento } from '../../modelos/elemento.modelo';
-import { OrganizadorElementos } from './clases/OrganizadorElementos';
 import { Datos } from '../../utils/datos.util';
 import { ConfirmationService, Message } from 'primeng/api';
-import { OrganizadorEntidades } from '../organizador-entidades/clases/OrganizadorEntidades';
 import { MsgTipo, MsgCodigo, Mensaje } from '../../modelos/mensajes.modelo';
 import { NuevoElementoComponent } from './nuevo-elemento/nuevo-elemento.component';
 import { Subscription } from 'rxjs/Subscription';
-import { StartingPoint, ResizingElement, Directions } from './clases/interfaces';
+import { StartingPoint, ResizingElement, Directions } from './interfaces';
 import { EventosOrgAulaService } from '../../eventos-org-aula.service';
+import { OrganizadorElementos } from '../../utils/OrganizadorElementos';
 
 
 @Component({
@@ -94,9 +93,13 @@ export class OrganizadorElementoComponent implements OnInit, OnDestroy {
     return {width: `${size[0]}px`, height: `${size[1]}px`};
   }
 
-
+  dropEnd(e: DragEvent){
+    e.preventDefault();
+    e.stopPropagation();
+  }
   //Funcion para el drop
-  drop(cel: Celda, event: MouseEvent): void{     
+  drop(cel: Celda, event: DragEvent): void{     
+
     //Si el drop viene durante un resize se sale
     if(this.resizingElement && this.resizingElement.elem){        
       return;
@@ -156,8 +159,7 @@ export class OrganizadorElementoComponent implements OnInit, OnDestroy {
 
   //al empezar un resize pone el starting point y el resizing element
   onResizeStart(celda: Celda, event: DragEvent): void{
-    this.startingPoint = {izquierda: event.clientX, arriba: event.clientY, ancho: celda.elemento.getAncho(), alto: celda.elemento.getAlto()};    
-    console.log(event);
+    this.startingPoint = {izquierda: event.clientX, arriba: event.clientY, ancho: celda.elemento.getAncho(), alto: celda.elemento.getAlto()};        
     this.resizingElement = {elem: celda.elemento, htmlElem:  (<HTMLElement>event.target).parentElement};    
 
   }
@@ -201,6 +203,10 @@ export class OrganizadorElementoComponent implements OnInit, OnDestroy {
     
     this.organizador.resize(this.resizingElement.elem, this.resizingElement.htmlElem, this.resizeDir, this.startingPoint, this.dragEvent);
     this.resizingElement.elem=null;
+  }
+
+  tablaDragEnter(event: DragEvent){
+    this.dragEvent=event;   
   }
 
   

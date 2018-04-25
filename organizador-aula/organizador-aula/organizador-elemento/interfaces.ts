@@ -1,4 +1,5 @@
-import { Elemento } from "../../../modelos/elemento.modelo";
+import { Elemento } from "../../modelos/elemento.modelo";
+
 
 //Punto inicial para el resize
 export interface StartingPoint{

@@ -11,12 +11,12 @@ import { ExportTablero } from '../modelos/tablero-export-interfaces.modelo';
 import { Elemento } from '../modelos/elemento.modelo';
 import { Subscription } from 'rxjs/Subscription';
 
-import { OrganizadorElementos } from './organizador-elemento/clases/OrganizadorElementos';
-import { OrganizadorEntidades } from './organizador-entidades/clases/OrganizadorEntidades';
 import { Organizador } from '../utils/organizador.util';
 import { EventosOrgAulaService } from '../eventos-org-aula.service';
 import { ConfiguracionOrganizador, Botones } from '../modelos/configuracion-organizador.modelo';
 import { ArgsCreador } from '../modelos/args-creador-interface.modelo';
+import { OrganizadorElementos } from '../utils/OrganizadorElementos';
+import { OrganizadorEntidades } from '../utils/OrganizadorEntidades';
 @Component({
   selector: 'app-organizador-aula',
   templateUrl: './organizador-aula.component.html',

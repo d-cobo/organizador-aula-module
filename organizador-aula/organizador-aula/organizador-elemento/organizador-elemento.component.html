@@ -20,7 +20,7 @@
     </div>
     <div id="columna-derecha" class="ui-g-10">
         <div id="drop-div">
-          <div class="tabla" (dragover)="tablaDragEnter($event)" pDroppable="elementos" #tabla>
+          <div class="tabla" (dragover)="tablaDragEnter($event)" (drop)="dropEnd($event)" pDroppable="elementos" #tabla>
             <div class="fila" *ngFor="let fila of organizador.listaFilas">                  
                   <div [ngStyle]="col.getSizePx()" pDroppable="elementos" (onDrop)="drop(col,$event)" class="columna"   *ngFor="let col of fila.celdas" [attr.fila]="i" [attr.columna]="j">                    
                   

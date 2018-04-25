@@ -1,12 +1,11 @@
 import { Component, OnInit, Input, TemplateRef, Output, EventEmitter, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { Datos } from '../../utils/datos.util';
-import { OrganizadorEntidades } from './clases/OrganizadorEntidades';
 import { Elemento } from '../../modelos/elemento.modelo';
 import { Entidad } from '../../modelos/entidad.modelo';
 import { Subscription } from 'rxjs/Subscription';
 import { EventosOrgAulaService } from '../../eventos-org-aula.service';
 import { Celda } from '../../modelos/celda.modelo';
-import { OrganizadorElementos } from '../organizador-elemento/clases/OrganizadorElementos';
+import { OrganizadorEntidades } from '../../utils/OrganizadorEntidades';
 
 
 @Component({
