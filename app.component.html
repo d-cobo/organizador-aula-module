@@ -1,0 +1,45 @@
+<!--un div con alto fijado para que la tabla se adapte a el-->
+<div style="height: 800px">
+    <app-organizador-aula
+         [templateTabla]="tempTabla" [templateBarra]="tempBarra" [templateElemento]="tempElemento"   [configuracion]="config" [listaElementos]="listaElementos" [listaEntidades]="listaEntidades"  (onExport)="onExport($event)">
+         <!--Las diferentes plantillas-->
+        <ng-template #tempBarra let-objeto>
+            <span>{{objeto.nombre}}</span>        
+            <i class="fa fa-user"></i>            
+        </ng-template>
+        <ng-template #tempTabla let-objeto>  
+            <i class="fa fa-user"></i>
+            <span>{{objeto.nombre}}</span>         
+        </ng-template>
+        <ng-template #tempElemento let-elemento>
+            <ng-container [ngSwitch]="elemento.id">
+                <div *ngSwitchCase="'idmesa'" class="mesa">                
+                </div>
+                <div *ngSwitchCase="'idmesaprof'" class="mesaprof">                
+                    {{elemento.nombre}}
+                </div>
+                <div *ngSwitchCase="'idpizarra'" class="pizarra" [ngStyle]="{'background-color': elemento.color}">                
+                    <span>{{elemento.nombre}}</span>
+                </div>
+                <div *ngSwitchDefault class="default"  [ngStyle]="{'background-color': elemento.color}">
+                        {{elemento.nombre}}
+                    </div>
+            </ng-container>
+        </ng-template>
+    </app-organizador-aula>
+</div>
+<!--Estos botones desde fuera del módulo le envian ordenes para cambiar de pantalla, tamaño, o guardar/cancelar-->
+<div style="border: 1px solid gray; margin-top:20px">
+        <span>Prueba botones fuera del modulo</span> <br>
+        <button  (click)="clickBoton(btnElementos)"><span i18n>Elementos</span></button>
+        <button  (click)="clickBoton(btnEntidades)"><span i18n>Entidades</span></button>
+        <button  (click)="clickBoton(btnVisualizar)"><span i18n>Visualizar</span></button>              
+        <label i18n>Filas:</label> <input [(ngModel)]="filas" type="number"/>
+        <label i18n>Columnas:</label> <input  type="number"  [(ngModel)]="columnas"/>
+        <button (click)="cambioTam()" i18n>Cambiar</button>
+        <button (click)="clickBoton(btnGuardar)">Guardar</button>
+        <button (click)="clickBoton(btnCancelar)">Cancelar</button>
+  
+    
+        
+</div>

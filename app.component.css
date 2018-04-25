@@ -1,0 +1,23 @@
+i{
+    display:block;
+}
+
+.mesa, .default, .mesaprof{
+    width: 100%;
+    height: 100%;    
+    /*border: 1px solid gray;*/
+}
+
+.mesa{
+    background-image: url("../assets/madera.jpg");
+}
+
+.mesaprof{
+    color: white;
+    background-image: url("../assets/maderaprof.jpg");
+}
+
+.pizarra{
+    /*height: 20%;*/
+    color: white;
+}
