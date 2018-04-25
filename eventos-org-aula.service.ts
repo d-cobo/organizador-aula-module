@@ -1,7 +1,8 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { Mensaje } from './modelos/mensajes.modelo';
 import { ListaEntidad } from './modelos/lista-entidad.modelo';
-import { Botones } from './modelos/configuracion-organizador.modelo';
+import { Botones } from './modelos/botones.modelo';
+
 
 @Injectable()
 //Servicio para el módulo; simplemente son EventEmitters para la comunicación con el exterior del módulo

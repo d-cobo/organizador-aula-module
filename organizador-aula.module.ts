@@ -5,8 +5,8 @@ import {DragDropModule} from 'primeng/dragdrop';
 import { OrganizadorAulaComponent } from './organizador-aula/organizador-aula.component';
 import { OrganizadorEntidadesComponent } from './organizador-aula/organizador-entidades/organizador-entidades.component';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
-import {BrowserModule} from '@angular/platform-browser';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+//import {BrowserModule} from '@angular/platform-browser';
+//import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ConfirmationService} from 'primeng/api';
 import {DialogModule} from 'primeng/dialog';
 import { FormsModule } from '@angular/forms';
@@ -22,8 +22,8 @@ import { OrganizadorVisualizacionComponent } from './organizador-aula/organizado
     CommonModule,
     ConfirmDialogModule,
     DialogModule,
-    BrowserModule,
-    BrowserAnimationsModule,
+//    BrowserModule,
+ //   BrowserAnimationsModule,
     FormsModule,
     ButtonModule
   ],

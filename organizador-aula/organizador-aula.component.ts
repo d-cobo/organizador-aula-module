@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, TemplateRef, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { OrganizadorElementoComponent } from './organizador-elemento/organizador-elemento.component';
 import { Datos } from '../utils/datos.util';
-import { Creador, CreadorDefault } from '../utils/creador.util';
+import { Creador } from '../utils/creador.util';
 import { Celda } from '../modelos/celda.modelo';
 import { ListaElemento } from '../modelos/lista-elemento.modelo';
 import { ListaEntidad } from '../modelos/lista-entidad.modelo';
@@ -13,10 +13,12 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { Organizador } from '../utils/organizador.util';
 import { EventosOrgAulaService } from '../eventos-org-aula.service';
-import { ConfiguracionOrganizador, Botones } from '../modelos/configuracion-organizador.modelo';
+import { ConfiguracionOrganizador } from '../modelos/conf.modelo';
 import { ArgsCreador } from '../modelos/args-creador-interface.modelo';
 import { OrganizadorElementos } from '../utils/OrganizadorElementos';
 import { OrganizadorEntidades } from '../utils/OrganizadorEntidades';
+import { Botones } from '../modelos/botones.modelo';
+import { CreadorDefault } from '../utils/creador-default.util';
 @Component({
   selector: 'app-organizador-aula',
   templateUrl: './organizador-aula.component.html',

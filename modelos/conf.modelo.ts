@@ -1,4 +1,3 @@
-
 //Opciones de configuracion para el módulo
 export interface ConfiguracionOrganizador{
     filas?: number, //Numero de filas del tablero
@@ -12,14 +11,4 @@ export interface ConfiguracionOrganizador{
 
     mostrarBarraSuperior?: boolean //Mostrar la barra de herramientas superior 
                                    //(por defecto se muestra)
-}
-
-//Numeración de los botones de cambio de pantalla / tamaño / cancelar guardar
-export enum Botones{
-    Elementos=0,
-    Entidades=1,
-    Visualizar=2,
-    Cancelar=3,
-    Guardar=4,
-    Cambiar=5    
 }
