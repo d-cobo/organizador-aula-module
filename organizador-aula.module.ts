@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OrganizadorElementoComponent } from './organizador-aula/organizador-elemento/organizador-elemento.component';
 import {DragDropModule} from 'primeng/dragdrop';
-import { ResizableModule } from 'angular-resizable-element';
 import { OrganizadorAulaComponent } from './organizador-aula/organizador-aula.component';
 import { OrganizadorEntidadesComponent } from './organizador-aula/organizador-entidades/organizador-entidades.component';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
@@ -20,7 +19,6 @@ import { OrganizadorVisualizacionComponent } from './organizador-aula/organizado
 @NgModule({
   imports: [
     DragDropModule,
-    ResizableModule,
     CommonModule,
     ConfirmDialogModule,
     DialogModule,

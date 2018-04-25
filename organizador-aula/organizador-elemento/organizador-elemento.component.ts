@@ -1,5 +1,4 @@
 import { Component, OnInit, AfterViewInit, ElementRef, Input, ViewChild, ViewChildren, QueryList, HostListener, EventEmitter, Output, ApplicationRef, TemplateRef, SimpleChanges, OnDestroy } from '@angular/core';
-import { ResizeEvent, ResizableDirective } from 'angular-resizable-element';
 import { ListaElemento, Position } from '../../modelos/lista-elemento.modelo';
 import { Fila } from '../../modelos/fila.modelo';
 import { Celda } from '../../modelos/celda.modelo';
