@@ -26,9 +26,12 @@
                   
                     <div  *ngIf="col.initElemento()"  id="elem_{{i}}_{{j}}" [ngClass]="col.elemento.getClasses()" [ngStyle]="col.elemento.getEstilo()">
                       <ng-container *ngIf="col.elemento.id!=='id_auto'">
-                        <div id="tempWrapper" [dragEffect]="move" pDraggable="elementos"  (onDragStart)="celdaDragStart(col, $event)">
+                        <div class="tempWrapper" [dragEffect]="move" pDraggable="elementos"  (onDragStart)="celdaDragStart(col, $event)">
                           <ng-container *ngIf="templateElemento">
                             <ng-container *ngTemplateOutlet="templateElemento; context: {$implicit: col.elemento}"></ng-container>
+                          </ng-container>
+                          <ng-container *ngIf="!templateElemento">
+                            <div class="tempWrapper" [ngStyle]="{'background-color': col.elemento.color}"></div>
                           </ng-container>
                         </div>
                         <div class="arrow upArrow">&#11021;</div>

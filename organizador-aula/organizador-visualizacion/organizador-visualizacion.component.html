@@ -22,6 +22,9 @@
                       <ng-container *ngIf="templateElemento">
                           <ng-container *ngTemplateOutlet="templateElemento; context: {$implicit: col.elemento}"></ng-container>
                       </ng-container>
+                      <ng-container *ngIf="!templateElemento">
+                        <div class="filler" [ngStyle]="{'background-color': col.elemento.color}"></div>
+                      </ng-container>
                   </div>
                 </div>
               </div>

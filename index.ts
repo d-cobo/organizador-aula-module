@@ -11,3 +11,5 @@ export { Fila } from './modelos/fila.modelo';
 export { Celda } from './modelos/celda.modelo';
 export { Botones } from './modelos/botones.modelo';
 export {Creador} from './utils/creador.util';
+export {Elemento} from './modelos/elemento.modelo'
+export {Entidad} from './modelos/entidad.modelo'
