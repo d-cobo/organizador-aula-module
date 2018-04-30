@@ -9,11 +9,19 @@ export class Celda{
     ancho:number;
     alto: number;
     elemento: Elemento;
+    droppable: boolean;
 
-    constructor(x:number, y:number){
+    constructor(x:number, y:number, droppable?: boolean){
         this.x = x;
         this.y=y;      
         this.elemento=null;  
+        if(droppable===undefined) this.droppable = true;
+        else this.droppable=false;
+    }
+
+    get pDroppable(): string{
+        if(this.droppable) return 'elementos';
+        return null;
     }
 
     getAnchoPx(): string{

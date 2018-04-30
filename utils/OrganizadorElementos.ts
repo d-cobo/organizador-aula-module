@@ -56,8 +56,8 @@ export class OrganizadorElementos extends Organizador{
   //Comprueba si una celda está ocupada por un elemento (si se pasa elem como parámetro,
   //no cuenta al propio elemento)
   celdaOcupada(x:number, y:number, elem: Elemento=null): boolean{
-    //Si la casilla está fuera del tablero retorna que está ocupada    
-    if(!this.listaFilas[x] || !this.listaFilas[x].celdas[y]) return true;
+    //Si la casilla está fuera del tablero o la celda prohíbe ser ocupada, retorna que está ocupada
+    if(!this.listaFilas[x] || !this.listaFilas[x].celdas[y] || !this.listaFilas[x].celdas[y].droppable) return true;
 
     return (this.listaFilas[x].celdas[y].elemento && this.listaFilas[x].celdas[y].elemento!=elem);
   }

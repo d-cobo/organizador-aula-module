@@ -62,6 +62,9 @@ export class OrganizadorAulaComponent implements OnInit, OnDestroy {
       return;
     }
     
+    if(!this.listaElementos) this.listaElementos=[];
+    if(!this.listaEntidades) this.listaEntidades=[];
+
     //Activa la primera pantalla disponible
     if(this.configuracion && this.configuracion.permisoElementos) this.activo = this.ACT_ELEMENTOS;
     else if(this.configuracion && this.configuracion.permisoEntidades) this.activo = this.ACT_ENTIDADES;

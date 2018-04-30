@@ -10,7 +10,9 @@ export class Entidad{
 
     //Devuelve el valor de la propiedad del objeto asignada como titulo
     get titulo(): string{
-        return this.objeto[this.objeto.atributo_titulo];
+        if(this.objeto[this.objeto.atributo_titulo]!=undefined || this.objeto[this.objeto.atributo_titulo]!=null)
+            return String(this.objeto[this.objeto.atributo_titulo]);
+        return this.objeto.atributo_titulo;
     }
 
     constructor(objeto:ListaEntidad, elemento?: Elemento){
